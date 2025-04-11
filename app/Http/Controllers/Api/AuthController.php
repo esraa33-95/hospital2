@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\Common;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -34,7 +35,55 @@ class AuthController extends Controller
     }
 
 
-    
+    public function login(Request $request)
+    {
+        $data = $request->validate([
+        'email' => 'required|email|exists:users',
+          'password'=>'required|min:6',
+        ]);
 
+       $user = User::where('email',$data['email'])->first();
+
+       if(!$user || !Hash::check($data['password'],$user->password))
+       {
+
+        return response([
+            'msg'=>'invaid',
+          ]);
+
+        
+       }
+       $token = $user->createToken('auth_token')->plainTextToken;
+
+       return response()->json([
+      'user' => $user,
+      'token' => $token,
+      'msg'=>'you are logging succesfully',
+       ]);
+       
+    }
+
+    public function logout()
+    {
+        $user = auth()->user();
+    
+        if ($user) {
+            
+            $user->currentAccessToken()->delete();
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'User logged out successfully',
+                'data' => [],
+            ]);
+        }
+    
+        return response()->json([
+            'status' => false,
+            'message' => 'No authenticated user found',
+            'data' => [],
+        ], 401);
+    }
+    
 
 }

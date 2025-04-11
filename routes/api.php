@@ -10,11 +10,13 @@ Route::get('/user', function (Request $request) {
 
 
 //register
-Route::group([
-    'controller'=>AuthController::class,
-],function(){
+Route::controller(AuthController::class)->group(function () {
     Route::post('auth/register', 'register');
     Route::post('auth/login', 'login');
-    Route::post('auth/logout', 'logout');
- });
+    
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('auth/logout', 'logout');
+    });
+ 
+});
 
