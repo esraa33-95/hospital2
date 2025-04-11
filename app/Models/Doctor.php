@@ -15,4 +15,19 @@ class Doctor extends Model
         'image',
   
       ];
+
+      public function department()
+      {
+        return $this->belongsTo(Department::class);
+      }
+
+      public function shifts()
+      {
+        return $this->hasMany(Shift::class);
+      }
+
+      public function booking()
+      {
+        return $this->hasMany(Booking::class);
+      }
 }

@@ -13,4 +13,14 @@ class Shift extends Model
         'end_time',
         'day', 
       ];
+
+      public function doctors()
+      {
+        return $this->belongsTo(Doctor::class);
+      }
+
+      public function booking()
+      {
+        return $this->hasMany(Booking::class);
+      }
 }

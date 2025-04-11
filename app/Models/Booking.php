@@ -13,4 +13,19 @@ class Booking extends Model
         'status',
 
       ];
+
+      public function doctors()
+      {
+        return $this->belongsTo(Doctor::class);
+      }
+
+      public function patients()
+      {
+        return $this->belongsTo(Patient::class);
+      }
+
+      public function shifts()
+      {
+        return $this->belongsTo(Shift::class);
+      }
 }

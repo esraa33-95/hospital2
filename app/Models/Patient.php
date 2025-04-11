@@ -13,4 +13,9 @@ class Patient extends Model
         'phone',
         'image',
       ];
+
+      public function booking()
+      {
+        return $this->hasMany(Booking::class);
+      }
 }

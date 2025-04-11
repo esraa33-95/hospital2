@@ -9,4 +9,9 @@ class Department extends Model
     protected $fillable=[
         'name',
       ];
+
+      public function doctors()
+      {
+        return $this->hasMany(Doctor::class);
+      }
 }
