@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\PatientController;
 
 Route::get('/user', function (Request $request) {
@@ -22,16 +23,30 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 
-// Route::middleware(['auth:sanctum'])->group(function () {
-//     Route::get('patient/profile', [PatientController::class, 'index']);
 
-// });
+  //  Route::get('patient/profile', [PatientController::class, 'index']);
 
 
+//patient
 Route::controller(PatientController::class)->group(function () {
     
     Route::get('patient/{id}','show');
-    Route::post('patient/edit/{id}','update');   //user,patient
+    Route::post('patient/edit/{id}','update');   
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('change-password', 'changePassword');
+        Route::delete('delete-account', 'deleteAccount');
+    });
+  
+});
+
+
+
+//doctor
+Route::controller(DoctorController::class)->group(function () {
+    
+    Route::get('doctor/profile/{id}','show');
+    Route::post('doctor/edit/{id}','update');   
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('change-password', 'changePassword');

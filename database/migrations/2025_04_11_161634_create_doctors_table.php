@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('specialization');
             $table->foreignId('department_id')->constrained()->onDelete('cascade');
             $table->string('image');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

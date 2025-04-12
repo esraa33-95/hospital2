@@ -17,7 +17,10 @@ class PatientController extends Controller
      */
     public function index()
     {
-        $patient = Patient::get();
+        $patient = User::whereHas('role', function ($q) {
+            $q->where('name', 'patient'); 
+        })->get();
+       
        
     if($patient){
     
@@ -36,25 +39,7 @@ else{
 }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
+ 
     public function show($id)
     {
         $user = User::where('id', $id)->whereHas('role', function ($q) {
@@ -77,17 +62,6 @@ else{
     }
     
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         $data = $request->validate([
@@ -103,9 +77,7 @@ else{
            $data['image'] = $this->uploadFile($request->file('image'), 'assests/images'); 
        }
 
-    //    $patient = Patient::where('id',$id)->FindOrFail($id);
-
-    $patient = User::where('id', $id)->whereHas('role', function ($q) {
+       $patient = User::where('id', $id)->whereHas('role', function ($q) {
         $q->where('name', 'patient');  })->first();
 
         if($patient)
@@ -128,15 +100,7 @@ else{
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
-
-
+   
     public function changePassword(Request $request)
 {
      $request->validate([
@@ -161,12 +125,10 @@ else{
             'status' => 200,
         ]);
       
-   
 }
 
 public function deleteAccount(Request $request)
 {
-   
     auth()->user()->delete();
 
     return response()->json([
