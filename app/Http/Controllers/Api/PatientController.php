@@ -167,7 +167,7 @@ else{
 public function deleteAccount(Request $request)
 {
    
-    $user = auth()->user()->delete();
+    auth()->user()->delete();
 
     return response()->json([
         'msg' => 'Account deleted successfully',
