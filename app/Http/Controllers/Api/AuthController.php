@@ -18,9 +18,10 @@ class AuthController extends Controller
         $data = $request->validate([
             'name'=>'required|string',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
+            'password' => 'required|min:6|confirmed',
             'image' =>'nullable|mimes:png,jpg,jpeg',
             'mobile' => ['required', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,mobile'],
+            'role_id' => 'required|exists:roles,id',
 
         ]);
         if($request->hasfile('image'))
@@ -38,7 +39,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $data = $request->validate([
-        'email' => 'required|email|exists:users',
+         'email' => 'required|email|exists:users',
           'password'=>'required|min:6',
         ]);
 

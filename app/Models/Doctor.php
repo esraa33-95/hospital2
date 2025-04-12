@@ -31,8 +31,5 @@ class Doctor extends Model
         return $this->hasMany(Booking::class);
       }
 
-      public function patient()
-      {
-        return $this->belongsToMany(Patient::class);
-      }
+     
 }
