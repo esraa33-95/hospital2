@@ -82,7 +82,8 @@ else{
       
         $user = $request->user();
     
-        if (!Hash::check($request->current_password, $user->password)) {
+        if (!Hash::check($request->current_password, $user->password)) 
+        {
             return response()->json([
                 'msg' => 'Current password is incorrect',
                 'status' => 400,

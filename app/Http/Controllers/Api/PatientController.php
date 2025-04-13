@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Patient;
 use App\Models\User;
 use App\Traits\Common;
 use Illuminate\Http\Request;
@@ -75,7 +74,7 @@ else{
         if ($request->hasFile('image'))
         {
            $data['image'] = $this->uploadFile($request->file('image'), 'assests/images'); 
-       }
+        }
 
        $patient = User::where('id', $id)->whereHas('role', function ($q) {
         $q->where('name', 'patient');  })->first();
@@ -96,9 +95,9 @@ else{
         'data' => [],
         
     ]);
-}
-
     }
+
+ }
 
    
     public function changePassword(Request $request)
@@ -110,7 +109,8 @@ else{
   
     $user = $request->user();
 
-    if (!Hash::check($request->current_password, $user->password)) {
+    if (!Hash::check($request->current_password, $user->password)) 
+    {
         return response()->json([
             'msg' => 'Current password is incorrect',
             'status' => 400,

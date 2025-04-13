@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdminController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -58,4 +59,16 @@ Route::controller(DoctorController::class)->group(function () {
   
 });
 
+//admin
+Route::controller(AdminController::class)->group(function () {
+    Route::post('admin/login', 'login');
+    
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('admin/logout', 'logout');
 
+        Route::middleware(['auth:sanctum', 'admin.role'])->group(function () {
+            Route::post('admin/changedata/{id}', 'changedata');
+        });
+       
+    });
+});
