@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Traits\Common;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
+
 
 class AuthController extends Controller
 {
@@ -29,9 +32,16 @@ class AuthController extends Controller
            $data['image'] = $this->uploadFile($request->image,'assets/images');
         }
 
+        $data['password'] = Hash::make($data['password']);
+
        $user = User::create($data);
 
-       return $user;
+     
+
+       return response()->json([
+        'message' => 'Registered successfully',
+        'user' => $user
+    ], 201);
 
     }
 
@@ -86,5 +96,57 @@ class AuthController extends Controller
         ], 401);
     }
     
+
+    public function sendPasswordEmail(Request $request)
+{
+    $request->validate(['email' => 'required|email|exists:users']);
+
+    $status = Password::sendResetLink($request->only('email'));
+
+    if ($status === Password::RESET_LINK_SENT) {
+        return response()->json([
+            'message' => __('Password reset link  successfully.')
+        ], 200);
+    } 
+
+    return response()->json([
+        'message' => __('Error sending reset link.'),
+        'error' => __($status) 
+    ], 400);
+}
+
+
+
+public function reset(Request $request)
+{
+    $request->validate([
+        'token'=>'required',
+        'email' => 'required|email|exists:users',
+        'password'=>'required|min:6|confirmed',
+    ]);
+
+
+    $status = Password::reset(
+        $request->only('email','password','password_confirmation','token'),
+        function(User $user, string $password)
+        {
+            $user->forceFill([
+                'password' => Hash::make($password) ,
+                 'remember_token'=>Str::random(60)
+            ])->save(); 
+        }
+    );
+    if ($status === Password::PASSWORD_RESET) {
+        return response()->json([
+            'message' => __('Password  reset successfully.')
+        ], 200);
+    } 
+
+    return response()->json([
+        'message' => __('Invalid '),
+        'error' => __($status) 
+    ], 400);
+}
+
 
 }
