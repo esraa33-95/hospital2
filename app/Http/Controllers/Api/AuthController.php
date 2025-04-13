@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 
 
+
 class AuthController extends Controller
 {
     use Common;
@@ -36,7 +37,7 @@ class AuthController extends Controller
 
        $user = User::create($data);
 
-     
+      
 
        return response()->json([
         'message' => 'Registered successfully',

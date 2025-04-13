@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\EmailVerificationController;
 use App\Http\Controllers\Api\PatientController;
 use App\Models\User;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -65,10 +66,17 @@ Route::controller(AdminController::class)->group(function () {
     
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('admin/logout', 'logout');
+        Route::post('admin/changedata/{id}', 'changedata');
+       
+       
+    });
+});
 
-        Route::middleware(['auth:sanctum', 'admin.role'])->group(function () {
-            Route::post('admin/changedata/{id}', 'changedata');
-        });
+//verify email
+Route::controller(EmailVerificationController::class)->group(function () { 
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::put('verify/email/{id}', 'update'); 
+       
        
     });
 });
