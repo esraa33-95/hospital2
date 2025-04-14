@@ -17,7 +17,8 @@ class AdminRole
 {
     $user = $request->user();
 
-    if (!$user || !strtolower($user->role) === 2) {
+    if (!$user || $user->role_id != 2) 
+     {
         return response()->json([
             'msg' => 'Unauthorized',
             'status' => 401,

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\Common;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -26,24 +27,19 @@ class AuthController extends Controller
             'image' =>'nullable|mimes:png,jpg,jpeg',
             'mobile' => ['required', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,mobile'],
             'role_id' => 'required|exists:roles,id',
-
         ]);
         if($request->hasfile('image'))
         {
            $data['image'] = $this->uploadFile($request->image,'assets/images');
         }
-
         $data['password'] = Hash::make($data['password']);
 
        $user = User::create($data);
-
-      
-
+       event(new Registered($user));
        return response()->json([
         'message' => 'Registered successfully',
         'user' => $user
     ], 201);
-
     }
 
 

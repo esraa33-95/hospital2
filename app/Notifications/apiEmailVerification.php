@@ -37,7 +37,7 @@ class apiEmailVerification extends Notification
     $user_id = $notifiable->id;
     $vcode = mt_rand(11111, 99999);
 
-    // Save code to DB using the correct model
+    
     ApiEmailVerification::updateOrCreate(
         ['user_id' => $user_id],
         ['evcode' => $vcode]
@@ -47,7 +47,7 @@ class apiEmailVerification extends Notification
         ->subject('Your Verification Code')
         ->line('Here is your verification code:')
         ->line($vcode)
-        ->action('Verify Email', url('/your-url')) // optional
+        ->action('Verify Email', url('/your-url')) 
         ->line('Thank you!');
 }
 

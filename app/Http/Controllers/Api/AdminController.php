@@ -69,13 +69,12 @@ class AdminController extends Controller
 
 public function changedata(Request $request,$id)
 {
- $user = User::find($id);
-
   $data = $request->validate([
       'name'=>'required|string',
       'email' => 'required|email|unique:users,email,' . $id,
       'mobile' => [ 'required', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,mobile,' . $id ],
       'image'=>'nullable|mimes:png,jpg,jpeg',
+      'password' => 'nullable|min:6',
 ]);
 
 if ($request->hasFile('image'))
@@ -83,10 +82,14 @@ if ($request->hasFile('image'))
    $data['image'] = $this->uploadFile($request->file('image'), 'assests/images'); 
 }
 
+$data['password']= bcrypt($data['password']);
+
+$user = User::findOrFail($id);
 $user->update($data);
 
 return response()->json([
     'status' => 200,
+    'data'=>$user,
     'msg' => 'Data updated successfully',
 ]);
 

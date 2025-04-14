@@ -29,10 +29,7 @@ Route::controller(AuthController::class)->group(function () {
  
 });
 
-
-
-  //  Route::get('patient/profile', [PatientController::class, 'index']);
-
+  
 
 //patient
 Route::controller(PatientController::class)->group(function () {
@@ -45,7 +42,6 @@ Route::controller(PatientController::class)->group(function () {
     });
   
 });
-
 
 
 //doctor
@@ -64,7 +60,7 @@ Route::controller(DoctorController::class)->group(function () {
 Route::controller(AdminController::class)->group(function () {
     Route::post('admin/login', 'login');
     
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('auth:sanctum','admin')->group(function () {
         Route::post('admin/logout', 'logout');
         Route::post('admin/changedata/{id}', 'changedata');
        
@@ -72,11 +68,23 @@ Route::controller(AdminController::class)->group(function () {
     });
 });
 
-//verify email
-Route::controller(EmailVerificationController::class)->group(function () { 
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::put('verify/email/{id}', 'update'); 
-       
-       
+
+
+Route::middleware('auth:sanctum')->group(function () {
+  
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+        $request->fulfill();
+        return response()->json(['message' => 'Email verified!']);
+    })->middleware('signed')->name('verification.verify');
+
+    
+    Route::post('/email/resend', function (Request $request) {
+        if ($request->user()->hasVerifiedEmail()) {
+            return response()->json(['message' => 'Email already verified']);
+        }
+
+        $request->user()->sendEmailVerificationNotification();
+
+        return response()->json(['message' => 'Verification email resent']);
     });
 });
