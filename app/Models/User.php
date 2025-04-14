@@ -27,6 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'image',
         'password',
         'role_id',
+        'email_verified_at',
     ];
 
     /**
@@ -57,9 +58,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(Role::class);
     }
 
-   public function ApiEmailVerification()
-   {
-    return $this->hasMany(ApiEmailVerification::class);
-   }
-
+    public function otps()
+    {
+        return $this->hasMany(Otp::class);
+    }
 }

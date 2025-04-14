@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\EmailOtpMail;
+use App\Models\Otp;
 use Illuminate\Http\Request;
 use App\Traits\Common;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+
 
 
 
@@ -32,17 +35,28 @@ class AuthController extends Controller
         {
            $data['image'] = $this->uploadFile($request->image,'assets/images');
         }
+        
         $data['password'] = Hash::make($data['password']);
 
        $user = User::create($data);
-       event(new Registered($user));
+
+       $otp = rand(100000, 999999);
+        
+        Otp::create([
+            'user_id' => $user->id,
+            'otp' => $otp,
+            'expires_at' => now()->addMinutes(10),
+        ]);
+     
+       Mail::to($user->email)->send(new EmailOtpMail($otp));
+
        return response()->json([
         'message' => 'Registered successfully',
         'user' => $user
     ], 201);
     }
 
-
+//login
     public function login(Request $request)
     {
         $data = $request->validate([
@@ -54,12 +68,10 @@ class AuthController extends Controller
 
        if(!$user || !Hash::check($data['password'],$user->password))
        {
-
         return response([
-            'msg'=>'invaid',
+            'msg'=>'invaid email or password',
           ]);
-
-        
+ 
        }
        $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -70,7 +82,7 @@ class AuthController extends Controller
        ]);
        
     }
-
+//logout
     public function logout()
     {
         $user = auth()->user();
@@ -93,7 +105,7 @@ class AuthController extends Controller
         ], 401);
     }
     
-
+//forget password
     public function sendPasswordEmail(Request $request)
 {
     $request->validate(['email' => 'required|email|exists:users']);
@@ -113,7 +125,7 @@ class AuthController extends Controller
 }
 
 
-
+//reset link to change password
 public function reset(Request $request)
 {
     $request->validate([
@@ -122,8 +134,7 @@ public function reset(Request $request)
         'password'=>'required|min:6|confirmed',
     ]);
 
-
-    $status = Password::reset(
+       $status = Password::reset(
         $request->only('email','password','password_confirmation','token'),
         function(User $user, string $password)
         {
@@ -144,6 +155,69 @@ public function reset(Request $request)
         'error' => __($status) 
     ], 400);
 }
+
+//sendotp for mail
+// public function sendEmailOtp(Request $request)
+// {
+//     $request->validate([
+//         'email' => 'required|email|exists:users,email',
+//     ]);
+
+//     $user = User::where('email', $request->email)->first();
+    
+//     $otp = rand(100000, 999999);
+ 
+//     Otp::create([
+//         'user_id' => $user->id,
+//         'otp' => $otp,
+//         'expires_at' => now()->addMinutes(10),
+//     ]);
+
+   
+//     Mail::to($user->email)->send(new EmailOtpMail($otp));
+
+//     return response()->json([
+//         'status' => 200,
+//         'message' => 'OTP sent successfully.',
+//     ]);
+// }
+
+
+//verify mail using otp
+public function verifyEmailOtp(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email|exists:users,email',
+        'otp' => 'required|digits:6',
+    ]);
+
+    $user = User::where('email', $request->email)->first();
+
+    $otp = $user->otps()
+        ->where('otp', $request->otp)
+        ->where('is_used', false)
+        ->where('expires_at', '>=', now())
+        ->latest()
+        ->first();
+
+    if (!$otp) {
+        return response()->json([
+            'status' => 401,
+            'message' => 'invalid otp.',
+        ], 401);
+    }
+
+    $otp->update(['is_used' => true]);
+    $user->update(['email_verified_at' => now()]);
+
+    return response()->json([
+        'status' => 200,
+        'message' => 'Email verified successfully.',
+    ]);
+}
+
+
+
 
 
 }
