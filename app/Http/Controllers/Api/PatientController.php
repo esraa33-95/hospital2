@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Patient;
 use App\Models\User;
 use App\Traits\Common;
 use Illuminate\Http\Request;
@@ -11,44 +12,16 @@ use Illuminate\Support\Facades\Hash;
 class PatientController extends Controller
 {
     use Common;
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $patient = User::whereHas('role', function ($q) {
-            $q->where('name', 'patient'); 
-        })->get();
-       
-       
-    if($patient){
+   
     
-    return response()->json([
-        'msg'=>'patient profile',
-        'data'=>$patient,
-        'status'=>200,
-       ]);
-   }
-else{
-    return response()->json([
-        'msg'=>' no patient profile',
-        'data'=>[],
-        
-       ]);
-}
-    }
-
- 
-    public function show($id)
+    public function show(string $id)
     {
-        $user = User::where('id', $id)->whereHas('role', function ($q) {
-            $q->where('name', 'patient'); 
-        })->first();
+        $patient = Patient::FindOrFail($id);
     
-        if ($user) {
+        if ($patient) {
             return response()->json([
                 'msg' => 'Patient profile',
-                'data' => $user,
+                'data' => $patient,
                 'status' => 200,
             ]);
         } else {
@@ -65,8 +38,8 @@ else{
     {
         $data = $request->validate([
         'name'=>'required|string',
-        'email' => 'required|email|unique:users,email,' . $id,
-        'phone' => [ 'required', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,mobile,' . $id ],
+        'email' => 'nullable|email|unique:users,email,' . $id,
+        'phone' => [ 'nullable', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,mobile,' . $id ],
         'image'=>'nullable|mimes:png,jpg,jpeg',
 
         ]);
@@ -76,30 +49,27 @@ else{
            $data['image'] = $this->uploadFile($request->file('image'), 'assests/images'); 
         }
 
-       $patient = User::where('id', $id)->whereHas('role', function ($q) {
-        $q->where('name', 'patient');  })->first();
+    $patient = Patient::find($id);
 
-        if($patient)
-        {
-       $patient->update($data);
+    if (!$patient) 
+    {
+        return response()->json([
+            'msg' => 'patient not found',
+            'status' => 404,
+        ]);
+    }
 
-       return response()->json([
-        'msg' => 'Patient updating successfully',
+    $patient->update($data);
+
+    return response()->json([
+        'msg' => 'patient updated successfully',
         'data' => $patient,
         'status' => 200,
     ]);
-}
-else{
-    return response()->json([
-        'msg' => ' no Patient',
-        'data' => [],
-        
-    ]);
-    }
+
 
  }
 
-   
     public function changePassword(Request $request)
 {
      $request->validate([

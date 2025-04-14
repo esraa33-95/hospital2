@@ -21,9 +21,8 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('auth/login', 'login');
     Route::post('auth/password/email','sendPasswordEmail');
     Route::post('auth/reset/password','reset')->name('password.reset');
-   // Route::post('auth/send-email-otp',  'sendEmailOtp');
     Route::post('auth/verify-email',  'verifyEmailOtp');
-
+ // Route::post('auth/send-email-otp',  'sendEmailOtp');
     
     
     Route::middleware('auth:sanctum')->group(function () {
@@ -33,12 +32,11 @@ Route::controller(AuthController::class)->group(function () {
 });
 
   
-
 //patient
 Route::controller(PatientController::class)->group(function () {
-   
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::get('patient/{id}','show');
+    Route::get('patient/profile/{id}','show');
+
+    Route::middleware('auth:sanctum')->group(function () {    
         Route::post('patient/edit/{id}','update'); 
         Route::post('change-password', 'changePassword');
         Route::delete('delete-account', 'deleteAccount');
@@ -49,9 +47,9 @@ Route::controller(PatientController::class)->group(function () {
 
 //doctor
 Route::controller(DoctorController::class)->group(function () {
-  
+           Route::get('doctor/profile/{id}','show');
+           
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('doctor/profile/{id}','show');
         Route::post('doctor/edit/{id}','update');  
         Route::post('change-password', 'changePassword');
         Route::delete('delete-account', 'deleteAccount');

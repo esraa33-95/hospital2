@@ -13,7 +13,8 @@ class DoctorController extends Controller
 {
 
     use Common;
-    public function show($id)
+
+    public function show(string $id)
     {
       $doctor = Doctor::FindOrFail($id);
     
@@ -37,8 +38,8 @@ class DoctorController extends Controller
     {
         $data = $request->validate([
         'name'=>'required|string',
-        'email' => 'required|email|unique:users,email,' . $id,
-        'phone' => [ 'required', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,mobile,' . $id ],
+        'email' => 'nullable|email|unique:users,email,' . $id,
+        'phone' => [ 'nullable', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,mobile,' . $id ],
         'image'=>'nullable|mimes:png,jpg,jpeg',
         'specialization'=>'required|string',
         'department_id'=>'required|integer|exists:departments,id',
@@ -50,26 +51,24 @@ class DoctorController extends Controller
            $data['image'] = $this->uploadFile($request->file('image'), 'assests/images'); 
        }
 
-            $doctor = Doctor::where('id',$id)->FindOrFail($id);
+    $doctor = Doctor::find($id);
 
-        if($doctor)
-        {
-       $doctor->update($data);
+    if (!$doctor) {
+        return response()->json([
+            'msg' => 'Doctor not found',
+            'status' => 404,
+        ]);
+    }
 
-       return response()->json([
-        'msg' => 'doctor updating successfully',
+    $doctor->update($data);
+
+    return response()->json([
+        'msg' => 'Doctor updated successfully',
         'data' => $doctor,
         'status' => 200,
-        ]);
-      }
-else{
-    return response()->json([
-        'msg' => ' no doctor',
-        'data' => [],
-        
     ]);
-}
 
+        
     }
 
 
@@ -91,6 +90,7 @@ else{
         }
     
         $user->password = bcrypt($request->new_password);
+
         $user->save();
     
       return response()->json([
