@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
-use App\Models\User;
 use App\Traits\Common;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -37,7 +36,7 @@ class PatientController extends Controller
     public function update(Request $request, string $id)
     {
         $data = $request->validate([
-        'name'=>'required|string',
+        'name'=>'nullable|string',
         'email' => 'nullable|email|unique:users,email,' . $id,
         'phone' => [ 'nullable', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,mobile,' . $id ],
         'image'=>'nullable|mimes:png,jpg,jpeg',

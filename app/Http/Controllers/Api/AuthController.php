@@ -50,6 +50,7 @@ class AuthController extends Controller
      
        Mail::to($user->email)->send(new EmailOtpMail($otp));
 
+
        return response()->json([
         'message' => 'Registered successfully',
         'user' => $user

@@ -5,10 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DoctorController;
-use App\Http\Controllers\Api\EmailVerificationController;
 use App\Http\Controllers\Api\PatientController;
-use App\Models\User;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -23,8 +21,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('auth/reset/password','reset')->name('password.reset');
     Route::post('auth/verify-email',  'verifyEmailOtp');
  // Route::post('auth/send-email-otp',  'sendEmailOtp');
-    
-    
+     
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('auth/logout', 'logout');
     });
@@ -48,7 +45,7 @@ Route::controller(PatientController::class)->group(function () {
 //doctor
 Route::controller(DoctorController::class)->group(function () {
            Route::get('doctor/profile/{id}','show');
-           
+
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('doctor/edit/{id}','update');  
         Route::post('change-password', 'changePassword');
