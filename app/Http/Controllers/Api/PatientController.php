@@ -17,19 +17,14 @@ class PatientController extends Controller
     {
         $patient = Patient::FindOrFail($id);
     
-        if ($patient) {
+        
             return response()->json([
                 'msg' => 'Patient profile',
                 'data' => $patient,
                 'status' => 200,
             ]);
-        } else {
-            return response()->json([
-                'msg' => 'No patient profile found',
-                'data' => [],
-                'status' => 404,
-            ]);
-        }
+        
+        
     }
     
 
@@ -48,15 +43,7 @@ class PatientController extends Controller
            $data['image'] = $this->uploadFile($request->file('image'), 'assests/images'); 
         }
 
-    $patient = Patient::find($id);
-
-    if (!$patient) 
-    {
-        return response()->json([
-            'msg' => 'patient not found',
-            'status' => 404,
-        ]);
-    }
+    $patient = Patient::FindOrFail($id);
 
     $patient->update($data);
 
@@ -92,9 +79,9 @@ class PatientController extends Controller
   return response()->json([
             'msg' => 'Password changed successfully',
             'status' => 200,
-        ]);
-      
+        ]);     
 }
+
 
 public function deleteAccount(Request $request)
 {

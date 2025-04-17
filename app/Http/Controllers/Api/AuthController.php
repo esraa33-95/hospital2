@@ -24,12 +24,13 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $data = $request->validate([
-            'name'=>'required|string',
+            'name'=>'required|string|max:255|min:3',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|confirmed',
             'image' =>'nullable|mimes:png,jpg,jpeg',
             'mobile' => ['required', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,mobile'],
-            'role_id' => 'required|exists:roles,id',
+            'department_id' => 'required|exists:departments,id',
+            'role'=>'required|string',
         ]);
         if($request->hasfile('image'))
         {
@@ -40,15 +41,15 @@ class AuthController extends Controller
 
        $user = User::create($data);
 
-       $otp = rand(100000, 999999);
+    //    $otp = rand(100000, 999999);
         
-        Otp::create([
-            'user_id' => $user->id,
-            'otp' => $otp,
-            'expires_at' => now()->addMinutes(10),
-        ]);
+    //     Otp::create([
+    //         'user_id' => $user->id,
+    //         'otp' => $otp,
+    //         'expires_at' => now()->addMinutes(3),
+    //     ]);
      
-       Mail::to($user->email)->send(new EmailOtpMail($otp));
+    //    Mail::to($user->email)->send(new EmailOtpMail($otp));
 
 
        return response()->json([

@@ -43,16 +43,16 @@ Route::controller(PatientController::class)->group(function () {
 
 
 //doctor
-Route::controller(DoctorController::class)->group(function () {
-           Route::get('doctor/profile/{id}','show');
+// Route::controller(DoctorController::class)->group(function () {
+//            Route::get('doctor/profile/{id}','show');
 
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::post('doctor/edit/{id}','update');  
-        Route::post('change-password', 'changePassword');
-        Route::delete('delete-account', 'deleteAccount');
-    });
+//     Route::middleware('auth:sanctum')->group(function () {
+//         Route::post('doctor/edit/{id}','update');  
+//         Route::post('change-password', 'changePassword');
+//         Route::delete('delete-account', 'deleteAccount');
+//     });
   
-});
+// });
 
 //admin
 Route::controller(AdminController::class)->group(function () {

@@ -26,8 +26,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'mobile',
         'image',
         'password',
-        'role_id',
         'email_verified_at',
+        'role',
+        'department_id',
+        
+        
     ];
 
     /**
@@ -53,13 +56,14 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    public function role()
-    {
-        return $this->belongsTo(Role::class);
-    }
-
+    
     public function otps()
     {
         return $this->hasMany(Otp::class);
+    }
+
+    public function department()
+    {
+      return $this->belongsTo(Department::class);
     }
 }

@@ -12,12 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('otps', function (Blueprint $table) {
-           $table->id();
-           $table->foreignId('user_id')->constrained()->onDelete('cascade');
-           $table->string('otp');
-           $table->boolean('is_used')->default(false);
-           $table->timestamp('expires_at');
-           $table->timestamps();
+            $table->id();
+            $table->string('otp');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->timestamp('expires_at');
+            $table->timestamps();
         });
     }
 
@@ -28,4 +27,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('otps');
     }
+
+
+    
 };
