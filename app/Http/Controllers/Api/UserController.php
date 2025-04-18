@@ -56,26 +56,26 @@ class UserController extends Controller
 
 //change password
 public function changePassword(ChangeUserPassword $request)
-    {
-         $request->validated();
-      
-        $user = $request->user();
+{
+    $request->validated();
+  
+    $user = $request->user();
 
-        $SamePassword = $request->current_password == $request->new_password;
     
-        if (!Hash::check($request->current_password, $user->password) || $SamePassword) 
-        {
-            return $this->responseApi(__('Current password is incorrect'));
-            
-        }
-
-        $user->password = bcrypt($request->new_password);
-
-        $user->save();
-    
-        return $this->responseApi(__('Password changed successfully'),200);
-          
+    if (!Hash::check($request->current_password, $user->password)) {
+        return $this->responseApi(__('Current password is incorrect'));
     }
+
+    if (Hash::check($request->new_password, $user->password)) {
+        return $this->responseApi(__('New password must be different from the current password'));
+    }
+    
+
+    $user->password = bcrypt($request->new_password);
+    $user->save();
+
+    return $this->responseApi(__('Password changed successfully'), 200);
+}
 
 
 
@@ -83,3 +83,5 @@ public function changePassword(ChangeUserPassword $request)
 
 
 }
+
+
