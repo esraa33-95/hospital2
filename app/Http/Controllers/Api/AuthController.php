@@ -17,7 +17,7 @@ use App\Events\UserRegistered;
 use App\Http\Requests\Api\RegisterRequest;
 use App\Http\Requests\Api\VerifyEmailOtp;
 use App\Http\Requests\Api\LoginRequest;
-
+use App\Http\Requests\Api\ForgetPassword;
 
 class AuthController extends Controller
 {
@@ -83,58 +83,24 @@ class AuthController extends Controller
     }
     
 //forget password
-    public function sendPasswordEmail(Request $request)
+    public function forgetpassword(ForgetPassword $request)
 {
-    $request->validate(['email' => 'required|email|exists:users']);
+    $request->validated();
+      
+    $user = User::where('email', $request->email)->first();
 
-    $status = Password::sendResetLink($request->only('email'));
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
+    }
 
-    if ($status === Password::RESET_LINK_SENT) {
-        return response()->json([
-            'message' => __('Password reset link  successfully.')
-        ], 200);
-    } 
+    event(new UserRegistered($user));
 
-    return response()->json([
-        'message' => __('Error sending reset link.'),
-        'error' => __($status) 
-    ], 400);
+    return $this->responseApi(__('send otp to mail successfully'),$user,200);
+    
 }
 
 
-//reset link to change password
-public function reset(Request $request)
-{
-    $request->validate([
-        'token'=>'required',
-        'email' => 'required|email|exists:users',
-        'password'=>'required|min:6|confirmed',
-    ]);
-
-       $status = Password::reset(
-        $request->only('email','password','password_confirmation','token'),
-        function(User $user, string $password)
-        {
-            $user->forceFill([
-                'password' => Hash::make($password) ,
-                 'remember_token'=>Str::random(60)
-            ])->save(); 
-        }
-    );
-    if ($status === Password::PASSWORD_RESET) {
-        return response()->json([
-            'message' => __('Password  reset successfully.')
-        ], 200);
-    } 
-
-    return response()->json([
-        'message' => __('Invalid '),
-        'error' => __($status) 
-    ], 400);
-}
-
-
-//verify mail using otp
+//verify mail and reset password using otp
 public function verifyEmailOtp(VerifyEmailOtp $request)
 {
     $request->validated();
@@ -149,10 +115,21 @@ public function verifyEmailOtp(VerifyEmailOtp $request)
     if (!$otp) {
         return $this->responseApi(__('invalid otp'),422);
     }
+
     $otp->update(['is_verified'=>true]);
     $user->update(['email_verified_at' => now()]);
 
-    return $this->responseApi(__('email verified successfully'),200);
+    if ($request->filled('password')) {
+        $request->validate([
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        $user->update(['password' => Hash::make($request->password)]);
+
+        return $this->responseApi(__('OTP verified and password reset successfully'), 200);
+    }
+
+    return $this->responseApi(__('Otp verified successfully'), 200);
 }
 
 

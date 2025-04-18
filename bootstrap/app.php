@@ -12,9 +12,14 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
         then: function () {
+
             Route::namespace('App\Http\Controllers\Api')
             ->prefix('doctor')
             ->group(base_path('routes/Api/doctor.php'));
+
+            Route::namespace('App\Http\Controllers\Api')
+            ->prefix('patient')
+            ->group(base_path('routes/Api/patient.php')); 
         },
     )
     ->withMiddleware(function (Middleware $middleware) {
