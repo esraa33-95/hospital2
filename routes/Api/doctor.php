@@ -8,9 +8,9 @@ use App\Http\Controllers\Api\UserController;
 
 
 
-Route::controller(UserController::class)->group(function () {
-        Route::get('{id}','show');
-        Route::post('edit/{id}','update');  
+Route::controller(UserController::class)->middleware('auth:sanctum')->group(function () {
+        Route::get('profile','userprofile');
+        Route::post('edit','update');  
         Route::post('change-password', 'changePassword');
         Route::delete('delete-account', 'deleteAccount');
   
