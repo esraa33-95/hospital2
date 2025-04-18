@@ -40,7 +40,7 @@ class UserController extends Controller
 
        $user->update($data);
 
-    return $this->responseApi(__(' updated successfully'), $user,200);
+    return $this->responseApi(__(' updated  user successfully'), $user,200);
 
  }
 
@@ -50,7 +50,7 @@ class UserController extends Controller
 {
    $user = auth()->user()->delete();
 
-   return $this->responseApi(__(' deleted successfully'), $user,200);
+   return $this->responseApi(__(' delete account successfully'), $user,200);
       
 }
 

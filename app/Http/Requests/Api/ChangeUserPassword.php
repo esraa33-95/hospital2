@@ -28,14 +28,5 @@ class ChangeUserPassword extends FormRequest
     }
 
 
-    // public function messages(): array
-    // {
-    //     return [
-    //         'current_password.required' => 'الرجاء إدخال كلمة المرور الحالية',
-    //         'current_password.min' => 'كلمة المرور الحالية يجب أن تكون على الأقل 6 أحرف',
-    //         'new_password.required' => 'الرجاء إدخال كلمة المرور الجديدة',
-    //         'new_password.min' => 'كلمة المرور الجديدة يجب أن تكون على الأقل 6 أحرف',
-    //         'new_password.different' => 'كلمة المرور الجديدة يجب أن تكون مختلفة عن الحالية',
-    //     ];
-    // }
+    
 }

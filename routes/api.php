@@ -13,7 +13,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-//register
+//authentication
 Route::controller(AuthController::class)->group(function () {
     Route::post('auth/register', 'register');
     Route::post('auth/login', 'login');
@@ -27,32 +27,9 @@ Route::controller(AuthController::class)->group(function () {
 });
 
   
-//patient
-Route::controller(PatientController::class)->group(function () {
-    Route::get('patient/profile/{id}','show');
-
-    Route::middleware('auth:sanctum')->group(function () {    
-        Route::post('patient/edit/{id}','update'); 
-        Route::post('change-password', 'changePassword');
-        Route::delete('delete-account', 'deleteAccount');
-    });
-  
-});
 
 
 
-
-//admin
-Route::controller(AdminController::class)->group(function () {
-    Route::post('admin/login', 'login');
-    
-    Route::middleware('auth:sanctum','admin')->group(function () {
-        Route::post('admin/logout', 'logout');
-        Route::post('admin/changedata/{id}', 'changedata');
-       
-       
-    });
-});
 
 
 

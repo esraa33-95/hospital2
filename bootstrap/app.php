@@ -20,6 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::namespace('App\Http\Controllers\Api')
             ->prefix('patient')
             ->group(base_path('routes/Api/patient.php')); 
+
+            Route::namespace('App\Http\Controllers\Api')
+            ->prefix('admin')
+            ->group(base_path('routes/Api/admin.php')); 
         },
     )
     ->withMiddleware(function (Middleware $middleware) {

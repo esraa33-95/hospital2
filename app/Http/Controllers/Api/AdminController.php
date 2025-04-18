@@ -7,75 +7,57 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Traits\Common;
-
+use App\Http\Trait\Response;
+use App\Http\Requests\Api\LoginRequest;
+use App\Http\Requests\Api\ChangeUserData;
 
 
 class AdminController extends Controller
 {
     use Common;
+    use Response;
     //login
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $data = $request->validate([
-         'email' => 'required|email|exists:users',
-         'password'=>'required|min:6',
-        ]);
+        $data = $request->validated();
 
        $user = User::where('email',$data['email'])->first();
 
-       if(!$user || !Hash::check($data['password'],$user->password))
+       if(!$user || !Hash::check($data['password'],$user->password ) )
        {
-
-        return response([
-            'msg'=>'invaild data',
-          ]);
-
-        
+        return $this->responseApi(__('invalid mail or password'));
        }
+
+       $Otp = $user->otps()
+        ->where('is_verified', true)
+        ->latest()
+        ->first();
+
+    if (!$Otp) {
+        return $this->responseApi(__('Please verify your email first'), 403);
+    }
        $token = $user->createToken('auth_token')->plainTextToken;
 
-       return response()->json([
-      'user' => $user,
-      'token' => $token,
-      'msg'=>'you are logging succesfully',
-       ]);
-       
+       return $this->responseApi(__('login successfully'),$token);
+   
     }
 
     //logout
     public function logout()
     {
         $user = auth()->user();
+      
+        $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
     
-        if ($user) {
-            
-            $user->currentAccessToken()->delete();
-    
-            return response()->json([
-                'status' => true,
-                'message' => 'admin logged out successfully',
-                'data' => [],
-            ]);
-        }
-    
-        return response()->json([
-            'status' => false,
-            'message' => 'No authenticated admin found',
-            'data' => [],
-        ], 401);
+      return $this->responseApi(__('admin logout successfully from all devices'),200);
+        
     }
 
 //change data
 
-public function changedata(Request $request,$id)
+public function changedata(ChangeUserData $request)
 {
-  $data = $request->validate([
-      'name'=>'required|string',
-      'email' => 'required|email|unique:users,email,' . $id,
-      'mobile' => [ 'required', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,mobile,' . $id ],
-      'image'=>'nullable|mimes:png,jpg,jpeg',
-      'password' => 'nullable|min:6',
-]);
+  $data = $request->validated();
 
 if ($request->hasFile('image'))
 {
@@ -84,15 +66,11 @@ if ($request->hasFile('image'))
 
 $data['password']= bcrypt($data['password']);
 
-$user = User::findOrFail($id);
+$user = User::first();
+
 $user->update($data);
 
-return response()->json([
-    'status' => 200,
-    'data'=>$user,
-    'msg' => 'Data updated successfully',
-]);
-
+return $this->responseApi(__('admin change data succesfully'),$user,200);
 
 }
 
