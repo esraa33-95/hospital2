@@ -10,12 +10,15 @@ use App\Traits\Common;
 use App\Http\Trait\Response;
 use App\Http\Requests\Api\LoginRequest;
 use App\Http\Requests\Api\ChangeUserData;
-
+use App\Http\Requests\UpdateAdminRequest;
+use App\Http\Resources\AdminResource;
+use App\Http\Resources\UserResource;
 
 class AdminController extends Controller
 {
     use Common;
     use Response;
+
     //login
     public function login(LoginRequest $request)
     {
@@ -47,13 +50,13 @@ class AdminController extends Controller
     {
         $user = auth()->user();
       
-        $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
+        $user->tokens()->delete();
     
       return $this->responseApi(__('admin logout successfully from all devices'),200);
         
     }
 
-//change data
+//change data for users
 
 public function changedata(ChangeUserData $request)
 {
@@ -64,16 +67,35 @@ if ($request->hasFile('image'))
    $data['image'] = $this->uploadFile($request->file('image'), 'assests/images'); 
 }
 
-$data['password']= bcrypt($data['password']);
+$data['password']= Hash::make($data['password']);
 
-$user = User::first();
+$user = auth()->user();
 
 $user->update($data);
 
-return $this->responseApi(__('admin change data succesfully'),$user,200);
+return new UserResource($user);
 
 }
 
+//update data of admin
+public function update(UpdateAdminRequest $request)
+{
+  $data = $request->validated();
+
+  $data['password']= Hash::make($data['password']);
+
+  $user = auth()->user();
+
+  if ($user->role !== 'admin') 
+  {
+    return $this->responseApi(__('unauthorized action'),401);
+  }
+
+  $user->update($data);
+
+  return new AdminResource($user);
+
+}
 
 
 

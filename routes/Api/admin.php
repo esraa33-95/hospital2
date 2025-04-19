@@ -13,6 +13,7 @@ Route::controller(AdminController::class)->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', 'logout');
         Route::post('changedata', 'changedata');
+        Route::post('update', 'update');
            
     });
 });

@@ -15,10 +15,9 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     use Common;
-  use Response;
+    use Response;
 
-    //show profile using token
-
+    //show profile 
     public function userprofile(Request $request)
     {
        $user = $request->user()->load('department');
@@ -36,11 +35,11 @@ class UserController extends Controller
            $data['image'] = $this->uploadFile($request->file('image'), 'assests/images'); 
         }
 
-       $user = User::first();
+       $user = auth()->user();
 
        $user->update($data);
 
-    return $this->responseApi(__(' updated  user successfully'), $user,200);
+    return new UserResource($user);
 
  }
 
@@ -49,8 +48,8 @@ class UserController extends Controller
  public function deleteAccount(Request $request)
 {
    $user = auth()->user()->delete();
-
-   return $this->responseApi(__(' delete account successfully'), $user,200);
+   return $this->responseApi(__('account delete successufully'));
+ 
       
 }
 
@@ -60,8 +59,7 @@ public function changePassword(ChangeUserPassword $request)
     $request->validated();
   
     $user = $request->user();
-
-    
+  
     if (!Hash::check($request->current_password, $user->password)) {
         return $this->responseApi(__('Current password is incorrect'));
     }
@@ -70,11 +68,10 @@ public function changePassword(ChangeUserPassword $request)
         return $this->responseApi(__('New password must be different from the current password'));
     }
     
-
     $user->password = bcrypt($request->new_password);
     $user->save();
 
-    return $this->responseApi(__('Password changed successfully'), 200);
+    return new UserResource($user);
 }
 
 
