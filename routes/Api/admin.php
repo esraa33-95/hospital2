@@ -14,6 +14,6 @@ Route::controller(AdminController::class)->group(function () {
         Route::post('logout', 'logout');
         Route::post('changedata', 'changedata');
         Route::post('update', 'update');
-           
+        Route::post('departments', 'departments');  
     });
 });

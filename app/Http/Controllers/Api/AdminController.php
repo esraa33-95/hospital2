@@ -12,7 +12,9 @@ use App\Http\Requests\Api\LoginRequest;
 use App\Http\Requests\Api\ChangeUserData;
 use App\Http\Requests\UpdateAdminRequest;
 use App\Http\Resources\AdminResource;
+use App\Http\Resources\DepartmentResource;
 use App\Http\Resources\UserResource;
+use App\Models\Department;
 
 class AdminController extends Controller
 {
@@ -97,6 +99,19 @@ public function update(UpdateAdminRequest $request)
 
 }
 
+public function departments()
+{
+    $user = auth()->user();
+
+    if ($user->role !== 'admin')
+     {
+      return $this->responseApi(__('unauthorized action'),401);
+    }
+
+    $departments = Department::get();
+
+   return  DepartmentResource::collection($departments);
+}
 
 
 }
