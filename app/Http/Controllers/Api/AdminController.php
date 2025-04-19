@@ -11,7 +11,6 @@ use App\Http\Trait\Response;
 use App\Http\Requests\Api\LoginRequest;
 use App\Http\Requests\Api\ChangeUserData;
 use App\Http\Requests\Api\UpdateAdminRequest;
-use App\Http\Resources\AdminResource;
 use App\Http\Resources\DepartmentResource;
 use App\Http\Resources\UserResource;
 use App\Models\Department;
@@ -20,43 +19,6 @@ class AdminController extends Controller
 {
     use Common;
     use Response;
-
-    //login
-    public function login(LoginRequest $request)
-    {
-        $data = $request->validated();
-
-       $user = User::where('email',$data['email'])->first();
-
-       if(!$user || !Hash::check($data['password'],$user->password ) )
-       {
-        return $this->responseApi(__('invalid mail or password'));
-       }
-
-       $Otp = $user->otps()
-        ->where('is_verified', true)
-        ->latest()
-        ->first();
-
-    if (!$Otp) {
-        return $this->responseApi(__('Please verify your email first'), 403);
-    }
-       $token = $user->createToken('auth_token')->plainTextToken;
-
-       return $this->responseApi(__('login successfully'),$token);
-   
-    }
-
-    //logout
-    public function logout()
-    {
-        $user = auth()->user();
-      
-        $user->tokens()->delete();
-    
-      return $this->responseApi(__('admin logout successfully from all devices'),200);
-        
-    }
 
 //change data for users
 
@@ -95,10 +57,11 @@ public function update(UpdateAdminRequest $request)
 
   $user->update($data);
 
-  return new AdminResource($user);
+  return new UserResource($user);
 
 }
 
+//show all departments
 public function departments()
 {
     $user = auth()->user();

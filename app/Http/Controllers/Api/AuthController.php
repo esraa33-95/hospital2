@@ -18,6 +18,7 @@ use App\Http\Requests\Api\RegisterRequest;
 use App\Http\Requests\Api\VerifyEmailOtp;
 use App\Http\Requests\Api\LoginRequest;
 use App\Http\Requests\Api\ForgetPassword;
+use App\Http\Resources\UserResource;
 
 class AuthController extends Controller
 {
@@ -67,7 +68,7 @@ class AuthController extends Controller
     }
        $token = $user->createToken('auth_token')->plainTextToken;
 
-       return $this->responseApi(__('login successfully'),$token);
+       return $this->responseApi(__('login successfully'),$token,200);
    
     }
 
@@ -76,9 +77,9 @@ class AuthController extends Controller
     {
         $user = auth()->user();
       
-        $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
+        $user->tokens()->delete();
     
-      return $this->responseApi(__('user logout successfully from all devices'),200);
+      return $this->responseApi(__('user logout successfully from all devices'),$user,200);
         
     }
     
@@ -89,8 +90,9 @@ class AuthController extends Controller
       
     $user = User::where('email', $request->email)->first();
 
-    if (!$user) {
-        return response()->json(['message' => 'User not found'], 404);
+    if (!$user) 
+    {
+        return $this->responseApi(__('User not found'),404);
     }
 
     event(new UserRegistered($user));
@@ -104,6 +106,7 @@ class AuthController extends Controller
 public function verifyEmailOtp(VerifyEmailOtp $request)
 {
     $request->validated();
+
     $user = User::where('email', $request->email)->first();
 
     $otp = $user->otps()

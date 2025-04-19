@@ -8,10 +8,8 @@ use App\Http\Controllers\Api\AdminController;
 
 
 Route::controller(AdminController::class)->group(function () {
-    Route::post('login', 'login');
-    
+   
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('logout', 'logout');
         Route::post('changedata', 'changedata');
         Route::post('update', 'update');
         Route::post('departments', 'departments');  
