@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -22,9 +22,10 @@ class UpdateAdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-        'email' => 'nullable|email',
-        'password' => 'nullable|min:6',
-        
+           
+                'email' => 'nullable|email',
+                'password' => 'nullable|min:6',
+             
         ];
     }
 }

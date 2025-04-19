@@ -10,7 +10,7 @@ use App\Traits\Common;
 use App\Http\Trait\Response;
 use App\Http\Requests\Api\LoginRequest;
 use App\Http\Requests\Api\ChangeUserData;
-use App\Http\Requests\UpdateAdminRequest;
+use App\Http\Requests\Api\UpdateAdminRequest;
 use App\Http\Resources\AdminResource;
 use App\Http\Resources\DepartmentResource;
 use App\Http\Resources\UserResource;
