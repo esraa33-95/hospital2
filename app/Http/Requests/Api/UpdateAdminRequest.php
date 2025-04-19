@@ -24,8 +24,7 @@ class UpdateAdminRequest extends FormRequest
         return [
            
                 'email' => 'nullable|email',
-                'password' => 'nullable|min:6',
-             
+                'password' => 'nullable|min:6',    
         ];
     }
 }
