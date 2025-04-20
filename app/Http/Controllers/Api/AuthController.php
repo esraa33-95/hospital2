@@ -55,7 +55,6 @@ class AuthController extends Controller
        if(!$user || !Hash::check($data['password'],$user->password ) )
        {
         return $this->responseApi(__('invalid mail or password'));
- 
        }
 
        $Otp = $user->otps()
@@ -63,7 +62,8 @@ class AuthController extends Controller
         ->latest()
         ->first();
 
-    if (!$Otp) {
+    if (!$Otp) 
+    {
         return $this->responseApi(__('Please verify your email first'), 403);
     }
        $token = $user->createToken('auth_token')->plainTextToken;
@@ -115,7 +115,8 @@ public function verifyEmailOtp(VerifyEmailOtp $request)
         ->latest()
         ->first();
 
-    if (!$otp) {
+    if (!$otp)
+     {
         return $this->responseApi(__('invalid otp'),422);
     }
 

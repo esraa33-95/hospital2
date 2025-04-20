@@ -27,7 +27,6 @@ class UpdateUserData extends FormRequest
         'mobile' => 'nullable', 'regex:/^01[0125][0-9]{8}$/',
         'image'=>'nullable|mimes:png,jpg,jpeg',
         'password'=>'nullable|min:6',
-        'role'=>'nullable|string|min:3',
         'department_id'=>'nullable|exists:departments,id',
         ];
     }

@@ -21,15 +21,8 @@ class UserResource extends JsonResource
             'mobile' => $this->mobile,
             'password'=>$this->password,
             'image' => $this->image,
-            'role' => $this->role,
+            
         ];
-
-        if ($this->role === 'doctor') {
-            $data['department'] = [
-                'id' => ($this->department)->id,
-                'name' => ($this->department)->name,
-            ];
-        }
 
         return $data;
     }

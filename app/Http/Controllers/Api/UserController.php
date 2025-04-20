@@ -16,6 +16,8 @@ class UserController extends Controller
     use Common;
     use Response;
 
+
+
     //show profile 
     public function userprofile(Request $request)
     {
