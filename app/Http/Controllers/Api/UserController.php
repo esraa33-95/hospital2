@@ -8,7 +8,6 @@ use App\Http\Requests\Api\UpdateUserData;
 use App\Http\Resources\UserResource;
 use App\Http\Trait\Response;
 use Illuminate\Http\Request;
-use App\Models\user;
 use App\Traits\Common;
 use Illuminate\Support\Facades\Hash;
 

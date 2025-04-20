@@ -26,7 +26,6 @@ public function __construct()
      */
     public function handle(UserRegistered $event): void
 {
-    
     $otpCode = Otp::generateCode();
 
     Otp::create([
