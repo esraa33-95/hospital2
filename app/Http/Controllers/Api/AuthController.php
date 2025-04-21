@@ -37,9 +37,21 @@ class AuthController extends Controller
         
         $data['password'] = Hash::make($data['password']);
 
+        $email = $data['email'];
+
+    if (str_ends_with($email, '@admin.com')) {
+        $data['role'] = 'admin';
+
+    } elseif (str_contains($email, 'doctor')) {
+        $data['role'] = 'doctor';
+
+    } else {
+        $data['role'] = 'patient';
+    }
+
        $user = User::create($data);
 
-       event(new UserRegistered($user));
+     event(new UserRegistered($user));
 
     return $this->responseApi(__('registered successfully'),$user,201);
     }

@@ -14,5 +14,6 @@ Route::controller(AdminController::class)->group(function () {
         Route::post('update', 'update');
         Route::post('departments', 'departments');  
         Route::post('assign-role/{id}', 'assignRole');
+        Route::post('create/departments', 'createdepartments');
     });
 });
