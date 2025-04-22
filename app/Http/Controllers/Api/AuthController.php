@@ -18,7 +18,7 @@ use App\Http\Requests\Api\RegisterRequest;
 use App\Http\Requests\Api\VerifyEmailOtp;
 use App\Http\Requests\Api\LoginRequest;
 use App\Http\Requests\Api\ForgetPassword;
-use App\Http\Resources\UserResource;
+
 
 class AuthController extends Controller
 {

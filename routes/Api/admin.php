@@ -8,12 +8,12 @@ use App\Http\Controllers\Api\AdminController;
 
 
 Route::controller(AdminController::class)->group(function () {
-   
+           Route::post('create/departments', 'createdepartments');
+
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('changedata', 'changedata');
         Route::post('update', 'update');
         Route::post('departments', 'departments');  
         Route::post('assign-role/{id}', 'assignRole');
-        Route::post('create/departments', 'createdepartments');
     });
 });

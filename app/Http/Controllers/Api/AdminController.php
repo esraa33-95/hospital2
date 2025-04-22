@@ -48,11 +48,6 @@ public function update(UpdateAdminRequest $request)
 
   $user = auth()->user();
 
-  if ($user->role !== 'admin') 
-  {
-    return $this->responseApi(__('unauthorized action'),401);
-  }
-
   $user->update($data);
 
   return new UserResource($user);
@@ -74,13 +69,6 @@ return  $this->responseApi(__('create department succefully'),$department,200);
 //show all departments
 public function departments()
 {
-    $user = auth()->user();
-
-    if ($user->role !== 'admin')
-     {
-      return $this->responseApi(__('unauthorized action'),401);
-    }
-
     $departments = Department::get();
 
    return  DepartmentResource::collection($departments);
