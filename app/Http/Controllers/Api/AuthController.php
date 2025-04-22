@@ -37,17 +37,6 @@ class AuthController extends Controller
         
         $data['password'] = Hash::make($data['password']);
 
-        $email = $data['email'];
-
-    if (str_ends_with($email, '@admin.com')) {
-        $data['role'] = 'admin';
-
-    } elseif (str_contains($email, 'doctor')) {
-        $data['role'] = 'doctor';
-
-    } else {
-        $data['role'] = 'patient';
-    }
 
        $user = User::create($data);
 
@@ -69,12 +58,9 @@ class AuthController extends Controller
         return $this->responseApi(__('invalid mail or password'));
        }
 
-       $Otp = $user->otps()
-        ->where('is_verified', true)
-        ->latest()
-        ->first();
+       $user = User::where(['is_verified'=>1])->first();
 
-    if (!$Otp) 
+    if (!$user) 
     {
         return $this->responseApi(__('Please verify your email first'), 403);
     }
@@ -122,19 +108,19 @@ public function verifyEmailOtp(VerifyEmailOtp $request)
     $user = User::where('email', $request->email)->first();
 
     $otp = $user->otps()
-        ->where('otp', $request->otp)
-        ->where('expires_at', '>=', now())
-        ->latest()
-        ->first();
+    ->where('otp', $request->otp)
+    ->where('expires_at','>=',now())
+    ->latest()
+    ->first();
 
-    if (!$otp)
-     {
-        return $this->responseApi(__('invalid otp'),422);
+    if(!$otp)
+    {
+        return $this->responseApi(__('invalid otp'),400);   
     }
 
-    $otp->update(['is_verified'=>true]);
-    $user->update(['email_verified_at' => now()]);
-
+    $user->update(['is_verified'=>true]);
+    $otp->delete();
+  
     if ($request->filled('password')) {
         $request->validate([
             'password' => 'required|min:6|confirmed',

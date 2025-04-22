@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('image');
             $table->string('password');
             $table->timestamp('email_verified_at')->nullable();
+            $table->boolean('is_verified')->default(false);
             $table->foreignId('department_id')->constrained()->onDelete('cascade');
             $table->softDeletes();
             $table->rememberToken();
