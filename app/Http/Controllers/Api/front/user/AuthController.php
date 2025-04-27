@@ -7,9 +7,7 @@ use Illuminate\Http\Request;
 use App\Traits\Common;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Trait\Response;
 use App\Events\UserRegistered;
-use App\Http\Requests\Api\front\user\ForgetPassword;
 use App\Http\Requests\Api\front\user\LoginRequest;
 use App\Http\Requests\Api\front\user\RegisterRequest;
 use App\Http\Requests\Api\front\user\ResetPassword;
@@ -18,13 +16,15 @@ use App\Http\Requests\Api\front\user\VerifyEmailOtp;
 use App\Http\Resources\UserResource;
 use App\Mail\EmailOtpMail;
 use App\Models\Otp;
+use App\Traits\Response;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
-    use Response;
+
     use Common;
+    use Response;
 
    //register
     public function register(RegisterRequest $request)

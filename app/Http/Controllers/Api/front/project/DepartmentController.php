@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\front\project\CreateDepartment;
 use App\Http\Requests\Api\front\project\UpdateDepartment;
 use App\Http\Resources\DepartmentResource;
-use App\Http\Trait\Response;
 use App\Models\Department;
+use App\Traits\Response;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -15,7 +15,7 @@ class DepartmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    use Response;
+  use Response;
     /**
      * Display a listing of the resource.
      */
@@ -61,7 +61,7 @@ class DepartmentController extends Controller
             return  $this->responseApi(__('no department found'),404); 
         }
     
-        return  $this->responseApi(__('create department succefully'),$department,200);
+        return  $this->responseApi(__('show department succefully'),$department,200);
     }
 
 

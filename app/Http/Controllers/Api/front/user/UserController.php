@@ -6,10 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\front\User\ChangePassword;
 use App\Http\Requests\Api\front\User\updateUser;
 use App\Http\Resources\UserResource;
-use App\Http\Trait\Response;
-use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\Common;
+use App\Traits\Response;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller

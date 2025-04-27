@@ -8,10 +8,10 @@ use App\Http\Requests\Api\admin\Updatebyname;
 use App\Http\Requests\Api\front\user\LoginRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\Common;
-use App\Http\Trait\Response;
 use App\Http\Resources\AdminResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Traits\Response;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
