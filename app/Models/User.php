@@ -31,6 +31,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
        'is_verified',
        'department_id',
+       'user_type',
     ];
 
     /**
@@ -66,4 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
       return $this->belongsTo(Department::class);
     }
+
+  
+
 }

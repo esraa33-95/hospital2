@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api;
+namespace App\Http\Requests\Api\front\user;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterRequest extends FormRequest
+class SendOtp extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,12 +22,8 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=>'required|string|max:255|min:3',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed',
-            'image' =>'required|mimes:png,jpg,jpeg',
-            'mobile' => ['required', 'regex:/^01[0125][0-9]{8}$/','unique:users,mobile'],
-            'department_id' => 'required|exists:departments,id',
+            'email' => 'required|email|exists:users',
+            'usage'=>'required|in:verify,forget',
         ];
     }
 }

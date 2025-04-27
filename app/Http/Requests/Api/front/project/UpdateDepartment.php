@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api;
+namespace App\Http\Requests\Api\front\project;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class VerifyEmailOtp extends FormRequest
+class UpdateDepartment extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,7 @@ class VerifyEmailOtp extends FormRequest
     public function rules(): array
     {
         return [
-        'email' => 'required|email|exists:users,email',
-        'otp' => 'required|digits:4',
+            'name'=>'nullable|string|max:255',
         ];
     }
 }

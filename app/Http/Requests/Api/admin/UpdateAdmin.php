@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api;
+namespace App\Http\Requests\Api\admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ChangeUserData extends FormRequest
+class UpdateAdmin extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,12 +21,13 @@ class ChangeUserData extends FormRequest
      */
     public function rules(): array
     {
+            $user = auth()->id();
+
         return [
-      'name'=>'nullable|string|min:3|max:255',
-      'email' => 'nullable|email',
-      'mobile' => [ 'nullable', 'regex:/^01[0125][0-9]{8}$/'],
-      'image'=>'nullable|mimes:png,jpg,jpeg|max:2048',
-      'password' => 'nullable|min:6',
-     ];
+           
+                'email' => 'nullable|email|unique:users,email,' . $user,
+                'password' => 'nullable|min:6',    
+        ];
+        
     }
 }

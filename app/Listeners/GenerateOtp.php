@@ -32,6 +32,7 @@ public function __construct()
         'user_id' => $event->user->id,
         'otp' => $otpCode,
         'expires_at' => now()->addMinutes(3),
+        
     ]);
     
     Mail::to($event->user->email)->send(new EmailOtpMail($otpCode));

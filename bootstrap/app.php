@@ -13,29 +13,22 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         then: function () {
 
-            Route::namespace('App\Http\Controllers\Api')
-            ->prefix('doctor')
-            ->group(base_path('routes/Api/doctor.php'));
+            Route::prefix('doctor')
+            ->group(base_path('routes/Api/front/user/doctor.php'));
 
-            Route::namespace('App\Http\Controllers\Api')
-            ->prefix('patient')
-            ->group(base_path('routes/Api/patient.php')); 
+            Route::prefix('patient')
+            ->group(base_path('routes/Api/front/user/patient.php')); 
 
-            Route::namespace('App\Http\Controllers\Api')
-            ->prefix('admin')
-            ->group(base_path('routes/Api/admin.php')); 
+            Route::prefix('admin')
+               ->group(base_path('routes/Api/admin/admin.php')); 
+
+            Route::namespace('App\Http\Controllers\Api\front\project')
+            ->prefix('department')
+            ->group(base_path('routes/Api/front/project/department.php')); 
         },
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->api(prepend: [
-            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-        ]);
-
-        $middleware->alias([
-            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
-            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
-            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
-        ]);
+        
 
        
     })

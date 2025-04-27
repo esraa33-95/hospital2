@@ -12,6 +12,7 @@ class Otp extends Model
         'otp',
         'expires_at',
         'is_verified',
+        'usage',
     ];
     public function user()
     {

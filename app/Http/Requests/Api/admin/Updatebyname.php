@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api;
+namespace App\Http\Requests\Api\admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateAdminRequest extends FormRequest
+class Updatebyname extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,7 @@ class UpdateAdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-           
-                'email' => 'nullable|email',
-                'password' => 'nullable|min:6',    
+            'name'=>'nullable|string|max:255',
         ];
     }
 }

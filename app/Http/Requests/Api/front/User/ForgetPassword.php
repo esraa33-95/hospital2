@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api;
+namespace App\Http\Requests\Api\front\user;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -22,7 +22,10 @@ class ForgetPassword extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|exists:users'
+            'email' => 'required|email|exists:users',
+            'otp'=> 'required|digits:4',
+            'usage'=> 'required|in:forget',
+            'new_password'=>'required|min:6|confirmed',
         ];
     }
 }
