@@ -48,7 +48,6 @@ class DepartmentController extends Controller
     
     }
 
-
     /**
      * Display the specified resource.
      */
@@ -84,6 +83,7 @@ class DepartmentController extends Controller
         return  $this->responseApi(__('update department succesfully'),$department,200);
     }
 
+
     /**
      * Remove the specified resource from storage.
      */
@@ -105,4 +105,6 @@ class DepartmentController extends Controller
         
         return  $this->responseApi(__('department delete successfully'),200); 
     }
+
+    
 }

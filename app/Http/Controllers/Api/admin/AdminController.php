@@ -46,7 +46,7 @@ class AdminController extends Controller
    
     }
 
-//logout if param from user
+//logout 
     public function logout(Request $request)
     {
         $logout = $request->input('logout');
@@ -103,20 +103,15 @@ public function doctors(Request $request)
         if ($user) 
         {
             return new UserResource($user); 
-        }
-
-       
+        }  
         return $this->responseApi(__('No user found with  name, email, or phone'), 404);
     }
-
-   
+ 
     $users = User::where('user_type', 2)
         ->paginate(10); 
 
     return UserResource::collection($users); 
 }
-
-
 
 //show all patients
 public function patients(Request $request)
