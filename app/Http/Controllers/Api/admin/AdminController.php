@@ -100,7 +100,8 @@ public function doctors(Request $request)
             })
             ->first(); 
 
-        if ($user) {
+        if ($user) 
+        {
             return new UserResource($user); 
         }
 
@@ -132,7 +133,8 @@ public function patients(Request $request)
             })
             ->first(); 
 
-        if ($user) {
+        if ($user)
+         {
             return new UserResource($user); 
         }
  
@@ -151,11 +153,15 @@ public function updatename(Updatebyname $request, $id)
 {
     $request->validated();
 
-    $user = User::whereIn('user_type',[2,3])
-    ->where('id', $id)
-    ->find($id);
+    $types = $request->input('user_type');
 
-    if (!$user) {
+    $user = User::where('user_type',$types)
+    ->where('id', $id)
+    ->whereNull('deleted_at')
+    ->first();
+
+    if (!$user) 
+    {
         return $this->responseApi(__('user not found'), 404);
     }
 
@@ -170,10 +176,14 @@ public function updatename(Updatebyname $request, $id)
 //delete users
 public function delete(Request $request)
 {
-    $types = [2, 3];
+    if (auth()->user()->user_type !== 1)
+     {
+        return $this->responseApi(__('Unauthorized,only admin delete users.'), 403);
+    }
 
-     $user = User::whereIn('user_type',$types)
-     ->first();
+    $types = $request->input('user_type');
+
+     $user = User::where('user_type',$types)->first();
 
      if(!$user)
      {

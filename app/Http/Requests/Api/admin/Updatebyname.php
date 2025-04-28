@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class Updatebyname extends FormRequest
 {
@@ -23,6 +24,7 @@ class Updatebyname extends FormRequest
     {
         return [
             'name'=>'nullable|string|max:255',
+            'user_type' => ['nullable', Rule::in(array_keys(config('user_types.types')))],
         ];
     }
 }
