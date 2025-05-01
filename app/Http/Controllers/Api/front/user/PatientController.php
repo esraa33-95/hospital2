@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Api\front\user;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Http\Requests\Api\admin\Updatebyname;
 use App\Http\Requests\Api\front\user\RegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Traits\Common;
 use App\Traits\Response;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class DoctorController extends Controller
+class PatientController extends Controller
 {
     use Response;
     use Common;
@@ -25,7 +25,7 @@ class DoctorController extends Controller
         $take = $request->input('take'); 
         $skip = $request->input('skip'); 
     
-        $query = User::where('user_type', 2);
+        $query = User::where('user_type', 3);
 
     if ($search) {
         $query->where(function ($q) use ($search) {
@@ -40,7 +40,7 @@ class DoctorController extends Controller
     $users = $query->skip($skip)->take($take)->get();
 
     if ($users->isEmpty()) {
-        return $this->responseApi(__('No doctors found.'), 404);
+        return $this->responseApi(__('No patients found.'), 404);
     }
 
     return response()->json([
@@ -67,7 +67,7 @@ class DoctorController extends Controller
 
          $user =  User::create($data);
 
-         return $this->responseApi(__('doctor created successfully'),$user,200);
+         return $this->responseApi(__('patient created successfully'),$user,200);
     }
 
     
@@ -78,12 +78,12 @@ class DoctorController extends Controller
     public function show(string $id)
     {
        $user = User::where('id',$id)
-      ->where('user_type',2)
+      ->where('user_type',3)
        ->first();
 
        if (!$user)
         {
-        return $this->responseApi(__('doctor not found'), 404);
+        return $this->responseApi(__('patient not found'), 404);
        }
 
         return new UserResource($user);
@@ -91,7 +91,6 @@ class DoctorController extends Controller
     }
 
     
-
     /**
      * Update the specified resource in storage.
      */
@@ -108,33 +107,33 @@ class DoctorController extends Controller
 
     if (!$user) 
     {
-        return $this->responseApi(__('doctor not found'), 404);
+        return $this->responseApi(__('patient not found'), 404);
     }
 
     $user->name = $request->name;
     $user->save();
 
-    return $this->responseApi(__('doctor name updated successfully'), 200);
+    return $this->responseApi(__('patient name updated successfully'), 200);
 }
 
     /**
      * Remove the specified resource from storage.
      */
     public function delete(Request $request,$id)
-{
-    $types = $request->input('user_type');
-
-     $user = User::where('user_type',$types)
-     ->where('id', $id)
-     ->first();
-
-     if(!$user)
-     {
-        return $this->responseApi(__('no doctor is find'), 404);
-     }
-
-   $user->delete();
-
-     return $this->responseApi(__('doctor delete successfully'),200);
-}
+    {
+        $types = $request->input('user_type');
+    
+         $user = User::where('user_type',$types)
+         ->where('id', $id)
+         ->first();
+    
+         if(!$user)
+         {
+            return $this->responseApi(__('no patient is find'), 404);
+         }
+    
+       $user->delete();
+    
+         return $this->responseApi(__('patient delete successfully'),200);
+    }
 }

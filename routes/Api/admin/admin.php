@@ -13,9 +13,6 @@ Route::controller(AdminController::class)->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('update', 'update');
         Route::post('logout', 'logout');
-        Route::get('doctors', 'doctors');
-        Route::get('patients', 'patients');
-        Route::post('updatename/{id}', 'updatename');
-        Route::delete('delete','delete');
+        
     });
 });

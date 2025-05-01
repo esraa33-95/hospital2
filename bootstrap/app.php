@@ -22,6 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::prefix('admin')
                ->group(base_path('routes/Api/admin/admin.php')); 
 
+               Route::prefix('list')
+               ->group(base_path('routes/Api/list.php')); 
+
             Route::namespace('App\Http\Controllers\Api\admin')
             ->prefix('department')
             ->group(base_path('routes/Api/admin/department.php')); 
