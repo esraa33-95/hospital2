@@ -27,5 +27,11 @@ class listController extends Controller
         return $this->responseApi(__('all doctors'),$doctors,200); 
     }
 
+    public function patients()
+    {
+        $patients = User::where('user_type',3)->get();
+
+        return $this->responseApi(__('all patients'),$patients,200); 
+    }
     
 }
