@@ -24,8 +24,7 @@ class AdminController extends Controller
         $data = $request->validated();
 
        $user = User::where('email',$data['email'])
-       ->where('is_verified',true)
-       ->whereNull('deleted_at')
+       ->where('user_type', 1)
        ->first();
 
        if(!$user || !Hash::check($data['password'],$user->password ) )
@@ -33,12 +32,9 @@ class AdminController extends Controller
         return $this->responseApi(__('invalid credintials'));
        }
 
-    if ($user->is_verified !== 1) 
-    {
-        return $this->responseApi(__('Please verify your email first'));
+       if (!$user->is_verified) {
+        return response()->json(['message' => 'Please verify your email first.'], 403);
     }
-
-       $user->tokens()->delete();
 
        $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -47,22 +43,13 @@ class AdminController extends Controller
     }
 
 //logout 
-    public function logout(Request $request)
-    {
-        $logout = $request->input('logout');
+public function logout(Request $request)
+{
+    $request->user()->currentAccessToken()->delete();
 
-        if($logout == 0 || !$logout)
-        {
-            $request->user()->currentAccessToken()->delete();
-            return $this->responseApi(__('user logout successfully from current device'));
-        }
-        elseif($logout == 1)
-        {
-            $request->user()->tokens()->delete();
-            return $this->responseApi(__('user logout successfully from all devices'));
-        }  
-            
-    }
+return response()->json(['message' => 'Admin logged out']); 
+        
+}
 
 //update data of admin
 public function update(UpdateAdmin $request)

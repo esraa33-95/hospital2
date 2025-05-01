@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Api\front\project;
+namespace App\Http\Controllers\Api\admin;
 
-use App\Http\Controllers\Api\front\project\DepartmentController;
+use App\Http\Controllers\Api\admin\DepartmentController;
 use Illuminate\Support\Facades\Route;
 
 

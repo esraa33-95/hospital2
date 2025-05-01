@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\front\project;
+namespace App\Http\Controllers\Api\admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\front\project\CreateDepartment;
-use App\Http\Requests\Api\front\project\UpdateDepartment;
+use App\Http\Requests\Api\admin\CreateDepartment;
+use App\Http\Requests\Api\admin\UpdateDepartment;
 use App\Http\Resources\DepartmentResource;
 use App\Models\Department;
 use App\Traits\Response;
@@ -71,7 +71,7 @@ class DepartmentController extends Controller
     {
         $data = $request->validated();
 
-        $department = Department::findOrfail($id);
+        $department = Department::find($id);
 
         if(!$department)
         {
@@ -108,3 +108,4 @@ class DepartmentController extends Controller
 
     
 }
+

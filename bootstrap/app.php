@@ -22,9 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::prefix('admin')
                ->group(base_path('routes/Api/admin/admin.php')); 
 
-            Route::namespace('App\Http\Controllers\Api\front\project')
+            Route::namespace('App\Http\Controllers\Api\admin')
             ->prefix('department')
-            ->group(base_path('routes/Api/front/project/department.php')); 
+            ->group(base_path('routes/Api/admin/department.php')); 
         },
     )
     ->withMiddleware(function (Middleware $middleware) {

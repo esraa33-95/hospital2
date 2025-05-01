@@ -18,7 +18,7 @@ use App\Mail\EmailOtpMail;
 use App\Models\Otp;
 use App\Traits\Response;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Mail;
+
 
 class AuthController extends Controller
 {
@@ -48,47 +48,52 @@ class AuthController extends Controller
 
 
 //login
-    public function login(LoginRequest $request)
-    {
-        $data = $request->validated();
+public function login(LoginRequest $request)
+{
+    $data = $request->validated();
 
-       $user = User::where('email',$data['email'])
-       ->whereNull('deleted_at')
-       ->first();
+   $user = User::withTrashed()
+  ->where('email',$data['email'])
+   ->first();
 
-       if(!$user || !Hash::check($data['password'],$user->password ))
-       {
-        return $this->responseApi(__('invalid credintials'));
-       }
+   if(!$user || !Hash::check($data['password'],$user->password ))
+   {
+    return $this->responseApi(__('invalid credintials'));
+   }
 
-    if ($user->is_verified !== 1) 
-    {
-        return $this->responseApi(__('Please verify your email first'));
-    }
-       $token = $user->createToken('auth_token')->plainTextToken;
+   if ($user->trashed()) 
+   {
+    return $this->responseApi(__('This account has been deleted.'));
+   }
 
-       return $this->responseApi(__('login successfully'),$token,200,new UserResource($user));
-   
-    }
+if ($user->is_verified !== 1) 
+{
+    return $this->responseApi(__('Please verify your email first'));
+}
+   $token = $user->createToken('auth_token')->plainTextToken;
+
+   return $this->responseApi(__('login successfully'),$token,200,new UserResource($user));
+
+}
 
 //logout if param from user
-    public function logout(Request $request)
-    {
-        $logout = $request->input('logout');
+public function logout(Request $request)
+{
+    $logout = $request->input('logout');
 
-        if($logout == 0 || !$logout)
-        {
-            $request->user()->currentAccessToken()->delete();
-            return $this->responseApi(__('user logout successfully from current device'));
-        }
-        elseif($logout == 1)
-        {
-            $request->user()->tokens()->delete();
-            return $this->responseApi(__('user logout successfully from all devices'));
-        }  
-    
-         
+    if($logout == 'one device' || !$logout)
+    {
+        $request->user()->currentAccessToken()->delete();
+        return $this->responseApi(__('user logout successfully from current device'));
     }
+    elseif($logout == 'all devices')
+    {
+        $request->user()->tokens()->delete();
+        return $this->responseApi(__('user logout successfully from all devices'));
+    }  
+    return $this->responseApi(__('invalid logout '), null, 400);
+      
+}
     //send otp
     public function sendotp(SendOtp $request)
     {
@@ -98,10 +103,7 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        Otp::where('user_id',$user->id)
-        ->where('usage',$usage)
-        ->delete();
-
+       
         $otp = rand(1000, 9999);
 
         $otp = Otp::create([
@@ -111,7 +113,6 @@ class AuthController extends Controller
            'usage'=>$usage,
         ]);
 
-        Mail::to('esraahedia33@gmail.com')->send(new EmailOtpMail($otp,$usage));
         
         return $this->responseApi(__(' code Otp sent to mail '), 200);
     }
@@ -137,9 +138,8 @@ public function verifyEmailOtp(VerifyEmailOtp $request)
     if($request->usage === 'verify')
     {
         $user->update(['is_verified'=>true]);
-        $user->save();
-
-        $otp->delete();
+       
+        $otp->update(['usage' => 'verify']);
      
          return $this->responseApi(__('Otp verified successfully'), 200);
     }
@@ -173,18 +173,18 @@ public function resetpassword(ResetPassword $request)
     }
 
     if (!Hash::check($request->old_password, $user->password)) {
-        return $this->responseApi(__('Current password is incorrect'), 422);
+        return $this->responseApi(__('old password is incorrect'), 422);
     }
 
     if (Hash::check($request->new_password, $user->password)) {
         return $this->responseApi(__('current password is same as new password can you continue'));
     }
 
-    $user->password = bcrypt($request->new_password);
+    $user->password = Hash::make($request->new_password);
     $user->save();
 
-    $user->tokens()->delete();
-  
+    $otp->update(['usage' => 'forget']);
+
     return $this->responseApi(__('Password changed successfully'), 200);
 }
 
