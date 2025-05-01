@@ -125,6 +125,14 @@ public function verifyEmailOtp(VerifyEmailOtp $request)
 
     $user = User::where('email', $request->email)->first();
 
+    if (!$user) {
+        return $this->responseApi(__('Account does not exist'), 404);
+    }
+
+    if ($user->trashed()) {
+        return $this->responseApi(__('Account has been deleted'), 403);
+    }
+
     $otp = $user->otps()
     ->where('otp', $request->otp)
     ->where('expires_at','>=',now())
@@ -135,6 +143,7 @@ public function verifyEmailOtp(VerifyEmailOtp $request)
         return $this->responseApi(__('invalid otp'),400);   
     }
 
+   
     if($request->usage === 'verify')
     {
         $user->update(['is_verified'=>true]);
@@ -161,6 +170,10 @@ public function resetpassword(ResetPassword $request)
 
     if (!$user) {
         return $this->responseApi(__('User not found'), 404);
+    }
+
+    if ($user->trashed()) {
+        return $this->responseApi(__('Account has been deleted'), 403);
     }
 
     $otp = Otp::where('user_id', $user->id)

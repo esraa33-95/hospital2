@@ -37,14 +37,14 @@ class PatientController extends Controller
 
     $total = $query->count(); 
 
-    $users = $query->skip($skip)->take($take)->get();
+    $patient = $query->skip($skip)->take($take)->get();
 
-    if ($users->isEmpty()) {
+    if ($patient->isEmpty()) {
         return $this->responseApi(__('No patients found.'), 404);
     }
 
     return response()->json([
-        'data' => UserResource::collection($users),
+        'data' => UserResource::collection($patient),
         'total' => $total,
         'skip' => $skip,
         'take' => $take,
@@ -65,9 +65,9 @@ class PatientController extends Controller
 
         $data['password'] = Hash::make($data['password']);  
 
-         $user =  User::create($data);
+         $patient =  User::create($data);
 
-         return $this->responseApi(__('patient created successfully'),$user,200);
+         return $this->responseApi(__('patient created successfully'),$patient,200);
     }
 
     
@@ -77,16 +77,16 @@ class PatientController extends Controller
      */
     public function show(string $id)
     {
-       $user = User::where('id',$id)
+       $patient = User::where('id',$id)
       ->where('user_type',3)
        ->first();
 
-       if (!$user)
+       if (!$patient)
         {
         return $this->responseApi(__('patient not found'), 404);
        }
 
-        return new UserResource($user);
+        return new UserResource($patient);
 
     }
 
@@ -100,18 +100,18 @@ class PatientController extends Controller
 
     $types = $request->input('user_type');
 
-    $user = User::where('user_type',$types)
+    $patient = User::where('user_type',$types)
     ->where('id', $id)
     ->whereNull('deleted_at')
     ->first();
 
-    if (!$user) 
+    if (!$patient) 
     {
         return $this->responseApi(__('patient not found'), 404);
     }
 
-    $user->name = $request->name;
-    $user->save();
+    $patient->name = $request->name;
+    $patient->save();
 
     return $this->responseApi(__('patient name updated successfully'), 200);
 }
@@ -123,16 +123,16 @@ class PatientController extends Controller
     {
         $types = $request->input('user_type');
     
-         $user = User::where('user_type',$types)
+         $patient = User::where('user_type',$types)
          ->where('id', $id)
          ->first();
     
-         if(!$user)
+         if(!$patient)
          {
             return $this->responseApi(__('no patient is find'), 404);
          }
     
-       $user->delete();
+       $patient->delete();
     
          return $this->responseApi(__('patient delete successfully'),200);
     }

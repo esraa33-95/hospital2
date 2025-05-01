@@ -37,14 +37,14 @@ class DoctorController extends Controller
 
     $total = $query->count(); 
 
-    $users = $query->skip($skip)->take($take)->get();
+    $doctor = $query->skip($skip)->take($take)->get();
 
-    if ($users->isEmpty()) {
+    if ($doctor->isEmpty()) {
         return $this->responseApi(__('No doctors found.'), 404);
     }
 
     return response()->json([
-        'data' => UserResource::collection($users),
+        'data' => UserResource::collection($doctor),
         'total' => $total,
         'skip' => $skip,
         'take' => $take,
@@ -65,9 +65,9 @@ class DoctorController extends Controller
 
         $data['password'] = Hash::make($data['password']);  
 
-         $user =  User::create($data);
+         $doctor =  User::create($data);
 
-         return $this->responseApi(__('doctor created successfully'),$user,200);
+         return $this->responseApi(__('doctor created successfully'),$doctor,200);
     }
 
     
@@ -77,16 +77,16 @@ class DoctorController extends Controller
      */
     public function show(string $id)
     {
-       $user = User::where('id',$id)
+       $doctor = User::where('id',$id)
       ->where('user_type',2)
        ->first();
 
-       if (!$user)
+       if (!$doctor)
         {
         return $this->responseApi(__('doctor not found'), 404);
        }
 
-        return new UserResource($user);
+        return new UserResource($doctor);
 
     }
 
@@ -101,18 +101,18 @@ class DoctorController extends Controller
 
     $types = $request->input('user_type');
 
-    $user = User::where('user_type',$types)
+    $doctor = User::where('user_type',$types)
     ->where('id', $id)
     ->whereNull('deleted_at')
     ->first();
 
-    if (!$user) 
+    if (!$doctor) 
     {
         return $this->responseApi(__('doctor not found'), 404);
     }
 
-    $user->name = $request->name;
-    $user->save();
+    $doctor->name = $request->name;
+    $doctor->save();
 
     return $this->responseApi(__('doctor name updated successfully'), 200);
 }
@@ -124,16 +124,16 @@ class DoctorController extends Controller
 {
     $types = $request->input('user_type');
 
-     $user = User::where('user_type',$types)
+     $doctor = User::where('user_type',$types)
      ->where('id', $id)
      ->first();
 
-     if(!$user)
+     if(!$doctor)
      {
         return $this->responseApi(__('no doctor is find'), 404);
      }
 
-   $user->delete();
+   $doctor->delete();
 
      return $this->responseApi(__('doctor delete successfully'),200);
 }
