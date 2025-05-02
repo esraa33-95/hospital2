@@ -129,10 +129,10 @@ class DoctorController extends Controller
     public function delete(Request $request)
     {
         $userType = $request->input('user_type');
-        $email = $request->input('email'); 
+        $name = $request->input('name'); 
     
         $doctor = User::where('user_type', $userType)
-                       ->where('email', $email)
+                       ->where('name', $name)
                        ->first();
     
         if (!$doctor) 
