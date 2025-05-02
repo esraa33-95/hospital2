@@ -100,15 +100,16 @@ class PatientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function updatename(Updatebyname $request, $id)
+    public function updatename(Updatebyname $request)
 {
     $request->validated();
 
     $types = $request->input('user_type');
+    $email = $request->input('email');
 
     $patient = User::where('user_type',$types)
-    ->where('id', $id)
     ->whereNull('deleted_at')
+    ->where('email', $email)
     ->first();
 
     if (!$patient) 
@@ -116,7 +117,7 @@ class PatientController extends Controller
         return $this->responseApi(__('patient not found'), 404);
     }
 
-    $patient->name = $request->name;
+    $patient->name = $request->input('name');
     $patient->save();
 
     return $this->responseApi(__('patient name updated successfully'), 200);
@@ -125,21 +126,25 @@ class PatientController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function delete(Request $request,$id)
+    public function delete(Request $request)
+{
+    $userType = $request->input('user_type');
+
+    $email = $request->input('email');
+
+    $patient = User::where('user_type', $userType)
+                   ->where('email', $email)
+                   ->first();
+
+    if (!$patient) 
     {
-        $types = $request->input('user_type');
-    
-         $patient = User::where('user_type',$types)
-         ->where('id', $id)
-         ->first();
-    
-         if(!$patient)
-         {
-            return $this->responseApi(__('no patient is find'), 404);
-         }
-    
-       $patient->delete();
-    
-         return $this->responseApi(__('patient delete successfully'),200);
+        return $this->responseApi(__('No patient found'), 404);
     }
+
+    $patient->delete();
+
+    return $this->responseApi(__('Patient deleted successfully'), 200);
+}
+
+    
 }

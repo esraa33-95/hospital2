@@ -12,8 +12,8 @@ Route::controller(PatientController::class)->middleware('auth:sanctum')->group(f
         Route::get('index', 'index');
         Route::post('create', 'create');
         Route::get('show/{id}', 'show');
-        Route::post('updatename/{id}', 'updatename');
-        Route::delete('delete/{id}','delete');
+        Route::post('updatename', 'updatename');
+        Route::delete('delete','delete');
         
 });
     

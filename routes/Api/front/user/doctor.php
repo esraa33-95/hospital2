@@ -12,7 +12,7 @@ Route::controller(DoctorController::class)->middleware('auth:sanctum')->group(fu
         Route::get('index', 'index');
         Route::post('create', 'create');
         Route::get('show/{id}', 'show');
-        Route::post('updatename/{id}', 'updatename');
-        Route::delete('delete/{id}','delete');
+        Route::post('updatename', 'updatename');
+        Route::delete('delete','delete');
         
 });

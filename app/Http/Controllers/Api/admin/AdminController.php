@@ -32,9 +32,10 @@ class AdminController extends Controller
         return $this->responseApi(__('invalid credintials'));
        }
 
-       if (!$user->is_verified) {
+       if (!$user->is_verified) 
+       {
         return response()->json(['message' => 'Please verify your email first.'], 403);
-    }
+       }
 
        $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -47,7 +48,7 @@ public function logout(Request $request)
 {
     $request->user()->currentAccessToken()->delete();
 
-return response()->json(['message' => 'Admin logged out']); 
+    return response()->json(['message' => 'Admin logged out']); 
         
 }
 

@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api\admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\UserType;
 
 class Updatebyname extends FormRequest
 {
@@ -23,8 +24,9 @@ class Updatebyname extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=>'nullable|string|max:255',
-            'user_type' => ['nullable', Rule::in(array_keys(config('user_types.types')))],
+           'user_type' => ['required', 'integer', Rule::in(array_column(UserType::cases(), 'value'))],
+            'email' => 'required|email|exists:users,email',
+            'name' => 'required|string|max:255',
         ];
     }
 }
