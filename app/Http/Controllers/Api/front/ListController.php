@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\front;
 
 use App\Http\Controllers\Controller;
-use App\Models\Department;
-use App\Models\User;
+use Illuminate\Http\Request;
 use App\Traits\Response;
 
-
-class listController extends Controller
+class ListController extends Controller
 {
     use Response;
 
@@ -33,5 +31,4 @@ class listController extends Controller
 
         return $this->responseApi(__('all patients'),$patients,200); 
     }
-    
 }
