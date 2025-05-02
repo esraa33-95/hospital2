@@ -27,7 +27,8 @@ class PatientController extends Controller
     
         $query = User::where('user_type', 3);
 
-    if ($search) {
+    if ($search) 
+    {
         $query->where(function ($q) use ($search) {
             $q->where('name', 'like', '%' . $search . '%')
               ->orWhere('email', 'like', '%' . $search . '%')
@@ -37,7 +38,12 @@ class PatientController extends Controller
 
     $total = $query->count(); 
 
-    $patient = $query->skip($skip)->take($take)->get();
+    if (!is_null($skip)) 
+        {
+            $query->skip($skip);
+        }
+
+    $patient = $query->take($take)->get();
 
     if ($patient->isEmpty()) {
         return $this->responseApi(__('No patients found.'), 404);

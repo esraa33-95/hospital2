@@ -37,7 +37,12 @@ class DoctorController extends Controller
 
     $total = $query->count(); 
 
-    $doctor = $query->skip($skip)->take($take)->get();
+       if (!is_null($skip)) 
+        {
+            $query->skip($skip);
+        }
+
+    $doctor = $query->take($take)->get();
 
     if ($doctor->isEmpty()) {
         return $this->responseApi(__('No doctors found.'), 404);
@@ -78,7 +83,7 @@ class DoctorController extends Controller
     public function show(string $id)
     {
        $doctor = User::where('id',$id)
-      ->where('user_type',2)
+       ->where('user_type',2)
        ->first();
 
        if (!$doctor)
