@@ -102,8 +102,7 @@ public function logout(Request $request)
         $usage = $request->input('usage');
 
         $user = User::where('email', $request->email)->first();
-
-       
+ 
         $otp = rand(1000, 9999);
 
         $otp = Otp::create([
@@ -112,8 +111,7 @@ public function logout(Request $request)
            'epires_at'=> Carbon::now()->addMinutes(3),
            'usage'=>$usage,
         ]);
-
-        
+  
         return $this->responseApi(__(' code Otp sent to mail '), 200);
     }
 
@@ -143,17 +141,12 @@ public function verifyEmailOtp(VerifyEmailOtp $request)
         return $this->responseApi(__('invalid otp'),400);   
     }
 
-   
-    if($request->usage === 'verify')
-    {
         $user->update(['is_verified'=>true]);
        
         $otp->update(['usage' => 'verify']);
      
-         return $this->responseApi(__('Otp verified successfully'), 200);
-    }
-
-    return $this->responseApi(__('not allowed to use this type'), 403); 
+     return $this->responseApi(__('Otp verified successfully'), 200);
+     
 }
 
 
@@ -162,17 +155,15 @@ public function resetpassword(ResetPassword $request)
 {
     $request->validated();
 
-    if ($request->usage !== 'forget') {
-        return $this->responseApi(__('not allowed to use this otp'), 403);
-    }
-
     $user = User::where('email', $request->email)->first();
 
-    if (!$user) {
+    if (!$user) 
+    {
         return $this->responseApi(__('User not found'), 404);
     }
 
-    if ($user->trashed()) {
+    if ($user->trashed()) 
+    {
         return $this->responseApi(__('Account has been deleted'), 403);
     }
 
@@ -181,7 +172,8 @@ public function resetpassword(ResetPassword $request)
         ->where('expires_at', '>=', now())
         ->first();
 
-    if (!$otp) {
+    if (!$otp) 
+    {
         return $this->responseApi(__('Invalid or expired OTP'), 404);
     }
 
