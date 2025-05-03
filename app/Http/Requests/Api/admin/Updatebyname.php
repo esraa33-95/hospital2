@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Api\admin;
 
+use App\Enum\UserType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\UserType;
+
 
 class Updatebyname extends FormRequest
 {

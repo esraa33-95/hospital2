@@ -21,11 +21,10 @@ class UpdateAdmin extends FormRequest
      */
     public function rules(): array
     {
-            $user = auth()->id();
-
+       
         return [
            
-                'email' => 'nullable|email|unique:users,email,' . $user,
+                'email' => 'nullable|email|unique:users,email',
                 'password' => 'nullable|min:6',    
         ];
         
