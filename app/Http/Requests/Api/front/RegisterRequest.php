@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Api\front;
 
-use App\UserType;
+use App\Enum\UserType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -31,7 +31,7 @@ class RegisterRequest extends FormRequest
             'mobile' => ['required', 'regex:/^01[0125][0-9]{8}$/','unique:users,mobile'],
             'department_id' => [
                  Rule::requiredIf(function () {
-                 return request('user_type') == UserType::doctor->value;
+                 return request('user_type') == UserType::Doctor->value;
                }),'nullable','exists:departments,id'
                                ],
            'user_type' => ['required', 'integer', Rule::in(array_column(UserType::cases(), 'value'))],
