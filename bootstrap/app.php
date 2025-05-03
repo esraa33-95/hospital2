@@ -14,10 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         then: function () {
 
             Route::prefix('doctor')
-            ->group(base_path('routes/Api/front/user/doctor.php'));
+            ->group(base_path('routes/Api/front/doctor.php'));
 
             Route::prefix('patient')
-            ->group(base_path('routes/Api/front/user/patient.php')); 
+            ->group(base_path('routes/Api/front/patient.php')); 
 
             Route::prefix('admin')
                ->group(base_path('routes/Api/admin/admin.php')); 
@@ -25,8 +25,8 @@ return Application::configure(basePath: dirname(__DIR__))
                Route::prefix('list')
                ->group(base_path('routes/Api/front/list.php')); 
 
-            Route::namespace('App\Http\Controllers\Api\admin')
-            ->prefix('department')
+           
+            Route::prefix('department')
             ->group(base_path('routes/Api/admin/department.php')); 
         },
     )

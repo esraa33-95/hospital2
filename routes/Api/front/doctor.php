@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\front\user;
+namespace App\Http\Controllers\Api\front;
 
 use Illuminate\Support\Facades\Route;
 

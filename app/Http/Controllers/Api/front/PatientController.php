@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\front\user;
+namespace App\Http\Controllers\Api\front;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
