@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api\front\user;
+namespace App\Http\Requests\Api\front;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ResetPassword extends FormRequest
+class ChangePassword extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,8 @@ class ResetPassword extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|exists:users',
-            'otp'=>'required',
-            'old_password'=> 'required|min:6',
-            'new_password'=>'required|min:6|confirmed',
+            'current_password' => 'required|min:6',
+            'new_password' => 'required|min:6|different:current_password',    
         ];
     }
 }

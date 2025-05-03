@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\front;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Traits\Response;
 use App\Models\Department;
 use App\Models\User;

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api\front\user;
+namespace App\Http\Requests\Api\front;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SendOtp extends FormRequest
+class ResetPassword extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,9 @@ class SendOtp extends FormRequest
     {
         return [
             'email' => 'required|email|exists:users',
-            'usage'=>'required|in:verify,forget',
+            'otp'=>'required',
+            'old_password'=> 'required|min:6',
+            'new_password'=>'required|min:6|confirmed',
         ];
     }
 }

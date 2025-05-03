@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\front;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\admin\Updatebyname;
-use App\Http\Requests\Api\front\user\RegisterRequest;
+use App\Http\Requests\Api\front\RegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Traits\Common;

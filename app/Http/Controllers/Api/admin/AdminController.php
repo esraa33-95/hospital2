@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\admin\UpdateAdmin;
-use App\Http\Requests\Api\admin\Updatebyname;
-use App\Http\Requests\Api\front\user\LoginRequest;
+use App\Http\Requests\Api\front\LoginRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\Common;
 use App\Http\Resources\AdminResource;
