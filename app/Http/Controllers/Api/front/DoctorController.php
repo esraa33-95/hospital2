@@ -104,14 +104,19 @@ class DoctorController extends Controller
     $types = $request->input('user_type');
     $email = $request->input('email');
 
-    $doctor = User::where('user_type',$types)
-    ->whereNull('deleted_at')
+    $doctor = User::withTrashed()
+    ->where('user_type',$types)
     ->where('email', $email)
     ->first();
 
     if (!$doctor) 
     {
         return $this->responseApi(__('doctor not found'), 404);
+    }
+
+    if ($doctor->trashed()) 
+    {
+        return $this->responseApi(__('Account has been deleted'), 403);
     }
 
    $doctor->name = $request->input('name');

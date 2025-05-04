@@ -108,14 +108,19 @@ class PatientController extends Controller
     $types = $request->input('user_type');
     $email = $request->input('email');
 
-    $patient = User::where('user_type',$types)
-    ->whereNull('deleted_at')
+    $patient = User::withTrashed()
+    ->where('user_type',$types)
     ->where('email', $email)
     ->first();
 
     if (!$patient) 
     {
         return $this->responseApi(__('patient not found'), 404);
+    }
+
+    if ($patient->trashed()) 
+    {
+        return $this->responseApi(__('patient has been deleted'), 403);
     }
 
     $patient->name = $request->input('name');
