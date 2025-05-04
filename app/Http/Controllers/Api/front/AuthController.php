@@ -90,7 +90,6 @@ public function logout(Request $request)
         $request->user()->tokens()->delete();
         return $this->responseApi(__('user logout successfully from all devices'));
     }  
-    return $this->responseApi(__('invalid logout '), null, 400);
       
 }
     //send otp
@@ -101,13 +100,18 @@ public function logout(Request $request)
         $usage = $request->input('usage');
 
         $user = User::where('email', $request->email)->first();
+
+        if (!$user) 
+        {
+            return $this->responseApi(__('User not found.'), 404);
+        }
  
         $otp = rand(1000, 9999);
 
         $otp = Otp::create([
            'user_id'=> $user->id,
            'otp'=> $otp,
-           'epires_at'=> Carbon::now()->addMinutes(3),
+           'expires_at'=> Carbon::now()->addMinutes(3),
            'usage'=>$usage,
         ]);
   
@@ -120,9 +124,12 @@ public function verifyEmailOtp(VerifyEmailOtp $request)
 {
    $request->validated();
 
-    $user = User::where('email', $request->email)->first();
+    $user = User::withTrashed()
+   ->where('email', $request->email)
+   ->first();
 
-    if (!$user) {
+    if (!$user) 
+    {
         return $this->responseApi(__('Account does not exist'), 404);
     }
 
@@ -186,7 +193,10 @@ public function resetpassword(ResetPassword $request)
         return $this->responseApi(__('current password is same as new password can you continue'));
     }
 
-    $user->password = Hash::make($request->new_password);
+    $user->update([
+        'password' => Hash::make($request->new_password),
+    ]);
+
     $user->save();
 
     $otp->update(['usage' => 'forget']);
