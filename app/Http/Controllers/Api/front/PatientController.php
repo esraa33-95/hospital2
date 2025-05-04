@@ -45,7 +45,8 @@ class PatientController extends Controller
 
     $patient = $query->take($take)->get();
 
-    if ($patient->isEmpty()) {
+    if ($patient->isEmpty()) 
+    {
         return $this->responseApi(__('No patients found.'), 404);
     }
 

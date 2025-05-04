@@ -75,8 +75,7 @@ class DoctorController extends Controller
          return $this->responseApi(__('doctor created successfully'),$doctor,200);
     }
 
-    
-
+ 
     /**
      * Display the specified resource.
      */
@@ -94,8 +93,6 @@ class DoctorController extends Controller
         return new UserResource($doctor);
 
     }
-
-    
 
     /**
      * Update the specified resource in storage.

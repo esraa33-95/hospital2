@@ -20,21 +20,32 @@ class DepartmentController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $search = $request->input('search');
-
-        $departments = Department::when($search ,function($q) use ($search){
-        $q->where('name','like','%'.$search.'%');
-        })->paginate(10);
-
-        if($departments->isEmpty())
-        {
-            return  $this->responseApi(__('no department found'),404);
-
-        }
-
-       return  DepartmentResource::collection($departments);
+{
+    $search = $request->input('search');
+    $take = $request->input('take'); 
+    $skip = $request->input('skip');  
+ 
+    $query = Department::query();
+  
+    if ($search) {
+        $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', '%' . $search . '%');
+        });
     }
+
+    if (!is_null($skip)) {
+        $query->skip($skip);
+    }
+
+    $departments = $query->take($take)->get();
+
+    if ($departments->isEmpty()) {
+        return $this->responseApi(__('no department found'), 404);
+    }
+
+    return DepartmentResource::collection($departments);
+}
+
 
     
 //create

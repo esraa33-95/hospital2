@@ -154,7 +154,9 @@ public function resetpassword(ResetPassword $request)
 {
     $request->validated();
 
-    $user = User::where('email', $request->email)->first();
+    $user = User::withTrashed()
+    ->where('email', $request->email)
+    ->first();
 
     if (!$user) 
     {
