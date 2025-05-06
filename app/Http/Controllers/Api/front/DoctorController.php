@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\front;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\admin\Updatebyname;
+
+use App\Http\Requests\Api\front\deleteUser;
 use App\Http\Requests\Api\front\RegisterRequest;
+use App\Http\Requests\Api\front\Updatebyname;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Traits\Common;
@@ -101,12 +103,11 @@ class DoctorController extends Controller
 {
     $request->validated();
 
-    $types = $request->input('user_type');
-    $email = $request->input('email');
+    $uuid = $request->input('uuid');
 
     $doctor = User::withTrashed()
-    ->where('user_type',$types)
-    ->where('email', $email)
+    ->where('uuid', $uuid)
+    ->where('user_type',2)
     ->first();
 
     if (!$doctor) 
@@ -128,19 +129,21 @@ class DoctorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function delete(Request $request)
+    public function delete(deleteUser $request)
     {
-        $userType = $request->input('user_type');
-        $name = $request->input('name'); 
+        $request->validated();
+
+        $uuid = $request->input('uuid');
     
-        $doctor = User::where('user_type', $userType)
-                       ->where('name', $name)
-                       ->first();
+        $doctor = User::where('user_type',2)
+        ->where('uuid', $uuid)
+        ->first();
     
         if (!$doctor) 
         {
             return $this->responseApi(__('No doctor found'), 404);
         }
+
     
         $doctor->delete();
     

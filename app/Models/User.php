@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -67,7 +68,16 @@ class User extends Authenticatable implements MustVerifyEmail
     {
       return $this->belongsTo(Department::class);
     }
-
   
+
+protected static function boot()
+{
+    parent::boot();
+
+    static::creating(function ($model) {
+        $model->uuid = (string) Str::uuid();
+    });
+}
+
 
 }

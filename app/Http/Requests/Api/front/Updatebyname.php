@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api\admin;
+namespace App\Http\Requests\Api\front;
 
-use App\Enum\UserType;
+
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
+
 
 
 class Updatebyname extends FormRequest
@@ -25,8 +25,7 @@ class Updatebyname extends FormRequest
     public function rules(): array
     {
         return [
-           'user_type' => ['required', 'integer', Rule::in(array_column(UserType::cases(), 'value'))],
-            'email' => 'required|email|exists:users,email',
+            'uuid' => 'required|uuid|exists:users,uuid',
             'name' => 'required|string|max:255',
         ];
     }

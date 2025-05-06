@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreignId('department_id')->nullable()->constrained()->onDelete('cascade');
             $table->integer('user_type');
             $table->softDeletes();
+            $table->uuid('uuid')->unique()->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
