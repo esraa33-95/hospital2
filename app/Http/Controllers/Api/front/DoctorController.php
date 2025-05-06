@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Api\front;
 
 use App\Http\Controllers\Controller;
-
-use App\Http\Requests\Api\front\deleteUser;
 use App\Http\Requests\Api\front\RegisterRequest;
 use App\Http\Requests\Api\front\Updatebyname;
 use App\Http\Resources\UserResource;
@@ -129,9 +127,8 @@ class DoctorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function delete(deleteUser $request)
+    public function delete(Request $request)
     {
-        $request->validated();
 
         $uuid = $request->input('uuid');
     
