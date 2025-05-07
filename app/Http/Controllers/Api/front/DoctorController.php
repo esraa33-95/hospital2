@@ -23,7 +23,7 @@ class DoctorController extends Controller
     {
         $search = $request->input('search', null);
         $take = $request->input('take'); 
-        $skip = $request->input('skip'); 
+        $skip = $request->input('skip',0); 
     
         $query = User::where('user_type', 2);
 
@@ -37,14 +37,15 @@ class DoctorController extends Controller
 
     $total = $query->count(); 
 
-       if (!is_null($skip)) 
+       if ($skip) 
         {
             $query->skip($skip);
         }
 
     $doctor = $query->take($take)->get();
 
-    if ($doctor->isEmpty()) {
+    if ($doctor->isEmpty()) 
+    {
         return $this->responseApi(__('No doctors found.'), 404);
     }
 
@@ -118,7 +119,12 @@ class DoctorController extends Controller
         return $this->responseApi(__('Account has been deleted'), 403);
     }
 
-   $doctor->name = $request->input('name');
+    if($doctor->name !== $request->input('name'))
+    {
+        $doctor->name = $request->input('name');
+
+    }
+
     $doctor->save();
 
     return $this->responseApi(__('doctor name updated successfully'), 200);

@@ -23,7 +23,7 @@ class DepartmentController extends Controller
 {
     $search = $request->input('search');
     $take = $request->input('take'); 
-    $skip = $request->input('skip');  
+    $skip = $request->input('skip',0);  
  
     $query = Department::query();
   
@@ -33,20 +33,22 @@ class DepartmentController extends Controller
         });
     }
 
-    if (!is_null($skip)) {
+    $total = $query->count(); 
+
+    if ($skip) 
+    {
         $query->skip($skip);
     }
-
+    
     $departments = $query->take($take)->get();
 
-    if ($departments->isEmpty()) {
-        return $this->responseApi(__('no department found'), 404);
-    }
-
-    return DepartmentResource::collection($departments);
+    return response()->json([
+        'data' => DepartmentResource::collection($departments),
+        'total' => $total,
+        'skip' => $skip,
+        'take' => $take,
+    ]);
 }
-
-
     
 //create
     public function create(CreateDepartment $request)
@@ -66,11 +68,6 @@ class DepartmentController extends Controller
     {
         $department = Department::findOrFail($id);
 
-        if(!$department)
-        {
-            return  $this->responseApi(__('no department found'),404); 
-        }
-    
         return  $this->responseApi(__('show department succefully'),$department,200);
     }
 

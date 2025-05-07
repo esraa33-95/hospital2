@@ -31,11 +31,6 @@ class AdminController extends Controller
         return $this->responseApi(__('invalid credintials'));
        }
 
-       if (!$user->is_verified) 
-       {
-        return response()->json(['message' => 'Please verify your email first.'], 403);
-       }
-
        $token = $user->createToken('auth_token')->plainTextToken;
 
        return $this->responseApi(__('login successfully'),$token,200,new UserResource($user));
@@ -47,17 +42,13 @@ public function logout(Request $request)
 {
     $request->user()->currentAccessToken()->delete();
 
-    return response()->json(['message' => 'Admin logged out']); 
+    return $this->responseApi(__('admin logout successfully'),200);
         
 }
 
 //update data of admin
 public function update(UpdateAdmin $request)
 {
-  $data = $request->validated();
-
-  $data['password']= Hash::make($data['password']);
-
   $user = auth()->user();
 
   if($user->user_type !== 1)
@@ -65,7 +56,19 @@ public function update(UpdateAdmin $request)
     return $this->responseApi(__('admin only can be change his data')); 
 }
 
-  $user->update($data);
+$data = $request->validated();
+
+if (!empty($data['email']) && $data['email']  !== $user->email) 
+{
+  $user->email = $data['email'];
+}
+
+if (!empty($data['password'])  && !Hash::check($data['password'] , $user->password))
+ {
+  $user->password = Hash::make($data['password']);
+ }
+
+  $user->save();
 
   return new AdminResource($user);
 

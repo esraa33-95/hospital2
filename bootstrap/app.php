@@ -13,21 +13,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         then: function () {
 
-            Route::prefix('doctor')
-            ->group(base_path('routes/Api/front/doctor.php'));
+            require base_path('routes/Api/doctor/doctor.php');
 
-            Route::prefix('patient')
-            ->group(base_path('routes/Api/front/patient.php')); 
+            require base_path('routes/Api/patient/patient.php'); 
 
-            Route::prefix('admin')
-               ->group(base_path('routes/Api/admin/admin.php')); 
+            require base_path('routes/Api/admin/admin.php');
 
-               Route::prefix('list')
-               ->group(base_path('routes/Api/front/list.php')); 
-
-           
-            Route::prefix('department')
-            ->group(base_path('routes/Api/admin/department.php')); 
+            require base_path('routes/Api/front/list.php'); 
+    
         },
     )
     ->withMiddleware(function (Middleware $middleware) {

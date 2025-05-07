@@ -24,8 +24,8 @@ class UpdateAdmin extends FormRequest
        
         return [
            
-                'email' => 'nullable|email|unique:users,email',
-                'password' => 'nullable|min:6',    
+              'email' => 'sometimes|email|unique:users,email,' . auth()->id(),
+                'password' => 'sometimes|min:6',    
         ];
         
     }

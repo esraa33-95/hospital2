@@ -24,7 +24,7 @@ class PatientController extends Controller
     {
         $search = $request->input('search', null);
         $take = $request->input('take'); 
-        $skip = $request->input('skip'); 
+        $skip = $request->input('skip',0); 
     
         $query = User::where('user_type', 3);
 
@@ -39,7 +39,7 @@ class PatientController extends Controller
 
     $total = $query->count(); 
 
-    if (!is_null($skip)) 
+    if ($skip ) 
         {
             $query->skip($skip);
         }
@@ -97,8 +97,7 @@ class PatientController extends Controller
         return new UserResource($patient);
 
     }
-
-    
+ 
     /**
      * Update the specified resource in storage.
      */
@@ -123,7 +122,12 @@ class PatientController extends Controller
         return $this->responseApi(__('patient has been deleted'), 403);
     }
 
-    $patient->name = $request->input('name');
+    if($patient->name !== $request->input('name'))
+    {
+        $patient->name = $request->input('name');
+
+    }
+  
     $patient->save();
 
     return $this->responseApi(__('patient name updated successfully'), 200);
