@@ -23,7 +23,7 @@ class updateUser extends FormRequest
     {
         return [
          
-                'name'=>'nullable|string|min:3,max:255',
+                'name'=>'nullable|string|max:255',
                 'email' => 'nullable|email',
                 'mobile' => 'nullable', 'regex:/^01[0125][0-9]{8}$/',
                 'image'=>'nullable|mimes:png,jpg,jpeg',
