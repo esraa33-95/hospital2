@@ -27,14 +27,13 @@ class updateUser extends FormRequest
          
                 'name'=>'nullable|string|max:255',
                 'email' => 'nullable|email',
-                'mobile' => 'nullable','regex:/^01[0125][0-9]{8}$/',
-                'image'=>'nullable|mimes:png,jpg,jpeg|max:2048',
-
+                'mobile'=> 'nullable','regex:/^01[0125][0-9]{8}$/',
+                'image' =>'nullable|mimes:png,jpg,jpeg|max:2048',  
                 'department_id' => [
                      Rule::requiredIf(function () {
                      return request('user_type') == UserType::Doctor->value;
                    }),'nullable','exists:departments,id'],
-
+                   
                  'user_type' => ['nullable', 'integer', Rule::in(array_column(UserType::cases(), 'value'))],       
                 
                 ];

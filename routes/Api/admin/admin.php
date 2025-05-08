@@ -15,13 +15,14 @@ Route::controller(AdminController::class)->prefix('admin')
     Route::post('logout', 'logout');    
 
 Route::controller(DepartmentController::class)->prefix('department')
-    ->middleware('auth:sanctum')->group(function () {
+    ->middleware('auth:sanctum')->group(function () 
+    {
     Route::post('create', 'create');
     Route::get('index/{search?}', 'index');
     Route::get('show/{id}', 'show'); 
     Route::put('update/{id}', 'update');
     Route::delete('delete/{id}', 'destroy');
-});
+    });
 });
 
 

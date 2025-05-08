@@ -53,15 +53,11 @@ class UserController extends Controller
         }
 
         $types = [2,3];
-  
+
        $user = User::withTrashed()
        ->whereIn('user_type', $types)
        ->find(auth()->id());
 
-       if (!$user) 
-       {
-        return $this->responseApi(__('user not found'), 403);
-       }
 
        if ($user->trashed()) 
        {
@@ -85,7 +81,7 @@ class UserController extends Controller
 
        if(isset($data['image']) && $data['image'] === $user->image)
        {
-        return $this->responseApi(__('email is same old image'));
+        return $this->responseApi(__('email is same old email'));
        }
 
        $user->update($data);
@@ -114,7 +110,7 @@ public function changePassword(ChangePassword $request)
 {
     $data = $request->validated(); 
 
-    $user = $request->user();
+    $user = auth()->user();
 
     if (!Hash::check($data['current_password'], $user->password)) 
     {

@@ -149,8 +149,7 @@ class PatientController extends Controller
         {
             return $this->responseApi(__('No patient found'), 404);
         }
-
-    
+ 
         $patient->delete();
     
         return $this->responseApi(__('Patient deleted successfully'), 200);

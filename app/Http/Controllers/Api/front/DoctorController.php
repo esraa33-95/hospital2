@@ -27,9 +27,10 @@ class DoctorController extends Controller
     
         $query = User::where('user_type', 2);
 
-    if ($search) {
+    if ($search) 
+    {
         $query->where(function ($q) use ($search) {
-            $q->where('name', 'like', '%' . $search . '%')
+             $q->where('name', 'like', '%' . $search . '%')
               ->orWhere('email', 'like', '%' . $search . '%')
               ->orWhere('mobile', 'like', '%' . $search . '%');
         });
@@ -76,7 +77,6 @@ class DoctorController extends Controller
          return $this->responseApi(__('doctor created successfully'),$doctor,200);
     }
 
- 
     /**
      * Display the specified resource.
      */
@@ -92,7 +92,6 @@ class DoctorController extends Controller
        }
 
         return new UserResource($doctor);
-
     }
 
     /**
@@ -135,7 +134,6 @@ class DoctorController extends Controller
      */
     public function delete(Request $request)
     {
-
         $uuid = $request->input('uuid');
     
         $doctor = User::where('user_type',2)
