@@ -47,47 +47,45 @@ class UserController extends Controller
     {
         $data = $request->validated();
         
-        $uuid = $request->input('uuid');
-
         if ($request->hasFile('image'))
         {
            $data['image'] = $this->uploadFile($request->file('image'), 'assets/images'); 
         }
 
         $types = [2,3];
-        
+  
        $user = User::withTrashed()
        ->whereIn('user_type', $types)
-       ->where('uuid', $uuid)
-       ->first();
+       ->find(auth()->id());
 
+       if (!$user) 
+       {
+        return $this->responseApi(__('user not found'), 403);
+       }
 
        if ($user->trashed()) 
        {
-           return $this->responseApi(__('Account has been deleted'), 403);
+        return $this->responseApi(__('Account has been deleted'), 403);
        }
 
        if(isset($data['name']) && $user->name === $data['name'])
        {
         return $this->responseApi(__('new user is same old name'));
-        
        }
 
        if(isset($data['email']) && $user->email === $data['email'])
        {
         return $this->responseApi(__('email is same old email'));
-      
        }
 
        if(isset($data['mobile']) && $user->mobile === $data['mobile'])
        {
         return $this->responseApi(__('mobile is same old mobile'));
-      
        }
 
        if(isset($data['image']) && $data['image'] === $user->image)
        {
-        return $this->responseApi(__('email is same old email'));
+        return $this->responseApi(__('email is same old image'));
        }
 
        $user->update($data);
@@ -100,10 +98,16 @@ class UserController extends Controller
  public function deleteAccount(Request $request)
 {
    $user = auth()->user()->delete();
+
+    if (!$user) 
+    {
+        return $this->responseApi(__('User not authenticated'), 401);
+    }
+
    return $this->responseApi(__('account delete successufully'));
- 
       
 }
+
 
 //change password 
 public function changePassword(ChangePassword $request)

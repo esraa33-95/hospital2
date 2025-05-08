@@ -147,7 +147,6 @@ class DoctorController extends Controller
             return $this->responseApi(__('No doctor found'), 404);
         }
 
-    
         $doctor->delete();
     
         return $this->responseApi(__('doctor deleted successfully'), 200);
