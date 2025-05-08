@@ -27,7 +27,7 @@ class RegisterRequest extends FormRequest
             'name'=>'required|string|max:255|min:3',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|confirmed',
-            'image' =>'nullable|mimes:png,jpg,jpeg',
+            'image' =>'nullable|mimes:png,jpg,jpeg|max:2048',
             'mobile' => ['required', 'regex:/^01[0125][0-9]{8}$/','unique:users,mobile'],
             
             'department_id' => [

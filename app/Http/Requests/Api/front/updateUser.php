@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Api\front;
 
+use App\Enum\UserType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class updateUser extends FormRequest
 {
@@ -25,10 +27,15 @@ class updateUser extends FormRequest
          
                 'name'=>'nullable|string|max:255',
                 'email' => 'nullable|email',
-                'mobile' => 'nullable', 'regex:/^01[0125][0-9]{8}$/',
-                'image'=>'nullable|mimes:png,jpg,jpeg',
-                
+                'mobile' => 'nullable','regex:/^01[0125][0-9]{8}$/',
+                'image'=>'nullable|mimes:png,jpg,jpeg|max:2048',
+                'department_id' => [
+                     Rule::requiredIf(function () {
+                     return request('user_type') == UserType::Doctor->value;
+                   }),'nullable','exists:departments,id'],
+
+               'user_type' => ['nullable', 'integer', Rule::in(array_column(UserType::cases(), 'value'))],       
+                 'uuid' => 'required|uuid|exists:users,uuid',
                 ];
-    
     }
 }

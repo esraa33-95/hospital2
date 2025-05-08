@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\front\ChangePassword;
 use App\Http\Requests\Api\front\updateUser;
 use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\Common;
 use App\Traits\Response;
@@ -46,17 +47,52 @@ class UserController extends Controller
     {
         $data = $request->validated();
         
+        $uuid = $request->input('uuid');
+
         if ($request->hasFile('image'))
         {
            $data['image'] = $this->uploadFile($request->file('image'), 'assets/images'); 
         }
 
-       $user = auth()->user();
+        $types = [2,3];
+        
+       $user = User::withTrashed()
+       ->whereIn('user_type', $types)
+       ->where('uuid', $uuid)
+       ->first();
+
+
+       if ($user->trashed()) 
+       {
+           return $this->responseApi(__('Account has been deleted'), 403);
+       }
+
+       if(isset($data['name']) && $user->name === $data['name'])
+       {
+        return $this->responseApi(__('new user is same old name'));
+        
+       }
+
+       if(isset($data['email']) && $user->email === $data['email'])
+       {
+        return $this->responseApi(__('email is same old email'));
+      
+       }
+
+       if(isset($data['mobile']) && $user->mobile === $data['mobile'])
+       {
+        return $this->responseApi(__('mobile is same old mobile'));
+      
+       }
+
+       if(isset($data['image']) && $data['image'] === $user->image)
+       {
+        return $this->responseApi(__('email is same old email'));
+       }
 
        $user->update($data);
 
     return new UserResource($user);
-
  }
 
 //delete account
