@@ -16,6 +16,7 @@ Route::controller(DoctorController::class)->prefix('doctor')
         Route::get('show/{id}', 'show');
         Route::patch('updatename', 'updatename');
         Route::delete('delete','delete');
+        Route::get('filter', 'filterDoctors');
         
         Route::controller(UserController::class)->prefix('profile')
 
@@ -25,6 +26,8 @@ Route::controller(DoctorController::class)->prefix('doctor')
             Route::post('changepassword', 'changePassword');
             Route::post('uploadimage', 'uploadimage');
             Route::delete('deleteaccount', 'deleteAccount');
+            Route::post('rate/{id}', 'rate');
+            
     });   
 
 });

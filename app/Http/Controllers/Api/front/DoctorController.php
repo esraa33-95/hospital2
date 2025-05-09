@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\front;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\front\RegisterRequest;
 use App\Http\Requests\Api\front\Updatebyname;
+use App\Http\Resources\DoctorResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Traits\Common;
@@ -149,5 +150,54 @@ class DoctorController extends Controller
     
         return $this->responseApi(__('doctor deleted successfully'), 200);
     }
+
+//filter doctor
+    public function filterDoctors(Request $request)
+{
+    $take = $request->input('take'); 
+
+    $query = User::where('user_type', 2); 
+    
+    if ($request->filled('name')) {
+        $query->where('name', 'like', '%' . $request->name . '%');
+    }
+
+    if ($request->filled('number_rate')) {
+        $query->where('number_rate', 'like', '%' . $request->number_rate . '%');
+    }
+    
+    if ($request->filled('department')) {
+        $query->whereHas('department', function ($q) use ($request) {
+            $q->where('name', 'like', '%' . $request->department . '%');
+        });
+    }
+
+    if ($request->filled('sort_by')) 
+    {
+        $Sorts = ['department', 'number_rate', 'name'];
+        $sortBy = $request->get('sort_by');
+        $input = $request->get('sort_order', 'high to low');
+
+       $sortOrder = match ($input) {
+        'low to high' => 'asc',
+        'high to low' => 'desc',
+    };
+
+        if (in_array($sortBy, $Sorts) )
+         {
+            $query->orderBy($sortBy, $sortOrder);
+        }
+    }
+
+    $total = $query->count(); 
+
+    $doctors = $query->take($take)->get();
+
+    return response()->json([
+        'data' => DoctorResource::collection($doctors),
+        'total' => $total,
+        'take' => $take,
+    ]);
+}
     
 }
