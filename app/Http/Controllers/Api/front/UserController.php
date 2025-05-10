@@ -48,6 +48,8 @@ class UserController extends Controller
     public function update(updateUser $request)
     {
         $data = $request->validated();
+
+        $uuid = $request->input('uuid');
         
         if ($request->hasFile('image'))
         {
@@ -56,40 +58,21 @@ class UserController extends Controller
 
         $types = [2,3];
 
-       $user = User::withTrashed()
-       ->whereIn('user_type', $types)
-       ->find(auth()->id());
+        $user = User::withTrashed()
+        ->whereIn('user_type', $types)
+        ->where('uuid', $uuid)
+       ->first();
 
-       if ($user->trashed()) 
-       {
+    if (!$user) {
+        return $this->responseApi(__('User not found'), 404);
+    }
+
+    if ($user->trashed()) {
         return $this->responseApi(__('Account has been deleted'), 403);
-       }
+    }
 
-       if(isset($data['name']) && $user->name === $data['name'])
-       {
-       
-        return $this->responseApi(__('new user is same old name'));
-       }
-
-       if(isset($data['email']) && $user->email === $data['email'])
-       {
-        
-        return $this->responseApi(__('email is same old email'));
-       }
-
-       if(isset($data['mobile']) && $user->mobile === $data['mobile'])
-       {
-       
-        return $this->responseApi(__('mobile is same old mobile'));
-       }
-
-       if(isset($data['image']) && $data['image'] === $user->image)
-       {
-     
-        return $this->responseApi(__('image is same old email'));
-       }
-
-       $user->update($data);
+  
+    $user->fill($data)->save();
 
     return new UserResource($user);
  }

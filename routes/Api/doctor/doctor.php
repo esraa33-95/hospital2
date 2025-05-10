@@ -22,7 +22,7 @@ Route::controller(DoctorController::class)->prefix('doctor')
 
         ->middleware('auth:sanctum')->group(function () {
             Route::get('index','userprofile');
-            Route::patch('update','update');  
+            Route::post('update','update');  
             Route::post('changepassword', 'changePassword');
             Route::post('uploadimage', 'uploadimage');
             Route::delete('deleteaccount', 'deleteAccount');
