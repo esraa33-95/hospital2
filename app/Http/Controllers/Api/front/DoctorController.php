@@ -24,7 +24,7 @@ class DoctorController extends Controller
     {
         $search = $request->input('search', null);
         $take = $request->input('take'); 
-        $skip = $request->input('skip',0); 
+        $skip = $request->input('skip'); 
     
         $query = User::where('user_type', 2);
 
@@ -39,24 +39,9 @@ class DoctorController extends Controller
 
     $total = $query->count(); 
 
-       if ($skip) 
-        {
-            $query->skip($skip);
-        }
+    $doctors = $query->skip($skip ?? 0)->take($take ?? 0)->get();
 
-    $doctor = $query->take($take)->get();
-
-    if ($doctor->isEmpty()) 
-    {
-        return $this->responseApi(__('No doctors found.'), 404);
-    }
-
-    return response()->json([
-        'data' => UserResource::collection($doctor),
-        'total' => $total,
-        'skip' => $skip,
-        'take' => $take,
-    ]);
+    return $this->responseApi('',UserResource::collection($doctors),200,['count' => $total]);
     }
 
     /**

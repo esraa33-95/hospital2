@@ -71,7 +71,6 @@ class UserController extends Controller
         return $this->responseApi(__('Account has been deleted'), 403);
     }
 
-  
     $user->fill($data)->save();
 
     return new UserResource($user);

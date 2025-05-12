@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\IsAdmin;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,18 +14,20 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         then: function () {
 
-            require base_path('routes/Api/doctor/doctor.php');
+            require base_path('routes/Api/doctor.php');
 
-            require base_path('routes/Api/patient/patient.php'); 
+            require base_path('routes/Api/patient.php'); 
 
-            require base_path('routes/Api/admin/admin.php');
+            require base_path('routes/Api/admin.php');
 
-            require base_path('routes/Api/front/list.php'); 
-    
+            // require base_path('routes/Api/front/list.php'); 
+
         },
     )
     ->withMiddleware(function (Middleware $middleware) {
-        
+        $middleware->alias([
+        'isadmin' => IsAdmin::class
+    ]);
 
        
     })

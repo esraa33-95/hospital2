@@ -30,24 +30,11 @@ class ListController extends Controller
 
     $total = $query->count(); 
 
-    if ($skip) 
-        {
-            $query->skip($skip);
-        }
-
     $department = $query->take($take)->get();
 
-    if ($department->isEmpty()) 
-    {
-        return $this->responseApi(__('No department found.'), 404);
-    }
+    $department = $query->skip($skip ?? 0)->take($take ?? 0)->get();
 
-    return response()->json([
-        'data' => DepartmentResource::collection($department),
-        'total' => $total,
-        'skip' => $skip,
-        'take' => $take,
-    ]);
+    return $this->responseApi('',DepartmentResource::collection($department),200,['count' => $total]);
 
     }
 
@@ -69,24 +56,10 @@ class ListController extends Controller
     
         $total = $query->count();
 
-        if ($skip) 
-        {
-            $query->skip($skip);
-        }
-    
-        $doctors = $query->skip($skip)->take($take)->get();
-    
-        if ($doctors->isEmpty()) 
-        {
-            return $this->responseApi(__('No doctor found.'), 404);
-        }
-    
-        return response()->json([
-            'data' => UserResource::collection($doctors),
-            'total' => $total,
-            'skip' => $skip,
-            'take' => $take,
-        ]);
+        $doctors = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+
+     return $this->responseApi('',UserResource::collection($doctors),200,['count' => $total]);
+
     }
     
 

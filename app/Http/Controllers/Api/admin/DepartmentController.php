@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\admin\CreateDepartment;
 use App\Http\Requests\Api\admin\UpdateDepartment;
 use App\Http\Resources\DepartmentResource;
+use App\Http\Resources\UserResource;
 use App\Models\Department;
 use App\Traits\Response;
 use Illuminate\Http\Request;
@@ -23,41 +24,39 @@ class DepartmentController extends Controller
 {
     $search = $request->input('search');
     $take = $request->input('take'); 
-    $skip = $request->input('skip',0);  
+    $skip = $request->input('skip');  
  
     $query = Department::query();
-  
-    if ($search) {
+    
+    if ($search)
+     {
         $query->where(function ($q) use ($search) {
             $q->where('name', 'like', '%' . $search . '%');
         });
     }
 
+     if (!$take || $take == 0)
+     {
+        return $this->responseApi('', DepartmentResource::collection([]), 200, ['count' => 0]);
+    }
+
     $total = $query->count(); 
 
-    if ($skip) 
-    {
-        $query->skip($skip);
-    }
+    $departments = $query->skip($skip ?? 0)->take($take)->get();
     
-    $departments = $query->take($take)->get();
 
-    return response()->json([
-        'data' => DepartmentResource::collection($departments),
-        'total' => $total,
-        'skip' => $skip,
-        'take' => $take,
-    ]);
+    return $this->responseApi('',DepartmentResource::collection($departments),200,['count' => $total]);
 }
     
+
 //create
-    public function create(CreateDepartment $request)
+    public function store(CreateDepartment $request)
     {
       $data = $request->validated();
     
     $department = Department::create($data);
     
-    return  $this->responseApi(__('create department succefully'),$department,200);
+    return  $this->responseApi(__('create department succefully'),$department,201);
     
     }
 
@@ -68,9 +67,8 @@ class DepartmentController extends Controller
     {
         $department = Department::findOrFail($id);
 
-        return  $this->responseApi(__('show department succefully'),$department,200);
+        return  $this->responseApi('',$department,200);
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -79,14 +77,11 @@ class DepartmentController extends Controller
     {
         $data = $request->validated();
 
-        $department = Department::find($id);
-
-        if(!$department)
-        {
-            return  $this->responseApi(__('no department found'),404); 
-        }
+        $department = Department::findOrFail($id);
     
-        $department->update($data);
+        $department->update([
+            'name' => $data['name'] ?? $department->name
+        ]);
 
         return  $this->responseApi(__('update department succesfully'),$department,200);
     }
@@ -97,21 +92,16 @@ class DepartmentController extends Controller
      */
     public function destroy(string $id)
     {
-        $department = Department::find($id);
+        $department = Department::findOrFail($id);
 
-        if(!$department)
-        {
-            return  $this->responseApi(__('no department found'),404); 
-        }
-    
         if($department->users()->exists())
         {
-            return  $this->responseApi(__('canot delete this department'),400); 
+            return  $this->responseApi(__('canot delete this department'),403); 
         }
 
         $department->delete();
         
-        return  $this->responseApi(__('department delete successfully'),200); 
+        return  $this->responseApi(__('department delete successfully'),204); 
     }
 
     

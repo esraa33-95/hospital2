@@ -24,7 +24,7 @@ class PatientController extends Controller
     {
         $search = $request->input('search', null);
         $take = $request->input('take'); 
-        $skip = $request->input('skip',0); 
+        $skip = $request->input('skip'); 
     
         $query = User::where('user_type', 3);
 
@@ -39,24 +39,9 @@ class PatientController extends Controller
 
     $total = $query->count(); 
 
-    if ($skip ) 
-        {
-            $query->skip($skip);
-        }
+    $patients = $query->skip($skip ?? 0)->take($take ?? 0)->get();
 
-    $patient = $query->take($take)->get();
-
-    if ($patient->isEmpty()) 
-    {
-        return $this->responseApi(__('No patients found.'), 404);
-    }
-
-    return response()->json([
-        'data' => UserResource::collection($patient),
-        'total' => $total,
-        'skip' => $skip,
-        'take' => $take,
-    ]);
+    return $this->responseApi('',UserResource::collection($patients),200,['count' => $total]);
     }
 
     /**
@@ -93,9 +78,7 @@ class PatientController extends Controller
         {
         return $this->responseApi(__('patient not found'), 404);
        }
-
         return new UserResource($patient);
-
     }
  
     /**
@@ -125,7 +108,6 @@ class PatientController extends Controller
     if($patient->name !== $request->input('name'))
     {
         $patient->name = $request->input('name');
-
     }
   
     $patient->save();
@@ -138,7 +120,6 @@ class PatientController extends Controller
      */
     public function delete(Request $request)
     {
-
         $uuid = $request->input('uuid');
     
         $patient = User::where('user_type',3)
