@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests\Api\front;
 
-
+use App\Enum\UserType;
 use Illuminate\Foundation\Http\FormRequest;
-
-
+use Illuminate\Validation\Rule;
 
 class Updatebyname extends FormRequest
 {
@@ -26,7 +25,8 @@ class Updatebyname extends FormRequest
     {
         return [
             'uuid' => 'required|uuid|exists:users,uuid',
-            'name' => 'required|string|max:255',
+            'name'   => 'nullable|string|max:255',
+            
         ];
     }
 }

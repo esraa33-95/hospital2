@@ -12,8 +12,8 @@ Route::prefix('doctor')->middleware(['auth:sanctum', 'api_localization'])->group
         Route::get('/', 'index');                  
         Route::post('/', 'create');                 
         Route::get('/{id}', 'show');               
-        Route::patch('/{id}', 'updatename');       
-        Route::delete('/{id}', 'delete');          
+        Route::patch('/', 'updatename');       
+        Route::delete('/', 'delete');          
         // Route::get('filter', 'filterDoctors');    
     });
 
