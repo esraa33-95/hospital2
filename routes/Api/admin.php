@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+
 
 use App\Http\Controllers\Api\Admin\AdminController;
 use App\Http\Controllers\Api\admin\DepartmentController;
@@ -11,7 +11,6 @@ use App\Http\Middleware\isadmin;
 
 //login
 Route::post('admin/login', [AdminController::class, 'login']);
-
 
 Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
 

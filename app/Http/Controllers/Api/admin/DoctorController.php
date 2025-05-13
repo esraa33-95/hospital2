@@ -36,7 +36,7 @@ class DoctorController extends Controller
         });
     }
 
-    if (!$take || $take === 0)
+    if (!$take || $take == 0)
      {
         return $this->responseApi('', UserResource::collection([]), 200, ['count' => 0]);
     }

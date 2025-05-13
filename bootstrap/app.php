@@ -14,13 +14,17 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         then: function () {
 
-            require base_path('routes/Api/doctor.php');
+            // require base_path('routes/Api/doctor.php');
 
-            require base_path('routes/Api/patient.php'); 
+            // require base_path('routes/Api/patient.php'); 
 
-            require base_path('routes/Api/admin.php');
+            // require base_path('routes/Api/admin.php');
 
-            // require base_path('routes/Api/front/list.php'); 
+            Route::namespace('App\Http\Controllers\Api')->group(function () {
+                   require base_path('routes/Api/doctor.php');
+                   require base_path('routes/Api/patient.php');
+                   require base_path('routes/Api/admin.php');
+             });
 
         },
     )

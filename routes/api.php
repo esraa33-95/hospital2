@@ -1,13 +1,13 @@
 <?php
 
 use App\Http\Controllers\Api\front\AuthController;
+use App\Http\Controllers\Api\front\ListController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
-
 
 
 //authentication
@@ -22,4 +22,12 @@ Route::controller(AuthController::class)->group(function () {
         Route::post('auth/logout', 'logout');
     });
  
+});
+
+//lists of doctors and departments
+Route::controller(ListController::class)->prefix('lists')
+    ->middleware('auth:sanctum')->group(function () {   
+        Route::get('departments', 'departments');
+         Route::get('doctors', 'doctors');
+        
 });

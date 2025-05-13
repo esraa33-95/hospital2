@@ -36,10 +36,14 @@ class DoctorController extends Controller
               ->orWhere('mobile', 'like', '%' . $search . '%');
         });
     }
+    if (!$take || $take == 0)
+     {
+        return $this->responseApi('', UserResource::collection([]), 200, ['count' => 0]);
+    }
 
     $total = $query->count(); 
 
-    $doctors = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+    $doctors = $query->skip($skip ?? 0)->take($take )->get();
 
     return $this->responseApi('',UserResource::collection($doctors),200,['count' => $total]);
     }

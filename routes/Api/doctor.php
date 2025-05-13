@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\doctor;
+
 
 use App\Http\Controllers\Api\front\DoctorController;
 use App\Http\Controllers\Api\front\UserController;

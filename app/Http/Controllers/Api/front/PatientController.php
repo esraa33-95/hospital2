@@ -37,9 +37,14 @@ class PatientController extends Controller
         });
     }
 
+    if (!$take || $take == 0)
+     {
+        return $this->responseApi('', UserResource::collection([]), 200, ['count' => 0]);
+    }
+
     $total = $query->count(); 
 
-    $patients = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+    $patients = $query->skip($skip ?? 0)->take($take)->get();
 
     return $this->responseApi('',UserResource::collection($patients),200,['count' => $total]);
     }

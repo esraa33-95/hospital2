@@ -28,11 +28,14 @@ class ListController extends Controller
         $query->where('name', 'like', '%' . $search . '%');
       }
 
+      if (!$take || $take == 0)
+     {
+        return $this->responseApi('', DepartmentResource::collection([]), 200, ['count' => 0]);
+    }
+
     $total = $query->count(); 
 
-    $department = $query->take($take)->get();
-
-    $department = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+    $department = $query->skip($skip ?? 0)->take($take)->get();
 
     return $this->responseApi('',DepartmentResource::collection($department),200,['count' => $total]);
 
@@ -54,9 +57,14 @@ class ListController extends Controller
             $query->where('name', 'like', '%' . $search . '%');
         }
     
+        if (!$take || $take == 0)
+     {
+        return $this->responseApi('', UserResource::collection([]), 200, ['count' => 0]);
+    }
+
         $total = $query->count();
 
-        $doctors = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+        $doctors = $query->skip($skip ?? 0)->take($take)->get();
 
      return $this->responseApi('',UserResource::collection($doctors),200,['count' => $total]);
 
