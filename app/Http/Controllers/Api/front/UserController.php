@@ -41,7 +41,7 @@ class UserController extends Controller
            $data['image'] = $this->uploadFile($request->file('image'), 'assets/images'); 
         }
 
-        return $this->responseApi(__('image upload successufully'));
+        return $this->responseApi(__('messages.upload'));
     }
 
 //update data
@@ -64,11 +64,11 @@ class UserController extends Controller
        ->first();
 
     if (!$user) {
-        return $this->responseApi(__('User not found'), 404);
+        return $this->responseApi(__('messages.trash'), 404);
     }
 
     if ($user->trashed()) {
-        return $this->responseApi(__('Account has been deleted'), 403);
+        return $this->responseApi(__('messages.trash'), 403);
     }
 
     $user->fill($data)->save();
@@ -84,10 +84,10 @@ class UserController extends Controller
 
     if (!$user) 
     {
-        return $this->responseApi(__('User not authenticated'), 401);
+        return $this->responseApi(__('messages.authentication'), 401);
     }
 
-   return $this->responseApi(__('account delete successufully'));
+   return $this->responseApi(__('messages.trash'));
       
 }
 
@@ -101,48 +101,48 @@ public function changePassword(ChangePassword $request)
 
     if (!Hash::check($data['current_password'], $user->password)) 
     {
-        return $this->responseApi(__('Current password is incorrect'), 422);
+        return $this->responseApi(__('messages.change'), 422);
     }
 
     if (Hash::check($data['new_password'], $user->password)) 
     {
-        return $this->responseApi(__('New password must be different from the current password'), 422);
+        return $this->responseApi(__('messages.different'), 422);
     }
 
     $user->password = Hash::make($data['new_password']);
     $user->save();
 
-    return $this->responseApi(__('change password successfully'),200);
+    return $this->responseApi(__('messages.change_password'),200);
 }
 
 //rate for doctor
-public function rate(Request $request,string $id)
-    {
-        $request->validate([
-            'rate'=>'required|decimal:1',
-        ]);
+// public function rate(Request $request,string $id)
+//     {
+//         $request->validate([
+//             'rate'=>'required|decimal:1',
+//         ]);
 
-        $doctor = User::where('user_type',2)->findOrfail($id);
+//         $doctor = User::where('user_type',2)->findOrfail($id);
 
-        Rate::create([
-            'user_id' => $doctor->id,
-            'rate' => $request->rate,
-        ]);
+//         Rate::create([
+//             'user_id' => $doctor->id,
+//             'rate' => $request->rate,
+//         ]);
 
-    $ratings = Rate::where('user_id', $doctor->id)->get();
+//     $ratings = Rate::where('user_id', $doctor->id)->get();
 
-    $average = round($ratings->avg('rate'), 2);
-    $number_rate = $ratings->count();
+//     $average = round($ratings->avg('rate'), 2);
+//     $number_rate = $ratings->count();
 
-     $doctor->number_rate = $number_rate;
-     $doctor->save();
+//      $doctor->number_rate = $number_rate;
+//      $doctor->save();
 
-    return response()->json([
-        'average' => $average,
-        'total_rate' => $number_rate,
-    ]);     
+//     return response()->json([
+//         'average' => $average,
+//         'total_rate' => $number_rate,
+//     ]);     
 
-}
+// }
 
 
 

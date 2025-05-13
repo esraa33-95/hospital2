@@ -64,7 +64,7 @@ class DoctorController extends Controller
 
          $doctor =  User::create($data);
 
-         return $this->responseApi(__('doctor created successfully'),$doctor,200);
+         return $this->responseApi(__('messages.store_doctors'),$doctor,200);
     }
 
     /**
@@ -78,7 +78,7 @@ class DoctorController extends Controller
 
        if (!$doctor)
         {
-        return $this->responseApi(__('doctor not found'), 404);
+        return $this->responseApi(__('messages.trash'), 404);
        }
 
         return new UserResource($doctor);
@@ -100,12 +100,12 @@ class DoctorController extends Controller
 
     if (!$doctor) 
     {
-        return $this->responseApi(__('doctor not found'), 404);
+        return $this->responseApi(__('messages.trash'), 404);
     }
 
     if ($doctor->trashed()) 
     {
-        return $this->responseApi(__('Account has been deleted'), 403);
+        return $this->responseApi(__('messages.trash'), 403);
     }
 
     if($doctor->name !== $request->input('name'))
@@ -116,7 +116,7 @@ class DoctorController extends Controller
 
     $doctor->save();
 
-    return $this->responseApi(__('doctor name updated successfully'), 200);
+    return $this->responseApi(__('messages.update_doctors'), 200);
 }
 
     /**
@@ -132,61 +132,64 @@ class DoctorController extends Controller
     
         if (!$doctor) 
         {
-            return $this->responseApi(__('No doctor found'), 404);
+            return $this->responseApi(__('messages.trash'), 404);
         }
 
         $doctor->delete();
     
-        return $this->responseApi(__('doctor deleted successfully'), 200);
+        return $this->responseApi(__('messages.delete_doctor'), 200);
     }
+
+
+
 
 //filter doctor
-    public function filterDoctors(Request $request)
-{
-    $take = $request->input('take'); 
+//     public function filterDoctors(Request $request)
+// {
+//     $take = $request->input('take'); 
 
-    $query = User::where('user_type', 2); 
+//     $query = User::where('user_type', 2); 
     
-    if ($request->filled('name')) {
-        $query->where('name', 'like', '%' . $request->name . '%');
-    }
+//     if ($request->filled('name')) {
+//         $query->where('name', 'like', '%' . $request->name . '%');
+//     }
 
-    if ($request->filled('number_rate')) {
-        $query->where('number_rate', 'like', '%' . $request->number_rate . '%');
-    }
+//     if ($request->filled('number_rate')) {
+//         $query->where('number_rate', 'like', '%' . $request->number_rate . '%');
+//     }
     
-    if ($request->filled('department')) {
-        $query->whereHas('department', function ($q) use ($request) {
-            $q->where('name', 'like', '%' . $request->department . '%');
-        });
-    }
+//     if ($request->filled('department')) {
+//         $query->whereHas('department', function ($q) use ($request) {
+//             $q->where('name', 'like', '%' . $request->department . '%');
+//         });
+//     }
 
-    if ($request->filled('sort_by')) 
-    {
-        $Sorts = ['department', 'number_rate', 'name'];
-        $sortBy = $request->get('sort_by');
-        $input = $request->get('sort_order', 'high to low');
+//     if ($request->filled('sort_by')) 
+//     {
+//         $Sorts = ['department', 'number_rate', 'name'];
+//         $sortBy = $request->get('sort_by');
+//         $input = $request->get('sort_order', 'high to low');
 
-       $sortOrder = match ($input) {
-        'low to high' => 'asc',
-        'high to low' => 'desc',
-    };
+//        $sortOrder = match ($input) {
+//         'low to high' => 'asc',
+//         'high to low' => 'desc',
+//     };
 
-        if (in_array($sortBy, $Sorts) )
-         {
-            $query->orderBy($sortBy, $sortOrder);
-        }
-    }
+//         if (in_array($sortBy, $Sorts) )
+//          {
+//             $query->orderBy($sortBy, $sortOrder);
+//         }
+//     }
 
-    $total = $query->count(); 
+//     $total = $query->count(); 
 
-    $doctors = $query->take($take)->get();
+//     $doctors = $query->take($take)->get();
 
-    return response()->json([
-        'data' => DoctorResource::collection($doctors),
-        'total' => $total,
-        'take' => $take,
-    ]);
-}
+//     return response()->json([
+//         'data' => DoctorResource::collection($doctors),
+//         'total' => $total,
+//         'take' => $take,
+//     ]);
+// }
     
 }

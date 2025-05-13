@@ -28,13 +28,13 @@ class AdminController extends Controller
 
        if(!$user || !Hash::check($data['password'],$user->password ) )
        {
-        return $this->responseApi(__('invalid credintials'));
+        return $this->responseApi(__('messages.invalid credintials'));
        }
 
        $token = $user->createToken('auth_token')->plainTextToken;
 
-       return $this->responseApi(__('login successfully'),$token,200,new UserResource($user));
-   
+          return $this->responseApi(__('messages.login'),new UserResource($user),200,['token'=>$token]);
+       
     }
 
 //logout 
@@ -42,7 +42,7 @@ public function logout(Request $request)
 {
     $request->user()->currentAccessToken()->delete();
 
-    return $this->responseApi(__('admin logout successfully'),200);
+    return $this->responseApi(__('messages.logout_one'));
         
 }
 
@@ -53,7 +53,7 @@ public function update(UpdateAdmin $request)
 
   if($user->user_type !== 1)
 {
-    return $this->responseApi(__('admin only can be change his data')); 
+    return $this->responseApi(__('messages.admin')); 
 }
 
 $data = $request->validated();

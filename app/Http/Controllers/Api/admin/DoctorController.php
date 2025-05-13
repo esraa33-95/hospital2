@@ -45,7 +45,9 @@ class DoctorController extends Controller
   
     $doctors = $query->skip($skip ?? 0)->take($take)->get();
     
-    return $this->responseApi('',UserResource::collection($doctors),200,['count' => $total]);
+    return $this->responseApi('',UserResource::collection($doctors),['count' => $total]);
+
+
     }
 
     /**
@@ -64,7 +66,7 @@ class DoctorController extends Controller
 
          $doctor =  User::create($data);
 
-         return $this->responseApi(__('doctor created successfully'),$doctor,201);
+         return $this->responseApi(__('messages.store_doctors'),$doctor,201);
     }
 
     /**
@@ -79,12 +81,12 @@ class DoctorController extends Controller
 
          if(!$doctor)
        {
-         return $this->responseApi(__('This doctor is deleted'),null, 403);
+         return $this->responseApi(__('messages.trash'),null, 403);
        }
        
        if ($doctor->trashed())
         {
-           return $this->responseApi(__('This doctor is deleted'), 403);
+           return $this->responseApi(__('messages.trash'), 403);
         }
 
         return new UserResource($doctor);
@@ -105,12 +107,12 @@ class DoctorController extends Controller
 
          if(!$doctor)
        {
-         return $this->responseApi(__('This doctor is deleted'),null, 403);
+         return $this->responseApi(__('messages.trash'),null, 403);
        }
 
     if ($doctor->trashed()) 
     {
-        return $this->responseApi(__('Account has been deleted'),[], 403);
+        return $this->responseApi(__('messages.trash'),[], 403);
     }
 
    foreach (['name', 'email', 'mobile', 'department_id', 'user_type'] as $field)
@@ -134,7 +136,7 @@ class DoctorController extends Controller
 
        $doctor->save();
 
-    return $this->responseApi(__('doctor updated successfully'),$doctor,200);
+    return $this->responseApi(__('messages.update_doctors'),$doctor,200);
 }
 
     /**
@@ -149,17 +151,17 @@ class DoctorController extends Controller
 
          if(!$doctor)
        {
-         return $this->responseApi(__('This doctor is deleted'),null, 403);
+         return $this->responseApi(__('messages.trash'),null, 403);
        }
 
     if ($doctor->trashed()) 
     {
-        return $this->responseApi(__('Doctor has been deleted'), [],409); 
+        return $this->responseApi(__('messages.trash'), [],409); 
     }
 
     $doctor->delete();
 
-    return $this->responseApi(__('Doctor deleted successfully'),[],200);
+    return $this->responseApi(__('messages.delete_doctor'),[],200);
 }
 
 }

@@ -65,7 +65,7 @@ class PatientController extends Controller
 
          $doctor =  User::create($data);
 
-         return $this->responseApi(__('patient created successfully'),$doctor,201);
+         return $this->responseApi(__('messages.store_patients'),$doctor,201);
     }
 
     /**
@@ -80,12 +80,12 @@ class PatientController extends Controller
 
        if(!$patient)
        {
-         return $this->responseApi(__('This patient is deleted'),null, 403);
+         return $this->responseApi(__('messages.trash'),null, 403);
        }
 
       if ($patient->trashed()) 
       {
-         return $this->responseApi(__('This  patient is deleted'),null, 403);
+         return $this->responseApi(__('messages.trash'),null, 403);
       }
 
         return new UserResource($patient);
@@ -105,12 +105,12 @@ class PatientController extends Controller
 
      if(!$patient)
        {
-         return $this->responseApi(__('This patient is deleted'),null, 403);
+         return $this->responseApi(__('messages.trash'),null, 403);
        }
 
     if ($patient->trashed()) 
     {
-        return $this->responseApi(__('Account has been deleted'),[] ,403);
+        return $this->responseApi(__('messages.trash'),[] ,403);
     }
 
    foreach (['name', 'email', 'mobile', 'department_id', 'user_type'] as $field)
@@ -134,7 +134,7 @@ class PatientController extends Controller
 
     $patient->save();
 
-    return $this->responseApi(__('patient updated successfully'),$patient,200);
+    return $this->responseApi(__('messages.update_patient'),$patient,200);
 }
 
   /**
@@ -149,16 +149,16 @@ class PatientController extends Controller
     
      if(!$patient)
        {
-         return $this->responseApi(__('This patient is deleted'),null, 403);
+         return $this->responseApi(__('messages.trash'),null, 403);
        }
         
         if ($patient->trashed()) 
     {
-        return $this->responseApi(__('patient has been deleted'),null,409); 
+        return $this->responseApi(__('messages.trash'),null,409); 
     }
 
         $patient->delete();
     
-        return $this->responseApi(__('patient deleted successfully'),200);
+        return $this->responseApi(__('messages.delete_patient'),200);
     }
 }

@@ -11,7 +11,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 
 
 //authentication
-Route::controller(AuthController::class)->group(function () {
+Route::middleware('api_localization')->controller(AuthController::class)->group(function () {
     Route::post('auth/register','register');
     Route::post('auth/login','login');
     Route::post('auth/sendotp','sendotp');

@@ -56,7 +56,7 @@ class DepartmentController extends Controller
     
     $department = Department::create($data);
     
-    return  $this->responseApi(__('create department succefully'),$department,201);
+    return  $this->responseApi(__('messages.store_department'),$department,201);
     
     }
 
@@ -83,7 +83,7 @@ class DepartmentController extends Controller
             'name' => $data['name'] ?? $department->name
         ]);
 
-        return  $this->responseApi(__('update department succesfully'),$department,200);
+        return  $this->responseApi(__('messages.update_department'),$department,200);
     }
 
 
@@ -96,12 +96,12 @@ class DepartmentController extends Controller
 
         if($department->users()->exists())
         {
-            return  $this->responseApi(__('canot delete this department'),403); 
+            return  $this->responseApi(__('messages.no_delete'),403); 
         }
 
         $department->delete();
         
-        return  $this->responseApi(__('department delete successfully'),204); 
+        return  $this->responseApi(__('messages.delete_department'),204); 
     }
 
     

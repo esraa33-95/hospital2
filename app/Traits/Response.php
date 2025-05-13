@@ -25,4 +25,6 @@ trait Response
 
         return response($array, $code);
     }
+
+
 }

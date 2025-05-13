@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\isadmin;
 
 //login
-Route::post('admin/login', [AdminController::class, 'login']);
+Route::post('admin/login', [AdminController::class, 'login'])->middleware('api_localization');
 
-Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
+Route::prefix('admin')->middleware(['auth:sanctum','api_localization'])->group(function () {
 
     Route::controller(AdminController::class)->group(function () {
         Route::post('update', 'update');

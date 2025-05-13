@@ -1,33 +1,31 @@
 <?php
 
-
-
 use App\Http\Controllers\Api\front\DoctorController;
 use App\Http\Controllers\Api\front\UserController;
 use Illuminate\Support\Facades\Route;
 
 
 
-Route::controller(DoctorController::class)->prefix('doctor')
+Route::prefix('doctor')->middleware(['auth:sanctum', 'api_localization'])->group(function () {
 
-    ->middleware('auth:sanctum')->group(function () {
-        Route::get('index', 'index');
-        Route::post('create', 'create');
-        Route::get('show/{id}', 'show');
-        Route::patch('updatename', 'updatename');
-        Route::delete('delete','delete');
-        Route::get('filter', 'filterDoctors');
-        
-        Route::controller(UserController::class)->prefix('profile')
+    Route::controller(DoctorController::class)->group(function () {
+        Route::get('/', 'index');                  
+        Route::post('/', 'create');                 
+        Route::get('/{id}', 'show');               
+        Route::patch('/{id}', 'updatename');       
+        Route::delete('/{id}', 'delete');          
+        // Route::get('filter', 'filterDoctors');    
+    });
 
-        ->middleware('auth:sanctum')->group(function () {
-            Route::get('index','userprofile');
-            Route::post('update','update');  
-            Route::post('changepassword', 'changePassword');
-            Route::post('uploadimage', 'uploadimage');
-            Route::delete('deleteaccount', 'deleteAccount');
-            Route::post('rate/{id}', 'rate');
-            
-    });   
+    Route::prefix('profile')->controller(UserController::class)->group(function () {
+        Route::get('index', 'userprofile');      
+        Route::post('update', 'update');           
+        Route::post('changepassword', 'changePassword');
+        Route::post('uploadimage', 'uploadimage');
+        Route::delete('deleteaccount', 'deleteAccount');
+        // Route::post('rate/{id}', 'rate');         
+    });
 
 });
+
+      

@@ -65,7 +65,7 @@ class PatientController extends Controller
 
          $patient =  User::create($data);
 
-         return $this->responseApi(__('patient created successfully'),$patient,200);
+         return $this->responseApi(__('messages.store_patients'),$patient,200);
     }
 
     
@@ -81,7 +81,7 @@ class PatientController extends Controller
 
        if (!$patient)
         {
-        return $this->responseApi(__('patient not found'), 404);
+        return $this->responseApi(__('messages.trash'), 404);
        }
         return new UserResource($patient);
     }
@@ -102,12 +102,12 @@ class PatientController extends Controller
 
     if (!$patient) 
     {
-        return $this->responseApi(__('patient not found'), 404);
+        return $this->responseApi(__('messages.trash'), 404);
     }
 
     if ($patient->trashed()) 
     {
-        return $this->responseApi(__('patient has been deleted'), 403);
+        return $this->responseApi(__('messages.trash'), 403);
     }
 
     if($patient->name !== $request->input('name'))
@@ -117,7 +117,7 @@ class PatientController extends Controller
   
     $patient->save();
 
-    return $this->responseApi(__('patient name updated successfully'), 200);
+    return $this->responseApi(__('messages.update_patient'), 200);
 }
 
     /**
@@ -133,12 +133,12 @@ class PatientController extends Controller
     
         if (!$patient) 
         {
-            return $this->responseApi(__('No patient found'), 404);
+            return $this->responseApi(__('messages.trash'), 404);
         }
  
         $patient->delete();
     
-        return $this->responseApi(__('Patient deleted successfully'), 200);
+        return $this->responseApi(__('messages.delete_patient'), 200);
     }
     
 

@@ -1,0 +1,50 @@
+<?php
+return [
+    //auth
+    'user_register'   => 'User created successfully',
+    'user_login'=>'login successfully',
+    'invalid credintials'=>'invalid credintials',
+    'account_deleted'=>'This account has been deleted',
+    'verify'=>'Please verify your email first',
+    'login'=>'login successfully',
+    'logout_one'=>'user logout successfully from current device',
+    'logout_all'=>'user logout successfully from all devices',
+    'not_found'=>'User not found',
+    'sendotp'=>'code Otp is sent ',
+    'invalid_otp'=>'invalid otp',
+    'verify_otp'=>'Otp verified successfully',
+    'old_password'=>'old password is incorrect',
+    'current_password'=>'current password is same as new password can you continue',
+    'change_password'=>'Password changed successfully',
+
+//admin
+'admin'=>'admin only can be change his data',
+'store_department'=>'create department succefully',
+'update_department'=>'update department succesfully',
+'no_delete'=>'canot delete this department',
+'delete_department'=>'department delete successfully',
+
+//doctors
+'store_doctors'=>'doctor created successfully',
+'trash'=>'This doctor is deleted',
+'update_doctors'=>'doctor updated successfully',
+'delete_doctor'=>'doctor deleted successfully',
+
+//patients
+'store_patients' =>'patient created successfully',
+'trash'=>'This patient is deleted',
+'update_patient'=>'patient updated successfully',
+'delete_patient'=>'patient deleted successfully',
+
+//image
+'upload'=>'image upload successufully',
+
+//profile
+'authentication'=>'User not authenticated',
+'change'=>'Current password is incorrect',
+'different'=>'New password must be different from the current password',
+
+
+   
+    
+];
