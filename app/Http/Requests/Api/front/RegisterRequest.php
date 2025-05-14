@@ -37,6 +37,6 @@ class RegisterRequest extends FormRequest
 
            'user_type' => ['required', 'integer', Rule::in(array_column(UserType::cases(), 'value'))],
         
-        ];
-    }
+            ];
+}
 }
