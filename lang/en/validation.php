@@ -176,10 +176,56 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
-        ],
+    'name' => [
+        'min' => 'The name must be at least 3 characters.',
+        'max' => 'The name must not exceed 255 characters.',
     ],
+    'password' => [
+        'min' => 'The password must be at least 6 characters.',
+    ],
+    'email' => [
+        'email' => 'Please enter a valid email address.',
+        'unique' => 'This email address is already in use.',
+    ],
+    'new_password' => [
+        'min' => 'The new password must be at least 6 characters.',
+        'different' => 'The new password must be different from the current password.',
+        'confirmed' => 'The new password confirmation does not match.',
+    ],
+    'current_password' => [
+        'min' => 'The current password must be at least 6 characters.',
+    ],
+    'image' => [
+        'mimes' => 'The image must be a file of type: png, jpg, jpeg.',
+        'max' => 'The image size must not exceed 2 MB.',
+    ],
+    'mobile' => [
+        'regex' => 'Invalid phone number. It must start with 010, 011, 012, or 015 and be 11 digits long.',
+        'unique' => 'This phone number is already in use.',
+    ],
+    'department_id' => [
+        'required' => 'The department is required when the user type is doctor.',
+        'exists' => 'The selected department does not exist.',
+    ],
+    'user_type' => [
+        'in' => 'Invalid user type.',
+    ],
+    'usage' => [
+        'in' => 'The usage type must be either "verify" or "forget".',
+    ],
+    'old_password' => [
+        'min' => 'The old password must be at least 6 characters.',
+    ],
+    'otp' => [
+        'digits' => 'The verification code must be exactly 4 digits.',
+    ],
+    'uuid' => [
+        'uuid' => 'The UUID format is invalid.',
+        'exists' => 'The UUID for this user does not exist.',
+    ],
+],
+
+
 
     /*
     |--------------------------------------------------------------------------
@@ -192,6 +238,20 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'email' ,
+        'name' ,
+        'password' ,
+        'mobile',
+        'image' ,
+        'department_id',
+        'user_type',
+        'usage',
+        'current_password',
+        'otp',
+       'old_password',
+       'new_password' ,
+       'uuid'
+    ],
 
 ];
