@@ -36,17 +36,17 @@ class DoctorController extends Controller
         });
     }
 
-    if (!$take || $take == 0)
+    if (!$take || $take <= 0)
      {
-        return $this->responseApi('', UserResource::collection([]), 200, ['count' => 0]);
+        return $this->responseApi('', [], 200, ['count' => 0]);
+      
     }
 
      $total = $query->count();
   
     $doctors = $query->skip($skip ?? 0)->take($take)->get();
     
-    return $this->responseApi('',UserResource::collection($doctors),['count' => $total]);
-
+    return $this->responseApi('',UserResource::collection($doctors),200,['count' => $total]);
 
     }
 
@@ -81,12 +81,12 @@ class DoctorController extends Controller
 
          if(!$doctor)
        {
-         return $this->responseApi(__('messages.trash'),null, 403);
+         return $this->responseApi(__('messages.trash_doctor'),null, 403);
        }
        
        if ($doctor->trashed())
         {
-           return $this->responseApi(__('messages.trash'), 403);
+           return $this->responseApi(__('messages.trash_doctor'), 403);
         }
 
         return new UserResource($doctor);
@@ -107,12 +107,12 @@ class DoctorController extends Controller
 
          if(!$doctor)
        {
-         return $this->responseApi(__('messages.trash'),null, 403);
+         return $this->responseApi(__('messages.trash_doctor'),null, 403);
        }
 
     if ($doctor->trashed()) 
     {
-        return $this->responseApi(__('messages.trash'),[], 403);
+        return $this->responseApi(__('messages.trash_doctor'),[], 403);
     }
 
    foreach (['name', 'email', 'mobile', 'department_id', 'user_type'] as $field)
@@ -151,12 +151,12 @@ class DoctorController extends Controller
 
          if(!$doctor)
        {
-         return $this->responseApi(__('messages.trash'),null, 403);
+         return $this->responseApi(__('messages.trash_doctor'),null, 403);
        }
 
     if ($doctor->trashed()) 
     {
-        return $this->responseApi(__('messages.trash'), [],409); 
+        return $this->responseApi(__('messages.trash_doctor'), [],409); 
     }
 
     $doctor->delete();

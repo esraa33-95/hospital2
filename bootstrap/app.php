@@ -13,29 +13,32 @@ return Application::configure(basePath: dirname(__DIR__))
         api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
-        then: function () {
+       using: function () {
+           
+                 Route::namespace('App\Http\Controllers\Api')
+                 ->prefix('api/admin')
+                 ->group(base_path('routes/Api/admin.php'));
 
-            // require base_path('routes/Api/doctor.php');
+           
+                Route::namespace('App\Http\Controllers\Api')
+                 ->prefix('api/doctor')
+                 ->group(base_path('routes/Api/doctor.php'));
 
-            // require base_path('routes/Api/patient.php'); 
-
-            // require base_path('routes/Api/admin.php');
-
-            Route::namespace('App\Http\Controllers\Api')->group(function () {
-                   require base_path('routes/Api/doctor.php');
-                   require base_path('routes/Api/patient.php');
-                   require base_path('routes/Api/admin.php');
-             });
-
+          
+                 Route::namespace('App\Http\Controllers\Api')
+                 ->prefix('api/patient')
+                 ->group(base_path('routes/Api/patient.php'));
+  
+                  Route::namespace('App\Http\Controllers')
+                 ->prefix('api/auth')
+                 ->group(base_path('routes/api.php'));
         },
+
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->alias([
-        'isadmin' => IsAdmin::class
-    ]);
-
     $middleware->alias([
-        'api_localization' => ApiLocalization::class
+        'api_localization' => ApiLocalization::class,
+         'IsAdmin' => IsAdmin::class
     ]);
        
     })

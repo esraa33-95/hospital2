@@ -26,7 +26,7 @@ return [
 
 //doctors
 'store_doctors'=>'doctor created successfully',
-'trash'=>'This doctor is deleted',
+'trash_doctor'=>'This doctor is deleted',
 'update_doctors'=>'doctor updated successfully',
 'delete_doctor'=>'doctor deleted successfully',
 

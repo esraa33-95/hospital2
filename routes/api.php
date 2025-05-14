@@ -12,20 +12,20 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 
 //authentication
 Route::middleware('api_localization')->controller(AuthController::class)->group(function () {
-    Route::post('auth/register','register');
-    Route::post('auth/login','login');
-    Route::post('auth/sendotp','sendotp');
-    Route::post('auth/verify-email','verifyEmailOtp');
-    Route::post('auth/reset-password','resetpassword');
+    Route::post('register','register');
+    Route::post('login','login');
+    Route::post('sendotp','sendotp');
+    Route::post('verify-email','verifyEmailOtp');
+    Route::post('reset-password','resetpassword');
     
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('auth/logout', 'logout');
+        Route::post('logout', 'logout');
     });
  
 });
 
 //lists of doctors and departments
-Route::controller(ListController::class)->prefix('lists')
+Route::controller(ListController::class)
     ->middleware('auth:sanctum')->group(function () {   
         Route::get('departments', 'departments');
          Route::get('doctors', 'doctors');
