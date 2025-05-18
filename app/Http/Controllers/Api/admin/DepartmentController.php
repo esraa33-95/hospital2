@@ -8,6 +8,7 @@ use App\Http\Requests\Api\admin\UpdateDepartment;
 use App\Http\Resources\DepartmentResource;
 use App\Http\Resources\UserResource;
 use App\Models\Department;
+use App\Models\DepartmentTranslation;
 use App\Traits\Response;
 use Illuminate\Http\Request;
 
@@ -50,15 +51,24 @@ class DepartmentController extends Controller
     
 
 //create
-    public function store(CreateDepartment $request)
-    {
-      $data = $request->validated();
-    
-    $department = Department::create($data);
-    
-    return  $this->responseApi(__('messages.store_department'),$department,201);
-    
-    }
+public function store(CreateDepartment $request)
+{
+    $data = $request->validated();
+
+    $locale = $request->query('lang', $request->query('locale', app()->getLocale()));
+
+    $department = new Department();
+
+    $department->translateOrNew($locale)->name = $data['name'];
+
+    $department->save();
+
+    app()->setLocale($locale);
+
+    return $this->responseApi(__('messages.store_department'), $department, 201);
+}
+
+
 
     /**
      * Display the specified resource.
@@ -73,18 +83,39 @@ class DepartmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDepartment  $request, string $id)
-    {
-        $data = $request->validated();
+    // public function update(UpdateDepartment  $request, string $id)
+    // {
+    //     $data = $request->validated();
 
-        $department = Department::findOrFail($id);
+    //     $department = Department::findOrFail($id);
     
-        $department->update([
-            'name' => $data['name'] ?? $department->name
-        ]);
+    //     $department->update([
+    //         'name' => $data['name'] ?? $department->name
+    //     ]);
 
-        return  $this->responseApi(__('messages.update_department'),$department,200);
+    //     return  $this->responseApi(__('messages.update_department'),$department,200);
+    // }
+
+    public function update(UpdateDepartment $request, string $id)
+{
+    $data = $request->validated();
+
+    $locale = $request->query('lang', $request->query('locale', app()->getLocale()));
+
+    $department = Department::findOrFail($id);
+
+    if (!empty($data['name'])) 
+    {
+        $department->translateOrNew($locale)->name = $data['name'];
     }
+
+    $department->save();
+
+    app()->setLocale($locale);
+
+    return $this->responseApi(__('messages.update_department'), $department, 200);
+}
+
 
 
     /**

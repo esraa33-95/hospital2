@@ -37,7 +37,7 @@ return [
 'delete_patient'=>'patient deleted successfully',
 
 //image
-'upload'=>'image upload successufully',
+'upload'=>'file upload successufully',
 
 //profile
 'authentication'=>'User not authenticated',

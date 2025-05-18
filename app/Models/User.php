@@ -74,6 +74,15 @@ class User extends Authenticatable implements MustVerifyEmail
       return $this->hasMany(Rate::class);
     }
 
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
+    }
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
+
 protected static function boot()
 {
     parent::boot();

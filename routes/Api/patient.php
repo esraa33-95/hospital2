@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 
     
-Route::middleware(['auth:sanctum', 'api_localization'])->group(function () {
+Route::middleware(['auth:sanctum', 'api_localization','IsPatient'])->group(function () {
 
     Route::controller(PatientController::class)->group(function () {
         Route::get('/', 'index');                  
@@ -21,7 +21,7 @@ Route::middleware(['auth:sanctum', 'api_localization'])->group(function () {
         Route::get('/', 'userprofile');      
         Route::post('/', 'update');           
         Route::post('/', 'changePassword');
-        Route::post('/', 'uploadimage');
+        Route::post('/{id}', 'uploadimage');
         Route::delete('/', 'deleteAccount');
         // Route::post('rate/{id}', 'rate');         
     });

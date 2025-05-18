@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api\admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateDepartment extends FormRequest
+class UpdateReport extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,10 @@ class CreateDepartment extends FormRequest
     public function rules(): array
     {
         return [
-        'name' => ['required', 'string', 'max:255'],
-    ];
-   
-}
+             'report_name'=>'nullable|string|max:255',
+             'symptoms'=>'nullable|string',
+            'traitment'=>'nullable|string',
+            'user_id' => 'nullable|exists:users,id',
+        ];
+    }
 }

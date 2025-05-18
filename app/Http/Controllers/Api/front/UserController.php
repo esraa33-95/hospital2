@@ -7,6 +7,7 @@ use App\Http\Requests\Api\front\ChangePassword;
 use App\Http\Requests\Api\front\updateUser;
 use App\Http\Resources\DoctorResource;
 use App\Http\Resources\UserResource;
+use App\Models\Document;
 use App\Models\Rate;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -30,19 +31,52 @@ class UserController extends Controller
     }
 
     //upload image
-    public function uploadimage(Request $request)
-    {
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048', 
-        ]);
+    // public function uploadimage(Request $request)
+    // {
+    //     $request->validate([
+    //         'image' => 'required|mimes:jpeg,jpg,png,pdf|max:5120', 
 
-        if ($request->hasFile('image'))
-        {
-           $data['image'] = $this->uploadFile($request->file('image'), 'assets/images'); 
-        }
+    //     ]);
 
-        return $this->responseApi(__('messages.upload'));
+    //     if ($request->hasFile('image'))
+    //     {
+    //        $data['image'] = $this->uploadFile($request->file('image'), 'assets/images'); 
+    //     }
+
+    //     return $this->responseApi(__('messages.upload'));
+    // }
+
+
+
+
+    public function uploadimage(Request $request, string $id)
+{
+    $request->validate([
+        'file' => 'required|mimes:jpeg,jpg,png,pdf|max:5120', 
+    ]);
+
+    if ($request->hasFile('file')) {
+      
+        $file = $request->file('file');
+        $filePath = $file->store('assets/images', 'public'); 
+
+       
+        $document = new Document();
+        $document->file_path = $filePath;
+        $document->file_type = $file->getClientOriginalExtension(); 
+        $document->save();
+
+        return response()->json([
+            'message' => 'File uploaded and saved to database.',
+            'document' => $document,
+        ], 201);
     }
+
+    return response()->json([
+        'message' => 'No file was uploaded.',
+    ], 400);
+}
+
 
 //update data
     public function update(updateUser $request)

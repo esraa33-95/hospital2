@@ -59,7 +59,6 @@ public function login(LoginRequest $request)
    {
     return $this->responseApi(__('messages.invalid credintials'));
    }
-
    if ($user->trashed()) 
    {
     return $this->responseApi(__('messages.account_deleted'));
@@ -71,7 +70,7 @@ if ($user->is_verified !== 1)
 }
    $token = $user->createToken('auth_token')->plainTextToken;
 
-   return $this->responseApi(__('login successfully'),new UserResource($user),200,['token'=>$token]);
+   return $this->responseApi(__('messages.login'),new UserResource($user),200,['token'=>$token]);
 
 }
 
@@ -103,7 +102,7 @@ public function logout(Request $request)
 
         if (!$user) 
         {
-            return $this->responseApi(__('messages.not_found'), 404);
+            return $this->responseApi(__('messages.not_found'),404);
         }
  
         $otp = rand(1000, 9999);
@@ -168,7 +167,7 @@ public function resetpassword(ResetPassword $request)
 
     if (!$user) 
     {
-        return $this->responseApi(__('messages.not_found'), 404);
+        return $this->responseApi(__('messages.not_found'),404);
     }
 
     if ($user->trashed()) 

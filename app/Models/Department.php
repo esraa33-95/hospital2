@@ -2,16 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class Department extends Model
+use Illuminate\Database\Eloquent\Model;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
+
+class Department extends Model implements TranslatableContract
 {
-    protected $fillable=[
-        'name',
-      ];
+    use Translatable;
+    
+   public $translatedAttributes = ['name'];
+
+    protected $fillable = [];
 
       public function users()
       {
         return $this->hasMany(User::class);
       }
+
+    
+
 }
