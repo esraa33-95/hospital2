@@ -11,11 +11,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\IsAdmin;
 
 
+//login
+Route::post('/login',[AdminController::class,'login']);
+
 Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function () {
 
     Route::controller(AdminController::class)->group(function () {
         Route::post('/', 'update');
-        Route::post('/', 'login');
         Route::post('/', 'logout');
     });
 

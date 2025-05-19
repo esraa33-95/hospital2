@@ -10,6 +10,7 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Traits\Common;
 use App\Traits\Response;
+use App\Transformers\UserTransform;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -36,16 +37,16 @@ class DoctorController extends Controller
               ->orWhere('mobile', 'like', '%' . $search . '%');
         });
     }
-    if (!$take || $take == 0)
-     {
-        return $this->responseApi('', UserResource::collection([]), 200, ['count' => 0]);
-    }
-
+    
     $total = $query->count(); 
 
-    $doctors = $query->skip($skip ?? 0)->take($take )->get();
+    $doctors = $query->skip($skip ?? 0)->take($take ?? 0)->get();
 
-    return $this->responseApi('',UserResource::collection($doctors),200,['count' => $total]);
+     $doctors =  fractal()->collection($doctors)
+                  ->transformWith(new UserTransform())
+                   ->toArray();
+
+    return $this->responseApi('',$doctors,200,['count' => $total]);
     }
 
     /**
@@ -54,15 +55,19 @@ class DoctorController extends Controller
     public function create(RegisterRequest $request)
     {
         $data = $request->validated();
-    
-        if($request->hasFile('image'))
-        {
-            $data['image'] = $this->uploadFile($request->image,'assets/images');
-        }
+
 
         $data['password'] = Hash::make($data['password']);  
 
          $doctor =  User::create($data);
+
+         if ($request->hasFile('image')) 
+         {
+            $doctor->addMedia($request->file('image'))
+                   ->toMediaCollection('image');
+        }
+
+        $doctor = fractal($doctor, new UserTransform())->toArray();
 
          return $this->responseApi(__('messages.store_doctors'),$doctor,200);
     }
@@ -81,7 +86,13 @@ class DoctorController extends Controller
         return $this->responseApi(__('messages.trash'), 404);
        }
 
-        return new UserResource($doctor);
+       $doctor = fractal()
+                  ->item($doctor)
+                 ->transformWith(new UserTransform())
+                 ->toArray();
+
+       return $this->responseApi('', $doctor, 200);
+
     }
 
     /**
@@ -116,7 +127,13 @@ class DoctorController extends Controller
 
     $doctor->save();
 
-    return $this->responseApi(__('messages.update_doctors'), 200);
+     $doctor = fractal()
+        ->item($doctor)
+        ->transformWith(new UserTransform())
+        ->toArray();
+
+    return $this->responseApi(__('messages.update_doctors'),$doctor,200);
+
 }
 
     /**

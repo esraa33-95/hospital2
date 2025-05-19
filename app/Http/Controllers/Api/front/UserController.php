@@ -5,14 +5,13 @@ namespace App\Http\Controllers\Api\front;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\front\ChangePassword;
 use App\Http\Requests\Api\front\updateUser;
-use App\Http\Resources\DoctorResource;
-use App\Http\Resources\UserResource;
 use App\Models\Document;
 use App\Models\Rate;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\Common;
 use App\Traits\Response;
+use App\Transformers\UserTransform;
 use Illuminate\Support\Facades\Hash;
 
 
@@ -21,62 +20,36 @@ class UserController extends Controller
     use Common;
     use Response;
 
-
     //show profile 
     public function userprofile()
     {
        $user = auth()->user(); 
-       return new UserResource($user);
+
+        $user = fractal()
+                 ->item($user)
+                 ->transformWith(new UserTransform())
+                 ->toArray();
+
+       return $this->responseApi('', $user, 200);
           
     }
 
+
     //upload image
-    // public function uploadimage(Request $request)
-    // {
-    //     $request->validate([
-    //         'image' => 'required|mimes:jpeg,jpg,png,pdf|max:5120', 
+    public function uploadimage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|mimes:jpeg,jpg,png,pdf|max:5120', 
 
-    //     ]);
+        ]);
 
-    //     if ($request->hasFile('image'))
-    //     {
-    //        $data['image'] = $this->uploadFile($request->file('image'), 'assets/images'); 
-    //     }
+        if ($request->hasFile('image'))
+        {
+           $data['image'] = $this->uploadFile($request->file('image'), 'assets/images'); 
+        }
 
-    //     return $this->responseApi(__('messages.upload'));
-    // }
-
-
-
-
-    public function uploadimage(Request $request, string $id)
-{
-    $request->validate([
-        'file' => 'required|mimes:jpeg,jpg,png,pdf|max:5120', 
-    ]);
-
-    if ($request->hasFile('file')) {
-      
-        $file = $request->file('file');
-        $filePath = $file->store('assets/images', 'public'); 
-
-       
-        $document = new Document();
-        $document->file_path = $filePath;
-        $document->file_type = $file->getClientOriginalExtension(); 
-        $document->save();
-
-        return response()->json([
-            'message' => 'File uploaded and saved to database.',
-            'document' => $document,
-        ], 201);
+        return $this->responseApi(__('messages.upload'));
     }
-
-    return response()->json([
-        'message' => 'No file was uploaded.',
-    ], 400);
-}
-
 
 //update data
     public function update(updateUser $request)
@@ -85,10 +58,9 @@ class UserController extends Controller
 
         $uuid = $request->input('uuid');
         
-        if ($request->hasFile('image'))
-        {
-           $data['image'] = $this->uploadFile($request->file('image'), 'assets/images'); 
-        }
+         if ($request->hasFile('image')) {
+        $data['image'] = $this->uploadFile($request->file('image'), 'assets/images'); 
+    }
 
         $types = [2,3];
 
@@ -107,7 +79,12 @@ class UserController extends Controller
 
     $user->fill($data)->save();
 
-    return new UserResource($user);
+    $user = fractal()
+        ->item($user)
+        ->transformWith(new UserTransform())
+        ->toArray();
+
+   return $this->responseApi(__('profile update successfully'),$user,200);
  }
 
 //delete account
@@ -149,6 +126,8 @@ public function changePassword(ChangePassword $request)
     return $this->responseApi(__('messages.change_password'),200);
 }
 
+
+
 //rate for doctor
 // public function rate(Request $request,string $id)
 //     {
@@ -178,7 +157,33 @@ public function changePassword(ChangePassword $request)
 
 // }
 
+//     public function uploadimage(Request $request, string $id)
+// {
+//     $request->validate([
+//         'file' => 'required|mimes:jpeg,jpg,png,pdf|max:5120', 
+//     ]);
 
+//     if ($request->hasFile('file')) {
+      
+//         $file = $request->file('file');
+//         $filePath = $file->store('assets/images', 'public'); 
+
+       
+//         $document = new Document();
+//         $document->file_path = $filePath;
+//         $document->file_type = $file->getClientOriginalExtension(); 
+//         $document->save();
+
+//         return response()->json([
+//             'message' => 'File uploaded and saved to database.',
+//             'document' => $document,
+//         ], 201);
+//     }
+
+//     return response()->json([
+//         'message' => 'No file was uploaded.',
+//     ], 400);
+// }
 
 
 

@@ -16,6 +16,7 @@ use App\Http\Requests\Api\front\VerifyEmailOtp;
 use App\Http\Resources\UserResource;
 use App\Models\Otp;
 use App\Traits\Response;
+use App\Transformers\UserTransform;
 use Carbon\Carbon;
 
 
@@ -70,7 +71,12 @@ if ($user->is_verified !== 1)
 }
    $token = $user->createToken('auth_token')->plainTextToken;
 
-   return $this->responseApi(__('messages.login'),new UserResource($user),200,['token'=>$token]);
+    $user = fractal()
+                 ->item($user)
+                 ->transformWith(new UserTransform())
+                 ->toArray();
+
+   return $this->responseApi(__('messages.login'),$user,200,['token'=>$token]);
 
 }
 

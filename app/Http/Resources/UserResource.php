@@ -19,7 +19,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'mobile' => $this->mobile,
-            'image' => $this->image ? url('assets/images/' . $this->image) : null,
+            'image' => $this->getFirstMediaUrl('image') ? :url('public/assets/images/' . $this->image),
             'department_name' =>($this->user_type == 2 && $this->department) ? $this->department->name : null,
             'user_type'=>$this->user_type,
         ];

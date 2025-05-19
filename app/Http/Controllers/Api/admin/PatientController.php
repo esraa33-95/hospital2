@@ -9,6 +9,7 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Traits\Common;
 use App\Traits\Response;
+use App\Transformers\UserTransform;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -36,16 +37,16 @@ class PatientController extends Controller
         });
     }
    
-    if (!$take || $take == 0)
-     {
-        return $this->responseApi('', UserResource::collection([]), 200, ['count' => 0]);
-    }
 
     $total = $query->count(); 
 
-    $patients = $query->skip($skip ?? 0)->take($take)->get();
+    $patients = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+
+    $patients =  fractal()->collection($patients)
+                  ->transformWith(new UserTransform())
+                   ->toArray();
     
-    return $this->responseApi('',UserResource::collection($patients),200,['count' => $total]);
+    return $this->responseApi('',$patients,200,['count' => $total]);
     }
 
     
@@ -56,16 +57,19 @@ class PatientController extends Controller
     {
         $data = $request->validated();
     
-        if($request->hasFile('image'))
-        {
-            $data['image'] = $this->uploadFile($request->image,'assets/images');
-        }
-
         $data['password'] = Hash::make($data['password']);  
 
-         $doctor =  User::create($data);
+         $patient =  User::create($data);
 
-         return $this->responseApi(__('messages.store_patients'),$doctor,201);
+         if ($request->hasFile('image')) 
+         {
+            $patient->addMedia($request->file('image'))
+                   ->toMediaCollection('image');
+        }
+
+        $patient = fractal($patient, new UserTransform())->toArray();
+
+         return $this->responseApi(__('messages.store_patients'),$patient,201);
     }
 
     /**
@@ -88,7 +92,13 @@ class PatientController extends Controller
          return $this->responseApi(__('messages.trash'),null, 403);
       }
 
-        return new UserResource($patient);
+      $patient = fractal()
+                  ->item($patient)
+                 ->transformWith(new UserTransform())
+                 ->toArray();
+
+       return $this->responseApi('', $patient, 200);
+       
     }
    
     /**
@@ -121,10 +131,12 @@ class PatientController extends Controller
         }
     }
 
-     if ($request->hasFile('image'))
-        {
-           $data['image'] = $this->uploadFile($request->file('image'), 'assets/images'); 
-        }
+    if ($request->hasFile('image')) 
+     {
+               $patient->clearMediaCollection('image');
+                $patient->addMedia($request->file('image'))
+                       ->toMediaCollection('image');
+    }
 
         if(!isset($patient->password ) && !Hash::check($patient->password ,$data['password']) )
         {
@@ -133,6 +145,11 @@ class PatientController extends Controller
         }
 
     $patient->save();
+
+     $patient = fractal()
+        ->item($patient)
+        ->transformWith(new UserTransform())
+        ->toArray();
 
     return $this->responseApi(__('messages.update_patient'),$patient,200);
 }

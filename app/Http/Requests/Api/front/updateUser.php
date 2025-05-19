@@ -28,7 +28,7 @@ class updateUser extends FormRequest
             'email'  => 'nullable|email',
             'mobile' => 'nullable|string' ,
             'image'  => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
-            'password'=>'nullable|min:6',
+            // 'password'=>'nullable|min:6',
             'department_id' => [
                  Rule::requiredIf(function () {
                  return request('user_type') == UserType::Doctor->value;

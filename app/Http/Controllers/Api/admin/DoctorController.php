@@ -10,6 +10,7 @@ use App\Http\Requests\Api\front\RegisterRequest;
 use App\Http\Requests\Api\front\updateUser;
 use App\Http\Resources\UserResource;
 use App\Traits\Common;
+use App\Transformers\UserTransform;
 use Illuminate\Support\Facades\Hash;
 
 class DoctorController extends Controller
@@ -36,17 +37,15 @@ class DoctorController extends Controller
         });
     }
 
-    if (!$take || $take <= 0)
-     {
-        return $this->responseApi('', [], 200, ['count' => 0]);
-      
-    }
-
      $total = $query->count();
   
-    $doctors = $query->skip($skip ?? 0)->take($take)->get();
+     $doctors = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+
+      $doctors =  fractal()->collection($doctors)
+                  ->transformWith(new UserTransform())
+                   ->toArray();
     
-    return $this->responseApi('',UserResource::collection($doctors),200,['count' => $total]);
+     return $this->responseApi('',$doctors,200,['count' => $total]);
 
     }
 
@@ -57,14 +56,17 @@ class DoctorController extends Controller
     {
         $data = $request->validated();
     
-        if($request->hasFile('image'))
-        {
-            $data['image'] = $this->uploadFile($request->image,'assets/images');
-        }
-
         $data['password'] = Hash::make($data['password']);  
 
          $doctor =  User::create($data);
+
+         if ($request->hasFile('image')) 
+         {
+            $doctor->addMedia($request->file('image'))
+                   ->toMediaCollection('image');
+        }
+
+        $doctor = fractal($doctor, new UserTransform())->toArray();
 
          return $this->responseApi(__('messages.store_doctors'),$doctor,201);
     }
@@ -89,7 +91,12 @@ class DoctorController extends Controller
            return $this->responseApi(__('messages.trash_doctor'), 403);
         }
 
-        return new UserResource($doctor);
+        $doctor = fractal()
+                  ->item($doctor)
+                 ->transformWith(new UserTransform())
+                 ->toArray();
+
+       return $this->responseApi('', $doctor, 200);
     }
 
    
@@ -123,10 +130,12 @@ class DoctorController extends Controller
         }
     }
 
-     if ($request->hasFile('image'))
-        {
-           $data['image'] = $this->uploadFile($request->file('image'), 'assets/images'); 
-        }
+     if ($request->hasFile('image')) 
+     {
+               $doctor->clearMediaCollection('image');
+                $doctor->addMedia($request->file('image'))
+                       ->toMediaCollection('image');
+    }
 
         if(!isset($doctor->password ) && !Hash::check($doctor->password ,$data['password']) )
         {
@@ -135,6 +144,11 @@ class DoctorController extends Controller
         }
 
        $doctor->save();
+    
+       $doctor = fractal()
+        ->item($doctor)
+        ->transformWith(new UserTransform())
+        ->toArray();
 
     return $this->responseApi(__('messages.update_doctors'),$doctor,200);
 }

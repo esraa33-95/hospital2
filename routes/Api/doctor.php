@@ -18,12 +18,12 @@ Route::middleware(['auth:sanctum', 'api_localization'])->group(function () {
         // Route::get('filter', 'filterDoctors');    
     });
 
-    Route::controller(UserController::class)->group(function () {
+    Route::prefix('profile')->controller(UserController::class)->group(function () {
         Route::get('/', 'userprofile');      
-        Route::post('/', 'update');           
+        Route::patch('/', 'update');           
         Route::post('/', 'changePassword');
-        Route::post('/', 'uploadimage');
         Route::delete('/', 'deleteAccount');
+         Route::post('/', 'uploadimage');  
         // Route::post('rate/{id}', 'rate');         
     });
 

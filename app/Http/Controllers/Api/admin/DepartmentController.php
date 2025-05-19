@@ -8,6 +8,8 @@ use App\Http\Requests\Api\admin\UpdateDepartment;
 use App\Http\Resources\DepartmentResource;
 use App\Models\Department;
 use App\Traits\Response;
+use App\Transformers\UserTransform;
+use DepartmentTransform;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -60,7 +62,11 @@ public function index(Request $request)
 
     $departments = $query->skip($skip ?? 0)->take($take ?? 0)->get();
 
-    return $this->responseApi('', DepartmentResource::collection($departments, $locale), 200, ['count' => $total]);
+     $departments =  fractal()->collection($departments)
+                  ->transformWith(new DepartmentTransform())
+                   ->toArray();
+
+    return $this->responseApi('', $departments, 200, ['count' => $total]);
 }
 
 
@@ -77,7 +83,9 @@ public function store(CreateDepartment $request)
 
     $department->save();
 
-   return $this->responseApi(__('messages.store_department'),new DepartmentResource($department,$locale), 201);
+     $department = fractal($department, new DepartmentTransform())->toArray();
+
+   return $this->responseApi(__('messages.store_department'),$department, 201);
 }
 
 
@@ -90,7 +98,12 @@ public function store(CreateDepartment $request)
 
         $department = Department::findOrFail($id);
 
-        return  $this->responseApi('',new DepartmentResource($department,$locale),200);
+         $department = fractal()
+                  ->item($department)
+                 ->transformWith(new DepartmentTransform())
+                 ->toArray();
+
+        return  $this->responseApi('',$department,200);
     }
 
     /**
@@ -124,10 +137,13 @@ public function store(CreateDepartment $request)
 
     $department->save();
 
-    return $this->responseApi(__('messages.update_department'), new DepartmentResource($department,$locale), 200);
+     $department = fractal()
+        ->item($department)
+        ->transformWith(new DepartmentTransform())
+        ->toArray();
+
+    return $this->responseApi(__('messages.update_department'), $department, 200);
 }
-
-
 
     /**
      * Remove the specified resource from storage.

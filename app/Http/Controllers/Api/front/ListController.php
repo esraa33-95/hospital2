@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api\front;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\DepartmentResource;
-use App\Http\Resources\UserResource;
 use App\Traits\Response;
 use App\Models\Department;
 use App\Models\User;
+use App\Transformers\UserTransform;
+use DepartmentTransform;
 use Illuminate\Http\Request;
 
 class ListController extends Controller
@@ -28,16 +28,16 @@ class ListController extends Controller
         $query->where('name', 'like', '%' . $search . '%');
       }
 
-      if (!$take || $take == 0)
-     {
-        return $this->responseApi('', DepartmentResource::collection([]), 200, ['count' => 0]);
-    }
 
     $total = $query->count(); 
 
-    $department = $query->skip($skip ?? 0)->take($take)->get();
+    $department = $query->skip($skip ?? 0)->take($take ?? 0)->get();
 
-    return $this->responseApi('',DepartmentResource::collection($department),200,['count' => $total]);
+     $department =  fractal()->collection($department)
+                  ->transformWith(new DepartmentTransform())
+                   ->toArray();
+
+    return $this->responseApi('',$department,200,['count' => $total]);
 
     }
 
@@ -57,16 +57,16 @@ class ListController extends Controller
             $query->where('name', 'like', '%' . $search . '%');
         }
     
-        if (!$take || $take == 0)
-     {
-        return $this->responseApi('', UserResource::collection([]), 200, ['count' => 0]);
-    }
 
         $total = $query->count();
 
-        $doctors = $query->skip($skip ?? 0)->take($take)->get();
+        $doctors = $query->skip($skip ?? 0)->take($take ?? 0)->get();
 
-     return $this->responseApi('',UserResource::collection($doctors),200,['count' => $total]);
+         $doctors = fractal()->collection($doctors)
+                  ->transformWith(new UserTransform())
+                   ->toArray();
+
+     return $this->responseApi('',$doctors,200,['count' => $total]);
 
     }
     

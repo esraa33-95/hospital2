@@ -11,6 +11,7 @@ use App\Http\Resources\AdminResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Traits\Response;
+use App\Transformers\UserTransform;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -33,7 +34,12 @@ class AdminController extends Controller
 
        $token = $user->createToken('auth_token')->plainTextToken;
 
-          return $this->responseApi(__('messages.login'),new UserResource($user),200,['token'=>$token]);
+       $admin = fractal()
+                 ->item($user)
+                 ->transformWith(new UserTransform())
+                 ->toArray();
+
+          return $this->responseApi(__('messages.login'),$admin,200,['token'=>$token]);
        
     }
 
@@ -70,7 +76,12 @@ if (!empty($data['password'])  && !Hash::check($data['password'] , $user->passwo
 
   $user->save();
 
-  return new AdminResource($user);
+  $admin = fractal()
+        ->item($user)
+        ->transformWith(new UserTransform())
+        ->toArray();
+
+   return $this->responseApi('',$admin,200);
 
 }
 
