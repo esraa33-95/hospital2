@@ -2,23 +2,26 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DepartmentResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(Request $request): array
+    
+     protected $locale;
+
+    public function __construct($resource, $locale = null)
     {
-         $lang = $request->query('lang', app()->getLocale());
-
-        return [
-        'name' => $this->getTranslation('name', $lang),
-          ];
-
+        parent::__construct($resource);
+        $this->locale = $locale ?? app()->getLocale();
     }
+
+    
+    public function toArray($request): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->translate($this->locale)->name,
+        ];
+    }
+
 }

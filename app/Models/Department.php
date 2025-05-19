@@ -20,6 +20,9 @@ class Department extends Model implements TranslatableContract
         return $this->hasMany(User::class);
       }
 
-    
+       public function translates()
+{
+    return $this->hasMany(DepartmentTranslation::class);
+}
 
 }

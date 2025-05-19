@@ -6,9 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\admin\CreateDepartment;
 use App\Http\Requests\Api\admin\UpdateDepartment;
 use App\Http\Resources\DepartmentResource;
-use App\Http\Resources\UserResource;
 use App\Models\Department;
-use App\Models\DepartmentTranslation;
 use App\Traits\Response;
 use Illuminate\Http\Request;
 
@@ -21,34 +19,50 @@ class DepartmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+//     public function index(Request $request)
+// {
+//     $search = $request->input('search');
+//     $take = $request->input('take'); 
+//     $skip = $request->input('skip');  
+ 
+//     $query = Department::query();
+    
+//     if ($search)
+//      {
+//         $query->where(function ($q) use ($search) {
+//             $q->where('name', 'like', '%' . $search . '%');
+//         });
+//     }
+
+
+//     $total = $query->count(); 
+
+//     $departments = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+    
+
+//     return $this->responseApi('',DepartmentResource::collection($departments),200,['count' => $total]);
+// }
+    
+public function index(Request $request)
 {
     $search = $request->input('search');
     $take = $request->input('take'); 
     $skip = $request->input('skip');  
- 
+    $locale = $request->query('lang', app()->getLocale());
+
     $query = Department::query();
-    
-    if ($search)
-     {
-        $query->where(function ($q) use ($search) {
-            $q->where('name', 'like', '%' . $search . '%');
-        });
+
+    if ($search) {
+        $query->whereTranslationLike('name', '%' . $search . '%', $locale);
     }
 
-     if (!$take || $take == 0)
-     {
-        return $this->responseApi('', DepartmentResource::collection([]), 200, ['count' => 0]);
-    }
+    $total = $query->count();
 
-    $total = $query->count(); 
+    $departments = $query->skip($skip ?? 0)->take($take ?? 0)->get();
 
-    $departments = $query->skip($skip ?? 0)->take($take)->get();
-    
-
-    return $this->responseApi('',DepartmentResource::collection($departments),200,['count' => $total]);
+    return $this->responseApi('', DepartmentResource::collection($departments, $locale), 200, ['count' => $total]);
 }
-    
+
 
 //create
 public function store(CreateDepartment $request)
@@ -63,21 +77,20 @@ public function store(CreateDepartment $request)
 
     $department->save();
 
-    app()->setLocale($locale);
-
-    return $this->responseApi(__('messages.store_department'), $department, 201);
+   return $this->responseApi(__('messages.store_department'),new DepartmentResource($department,$locale), 201);
 }
-
 
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request,string $id)
     {
+         $locale = $request->query('lang', app()->getLocale());
+
         $department = Department::findOrFail($id);
 
-        return  $this->responseApi('',$department,200);
+        return  $this->responseApi('',new DepartmentResource($department,$locale),200);
     }
 
     /**
@@ -111,9 +124,7 @@ public function store(CreateDepartment $request)
 
     $department->save();
 
-    app()->setLocale($locale);
-
-    return $this->responseApi(__('messages.update_department'), $department, 200);
+    return $this->responseApi(__('messages.update_department'), new DepartmentResource($department,$locale), 200);
 }
 
 
