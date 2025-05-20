@@ -69,24 +69,6 @@ public function index(Request $request)
 
 
 //create
-// public function store(CreateDepartment $request)
-// {
-//     $data = $request->validated();
-
-//     $locale = $request->query('lang', $request->query('locale', app()->getLocale()));
-
-//     $department = new Department();
-
-//     $department->translateOrNew($locale)->name = $data['name'];
-
-//     $department->save();
-
-//    $department = fractal($department, new DepartmentTransform())->toArray()['data'];
-
-//    return $this->responseApi(__('messages.store_department'),$department, 201);
-// }
-
-
 public function store(CreateDepartment $request)
 {
     $data = $request->validated();

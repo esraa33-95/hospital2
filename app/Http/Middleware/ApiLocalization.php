@@ -15,8 +15,8 @@ class ApiLocalization
      */
     public function handle(Request $request, Closure $next): Response
     {
-       $locale = $request->query('lang') ? 'ar': 'en';
-       
+       $locale = $request->query('lang') ? $request->input('lang'): 'en';
+
          app()->setLocale($locale);
 
          return $next($request);
