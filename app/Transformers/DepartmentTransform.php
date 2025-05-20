@@ -1,22 +1,21 @@
-
 <?php
 
+namespace App\Transformers;
+
+use App\Models\Department;
 use League\Fractal\TransformerAbstract;
 
 class DepartmentTransform extends TransformerAbstract
 {
-    protected $locale;
+   
 
-    public function __construct($locale = null)
-    {
-        $this->locale = $locale ?? app()->getLocale();
-    }
 
-    public function transform($department): array
+   
+    public function transform( Department $department):array
     {
         return [
-            'id' => $department->id,
-            'name' => $department->translate($this->locale)->name,
+              'id' => $department->id,
+              'name' => $department->name,
         ];
     }
 }

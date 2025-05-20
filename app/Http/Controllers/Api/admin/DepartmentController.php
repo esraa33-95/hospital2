@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Api\admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\admin\CreateDepartment;
 use App\Http\Requests\Api\admin\UpdateDepartment;
-use App\Http\Resources\DepartmentResource;
 use App\Models\Department;
 use App\Traits\Response;
-use App\Transformers\UserTransform;
-use DepartmentTransform;
+use App\Transformers\DepartmentTransform;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -71,35 +69,51 @@ public function index(Request $request)
 
 
 //create
+// public function store(CreateDepartment $request)
+// {
+//     $data = $request->validated();
+
+//     $locale = $request->query('lang', $request->query('locale', app()->getLocale()));
+
+//     $department = new Department();
+
+//     $department->translateOrNew($locale)->name = $data['name'];
+
+//     $department->save();
+
+//    $department = fractal($department, new DepartmentTransform())->toArray()['data'];
+
+//    return $this->responseApi(__('messages.store_department'),$department, 201);
+// }
+
+
 public function store(CreateDepartment $request)
 {
     $data = $request->validated();
 
-    $locale = $request->query('lang', $request->query('locale', app()->getLocale()));
-
     $department = new Department();
 
-    $department->translateOrNew($locale)->name = $data['name'];
+    foreach ($data['name'] as $locale => $name) 
+    {
+        $department->translateOrNew($locale)->name = $name;
+    }
 
     $department->save();
+ 
+    $department = fractal($department, new DepartmentTransform())->toArray()['data'];
 
-     $department = fractal($department, new DepartmentTransform())->toArray();
-
-   return $this->responseApi(__('messages.store_department'),$department, 201);
+    return $this->responseApi(__('messages.store_department'), $department, 201);
 }
-
 
     /**
      * Display the specified resource.
      */
     public function show(Request $request,string $id)
-    {
-         $locale = $request->query('lang', app()->getLocale());
-
+    {     
         $department = Department::findOrFail($id);
 
          $department = fractal()
-                  ->item($department)
+                 ->item($department)
                  ->transformWith(new DepartmentTransform())
                  ->toArray();
 
@@ -122,28 +136,25 @@ public function store(CreateDepartment $request)
     //     return  $this->responseApi(__('messages.update_department'),$department,200);
     // }
 
-    public function update(UpdateDepartment $request, string $id)
+ public function update(CreateDepartment $request, $id)
 {
     $data = $request->validated();
 
-    $locale = $request->query('lang', $request->query('locale', app()->getLocale()));
-
     $department = Department::findOrFail($id);
 
-    if (!empty($data['name'])) 
+    foreach ($data['name'] as $locale => $name) 
     {
-        $department->translateOrNew($locale)->name = $data['name'];
+        $department->translateOrNew($locale)->name = $name;
     }
 
     $department->save();
 
-     $department = fractal()
-        ->item($department)
-        ->transformWith(new DepartmentTransform())
-        ->toArray();
+    $department = fractal($department, new DepartmentTransform())
+                  ->toArray()['data'];
 
-    return $this->responseApi(__('messages.update_department'), $department, 200);
+    return $this->responseApi(__('messages.update_department'), $department);
 }
+
 
     /**
      * Remove the specified resource from storage.
