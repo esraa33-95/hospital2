@@ -128,7 +128,7 @@ public function store(CreateDepartment $request)
     {
         $department->translateOrNew($locale)->name = $name;
     }
-
+    
     $department->save();
 
     $department = fractal($department, new DepartmentTransform())
