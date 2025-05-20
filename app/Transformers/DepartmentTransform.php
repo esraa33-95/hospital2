@@ -8,9 +8,7 @@ use League\Fractal\TransformerAbstract;
 class DepartmentTransform extends TransformerAbstract
 {
    
-
-
-   
+  
     public function transform( Department $department):array
     {
         return [

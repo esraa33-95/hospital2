@@ -22,7 +22,11 @@ class UpdateDepartment extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=>'nullable|string|max:255',
+            // 'name'=>'nullable|string|max:255',
+
+            'name' => 'nullable|array',
+           'name.ar' => 'nullable|string',
+           'name.en' => 'nullable|string',
         ];
     }
 }

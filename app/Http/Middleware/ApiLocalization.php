@@ -15,14 +15,17 @@ class ApiLocalization
      */
     public function handle(Request $request, Closure $next): Response
     {
+       $locale = $request->query('lang') ? 'ar': 'en';
+       
+         app()->setLocale($locale);
 
-        $locale = $request->query('lang') ?? $request->query('locale');
+         return $next($request);
 
-      if (in_array($locale, config('translatable.locales')))
-       {
-            app()->setLocale($locale);
-        }
-       return $next($request);
+      //  $locale = $request->query('lang') ?? $request->query('locale');
 
+    //   if (in_array($locale, config('translatable.locales')))
+    //    {
+    //         app()->setLocale($locale);
+    //     }
     }
 }

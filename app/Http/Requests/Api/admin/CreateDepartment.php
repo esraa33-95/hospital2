@@ -24,7 +24,7 @@ class CreateDepartment extends FormRequest
         return [
         //  'name' => ['required', 'string', 'max:255'],
 
-         'name' => 'required|array',
+        'name' => 'required|array',
         'name.ar' => 'required|string',
         'name.en' => 'required|string',
     ];

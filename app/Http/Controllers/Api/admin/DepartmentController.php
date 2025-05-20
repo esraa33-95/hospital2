@@ -136,7 +136,7 @@ public function store(CreateDepartment $request)
     //     return  $this->responseApi(__('messages.update_department'),$department,200);
     // }
 
- public function update(CreateDepartment $request, $id)
+ public function update(UpdateDepartment $request, $id)
 {
     $data = $request->validated();
 
