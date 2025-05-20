@@ -97,7 +97,7 @@ public function store(CreateDepartment $request)
          $department = fractal()
                  ->item($department)
                  ->transformWith(new DepartmentTransform())
-                 ->toArray();
+                 ->toArray()['data'];
 
         return  $this->responseApi('',$department,200);
     }
