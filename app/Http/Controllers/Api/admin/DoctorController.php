@@ -12,6 +12,7 @@ use App\Http\Resources\UserResource;
 use App\Traits\Common;
 use App\Transformers\UserTransform;
 use Illuminate\Support\Facades\Hash;
+use League\Fractal\Serializer\ArraySerializer;
 
 class DoctorController extends Controller
 {
@@ -39,10 +40,19 @@ class DoctorController extends Controller
 
      $total = $query->count();
   
-     $doctors = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+      if ($take)
+    {
+        $query->skip($skip ?? 0)->take($take);
+    } elseif ($skip) 
+    {
+        $query->skip($skip);
+    }
+
+    $doctors = $query->get();
 
       $doctors =  fractal()->collection($doctors)
                   ->transformWith(new UserTransform())
+                   ->serializeWith(new ArraySerializer())
                    ->toArray();
     
      return $this->responseApi('',$doctors,200,['count' => $total]);
@@ -66,7 +76,9 @@ class DoctorController extends Controller
                    ->toMediaCollection('image');
         }
 
-        $doctor = fractal($doctor, new UserTransform())->toArray();
+        $doctor = fractal($doctor, new UserTransform())
+                   ->serializeWith(new ArraySerializer())
+                  ->toArray();
 
          return $this->responseApi(__('messages.store_doctors'),$doctor,201);
     }
@@ -76,24 +88,14 @@ class DoctorController extends Controller
      */
     public function show(string $id)
     {
-       $doctor = User::withTrashed()
-       ->where('user_type',2)
+       $doctor = User::where('user_type',2)
        ->where('id',$id)
-       ->first();
-
-         if(!$doctor)
-       {
-         return $this->responseApi(__('messages.trash_doctor'),null, 403);
-       }
-       
-       if ($doctor->trashed())
-        {
-           return $this->responseApi(__('messages.trash_doctor'), 403);
-        }
-
+       ->firstorFail();
+   
         $doctor = fractal()
-                  ->item($doctor)
+                 ->item($doctor)
                  ->transformWith(new UserTransform())
+                  ->serializeWith(new ArraySerializer())
                  ->toArray();
 
        return $this->responseApi('', $doctor, 200);
@@ -107,21 +109,11 @@ class DoctorController extends Controller
 {
     $data = $request->validated();
 
-    $doctor = User::withTrashed()
-    ->where('user_type',2)
+    $doctor = User::where('user_type',2)
     ->where('id',$id)
-    ->first();
+    ->firstOrFail();
 
-         if(!$doctor)
-       {
-         return $this->responseApi(__('messages.trash_doctor'),null, 403);
-       }
-
-    if ($doctor->trashed()) 
-    {
-        return $this->responseApi(__('messages.trash_doctor'),[], 403);
-    }
-
+       
    foreach (['name', 'email', 'mobile', 'department_id', 'user_type'] as $field)
     {
         if (isset($data[$field])) 
@@ -148,6 +140,7 @@ class DoctorController extends Controller
        $doctor = fractal()
         ->item($doctor)
         ->transformWith(new UserTransform())
+        ->serializeWith(new ArraySerializer())
         ->toArray();
 
     return $this->responseApi(__('messages.update_doctors'),$doctor,200);
@@ -158,20 +151,10 @@ class DoctorController extends Controller
      */
     public function destroy(string $id)
 {
-    $doctor = User::withTrashed()
-        ->where('user_type', 2) 
+    $doctor = User::where('user_type', 2) 
         ->where('id',$id)
-        ->first();
-
-         if(!$doctor)
-       {
-         return $this->responseApi(__('messages.trash_doctor'),null, 403);
-       }
-
-    if ($doctor->trashed()) 
-    {
-        return $this->responseApi(__('messages.trash_doctor'), [],409); 
-    }
+        ->firstorFail();
+   
 
     $doctor->delete();
 

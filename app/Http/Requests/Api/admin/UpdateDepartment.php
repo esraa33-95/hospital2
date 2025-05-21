@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateDepartment extends FormRequest
 {
@@ -22,11 +23,12 @@ class UpdateDepartment extends FormRequest
     public function rules(): array
     {
         return [
-            // 'name'=>'nullable|string|max:255',
-
-            'name' => 'nullable|array',
-           'name.ar' => 'nullable|string',
-           'name.en' => 'nullable|string',
+          'name_en' => [ 'nullable', 'string', 'max:255',
+            Rule::unique('department_translations', 'name')->where('locale', 'en'),
+        ],
+        'name_ar' => [ 'nullable','string','max:255',
+            Rule::unique('department_translations', 'name')->where('locale', 'ar'),
+        ],
         ];
     }
 }

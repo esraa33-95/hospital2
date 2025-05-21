@@ -11,7 +11,7 @@ class Department extends Model implements TranslatableContract
 {
     use Translatable;
     
-   public $translatedAttributes = ['name'];
+     public $translatedAttributes = ['name'];
 
     protected $fillable = [];
 

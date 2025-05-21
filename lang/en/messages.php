@@ -44,7 +44,14 @@ return [
 'change'=>'Current password is incorrect',
 'different'=>'New password must be different from the current password',
 
-
+//name 
+'name_en' => [ 'unique' => 'The English name already exists.',
+ 'required'=>'this field is required'
+],
+'name_ar' => ['
+unique' => 'The Arabic name already exists.',
+ 'required'=>'this field is required'],
    
-    
+
+
 ];

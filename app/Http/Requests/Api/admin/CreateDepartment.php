@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CreateDepartment extends FormRequest
 {
@@ -22,11 +23,13 @@ class CreateDepartment extends FormRequest
     public function rules(): array
     {
         return [
-        //  'name' => ['required', 'string', 'max:255'],
-
-        'name' => 'required|array',
-        'name.ar' => 'required|string',
-        'name.en' => 'required|string',
+        'name_en' => [ 'required', 'string', 'max:255',
+            Rule::unique('department_translations', 'name')->where('locale', 'en'),
+        ],
+        'name_ar' => [ 'required','string','max:255',
+            Rule::unique('department_translations', 'name')->where('locale', 'ar'),
+        ],
+     
     ];
 
    

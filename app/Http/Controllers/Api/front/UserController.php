@@ -38,14 +38,15 @@ class UserController extends Controller
     //upload image
     public function uploadimage(Request $request)
     {
-        $request->validate([
+      $data =  $request->validate([
             'image' => 'required|mimes:jpeg,jpg,png,pdf|max:5120', 
 
         ]);
 
         if ($request->hasFile('image'))
         {
-           $data['image'] = $this->uploadFile($request->file('image'), 'assets/images'); 
+           $data->addMedia($request->file('image'))
+                   ->toMediaCollection('image');
         }
 
         return $this->responseApi(__('messages.upload'));

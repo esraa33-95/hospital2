@@ -13,7 +13,9 @@ class DepartmentTransform extends TransformerAbstract
     {
         return [
               'id' => $department->id,
-              'name' => $department->name,
+              'name_en' => $department->translate('en')->name,
+              'name_ar' => $department->translate('ar')->name,
+              'created_at'=>$department->created_at->toDateTimeString(),
         ];
     }
 }

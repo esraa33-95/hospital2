@@ -25,7 +25,7 @@ Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function
         Route::post('/', 'store');
         Route::get('/', 'index');
         Route::get('/{id}', 'show');
-        Route::patch('/{id}', 'update');
+        Route::put('/{id}', 'update');
         Route::delete('/{id}', 'destroy');
     });
    
@@ -33,7 +33,7 @@ Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function
         Route::post('/', 'store');
         Route::get('/', 'index');
         Route::get('/{id}', 'show');
-        Route::patch('/{id}', 'update');
+        Route::put('/{id}', 'update');
         Route::delete('/{id}', 'destroy');
     });
 
@@ -41,7 +41,7 @@ Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function
         Route::post('/', 'store');
         Route::get('/', 'index');
         Route::get('/{id}', 'show');
-        Route::patch('/{id}', 'update');
+        Route::put('/{id}', 'update');
         Route::delete('/{id}', 'destroy');
     });
 
@@ -50,7 +50,7 @@ Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function
         Route::post('/', 'store');
         Route::get('/', 'index');
         Route::get('/{id}', 'show');
-        Route::patch('/{id}', 'update');
+        Route::put('/{id}', 'update');
         Route::delete('/{id}', 'destroy');
     });
     

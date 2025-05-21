@@ -12,6 +12,7 @@ use App\Traits\Response;
 use App\Transformers\UserTransform;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use League\Fractal\Serializer\ArraySerializer;
 
 class PatientController extends Controller
 {
@@ -40,10 +41,19 @@ class PatientController extends Controller
 
     $total = $query->count(); 
 
-    $patients = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+     if ($take)
+    {
+        $query->skip($skip ?? 0)->take($take);
+    } elseif ($skip) 
+    {
+        $query->skip($skip);
+    }
+
+    $patients = $query->get();
 
     $patients =  fractal()->collection($patients)
                   ->transformWith(new UserTransform())
+                   ->serializeWith(new ArraySerializer())
                    ->toArray();
     
     return $this->responseApi('',$patients,200,['count' => $total]);
@@ -67,7 +77,9 @@ class PatientController extends Controller
                    ->toMediaCollection('image');
         }
 
-        $patient = fractal($patient, new UserTransform())->toArray();
+        $patient = fractal($patient, new UserTransform())
+                   ->serializeWith(new ArraySerializer())
+                   ->toArray();
 
          return $this->responseApi(__('messages.store_patients'),$patient,201);
     }
@@ -77,24 +89,14 @@ class PatientController extends Controller
      */
     public function show(string $id)
     {
-       $patient = User::withTrashed()
-       ->where('user_type',3)
+       $patient = User::where('user_type',3)
        ->where('id', $id)
-       ->first();
-
-       if(!$patient)
-       {
-         return $this->responseApi(__('messages.trash'),null, 403);
-       }
-
-      if ($patient->trashed()) 
-      {
-         return $this->responseApi(__('messages.trash'),null, 403);
-      }
-
+       ->firstorFail();
+     
       $patient = fractal()
-                  ->item($patient)
+                 ->item($patient)
                  ->transformWith(new UserTransform())
+                 ->serializeWith(new ArraySerializer())
                  ->toArray();
 
        return $this->responseApi('', $patient, 200);
@@ -108,21 +110,10 @@ class PatientController extends Controller
 {
     $data = $request->validated();
 
-    $patient = User::withTrashed()
-    ->where('user_type',3)
+    $patient = User::where('user_type',3)
     ->where('id',$id)
-    ->first();
-
-     if(!$patient)
-       {
-         return $this->responseApi(__('messages.trash'),null, 403);
-       }
-
-    if ($patient->trashed()) 
-    {
-        return $this->responseApi(__('messages.trash'),[] ,403);
-    }
-
+    ->firstOrFail();
+  
    foreach (['name', 'email', 'mobile', 'department_id', 'user_type'] as $field)
     {
         if (isset($data[$field])) 
@@ -149,6 +140,7 @@ class PatientController extends Controller
      $patient = fractal()
         ->item($patient)
         ->transformWith(new UserTransform())
+        ->serializeWith(new ArraySerializer())
         ->toArray();
 
     return $this->responseApi(__('messages.update_patient'),$patient,200);
@@ -159,21 +151,10 @@ class PatientController extends Controller
      */
     public function destroy(string $id)
     {
-        $patient = User::withTrashed()
-        ->where('user_type',3)
+        $patient = User::where('user_type',3)
         ->where('id', $id)
-        ->first();
+        ->firstorFail();
     
-     if(!$patient)
-       {
-         return $this->responseApi(__('messages.trash'),null, 403);
-       }
-        
-        if ($patient->trashed()) 
-    {
-        return $this->responseApi(__('messages.trash'),null,409); 
-    }
-
         $patient->delete();
     
         return $this->responseApi(__('messages.delete_patient'),200);

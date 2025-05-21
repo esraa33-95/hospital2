@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\admin\CreateDepartment;
 use App\Http\Requests\Api\admin\UpdateDepartment;
 use App\Models\Department;
+use App\Models\DepartmentTranslation;
 use App\Traits\Response;
 use App\Transformers\DepartmentTransform;
 use Illuminate\Http\Request;
+use League\Fractal\Serializer\ArraySerializer;
 
 class DepartmentController extends Controller
 {
@@ -58,10 +60,19 @@ public function index(Request $request)
 
     $total = $query->count();
 
-    $departments = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+    if ($take)
+    {
+        $query->skip($skip ?? 0)->take($take);
+    } elseif ($skip) 
+    {
+        $query->skip($skip);
+    }
+
+    $departments = $query->get();
 
      $departments =  fractal()->collection($departments)
                   ->transformWith(new DepartmentTransform())
+                   ->serializeWith(new ArraySerializer())
                    ->toArray();
 
     return $this->responseApi('', $departments, 200, ['count' => $total]);
@@ -71,21 +82,38 @@ public function index(Request $request)
 //create
 public function store(CreateDepartment $request)
 {
-    $data = $request->validated();
+    $en = DepartmentTranslation::where('name', $request->name_en)
+        ->where('locale', 'en')
+        ->exists();
 
-    $department = new Department();
-
-    foreach ($data['name'] as $locale => $name) 
+    if ($en)
     {
-        $department->translateOrNew($locale)->name = $name;
+        return $this->responseApi(__('validation.name_en.unique'), [], 422);
     }
 
-    $department->save();
- 
-    $department = fractal($department, new DepartmentTransform())->toArray()['data'];
+    $ar = DepartmentTranslation::where('name', $request->name_ar)
+        ->where('locale', 'ar')
+        ->exists();
+
+    if ($ar) 
+    {
+        return $this->responseApi(__('validation.name_ar.unique'), [], 422);
+    }
+
+     $data = [
+        'en' => ['name' => $request->name_en],
+        'ar' => ['name' => $request->name_ar],
+    ];
+
+    $department = Department::create($data);
+
+    $department = fractal($department, new DepartmentTransform())
+                    ->serializeWith(new ArraySerializer())
+                    ->toArray();
 
     return $this->responseApi(__('messages.store_department'), $department, 201);
 }
+
 
     /**
      * Display the specified resource.
@@ -97,7 +125,8 @@ public function store(CreateDepartment $request)
          $department = fractal()
                  ->item($department)
                  ->transformWith(new DepartmentTransform())
-                 ->toArray()['data'];
+                 ->serializeWith(new ArraySerializer())
+                 ->toArray();
 
         return  $this->responseApi('',$department,200);
     }
@@ -120,19 +149,37 @@ public function store(CreateDepartment $request)
 
  public function update(UpdateDepartment $request, $id)
 {
-    $data = $request->validated();
-
     $department = Department::findOrFail($id);
 
-    foreach ($data['name'] as $locale => $name) 
-    {
-        $department->translateOrNew($locale)->name = $name;
+    $en = DepartmentTranslation::where('name', $request->name_en)
+        ->where('locale', 'en')
+        ->where('department_id', '!=', $id)
+        ->exists();
+
+        if ($en) 
+        {
+        return $this->responseApi(__('validation.name_en.unique'), [], 422);
+        }
+
+    $ar = DepartmentTranslation::where('name', $request->name_ar)
+        ->where('locale', 'ar')
+        ->where('department_id', '!=', $id)
+        ->exists();
+
+    if ($ar) {
+        return $this->responseApi(__('validation.name_ar.unique'), [], 422);
     }
-    
-    $department->save();
+
+    $data = [
+        'en' => ['name' => $request->name_en],
+        'ar' => ['name' => $request->name_ar],
+    ];
+
+     $department->update($data);
 
     $department = fractal($department, new DepartmentTransform())
-                  ->toArray()['data'];
+                  ->serializeWith(new ArraySerializer())
+                  ->toArray();
 
     return $this->responseApi(__('messages.update_department'), $department);
 }
