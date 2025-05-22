@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests\Api\front;
 
-use App\Enum\UserType;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Enum\UserType;
 use Illuminate\Validation\Rule;
 
-class RegisterRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -36,7 +36,6 @@ class RegisterRequest extends FormRequest
                }),'nullable','exists:departments,id'],
 
             'user_type' => ['required', 'integer', Rule::in(array_column(UserType::cases(), 'value'))],
-        
-            ];
-}
+        ];
+    }
 }

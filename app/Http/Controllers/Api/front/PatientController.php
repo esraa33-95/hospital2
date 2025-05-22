@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Api\front;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Admin\StoreAdminRequest;
 use Illuminate\Http\Request;
-use App\Http\Requests\Api\front\RegisterRequest;
 use App\Http\Requests\Api\front\Updatebyname;
 use App\Models\User;
 use App\Traits\Common;
 use App\Traits\Response;
-use App\Transformers\UserTransform;
+use App\Transformers\front\UserTransform;
 use Illuminate\Support\Facades\Hash;
+use League\Fractal\Serializer\ArraySerializer;
 
 
 class PatientController extends Controller
@@ -25,25 +26,35 @@ class PatientController extends Controller
         $search = $request->input('search', null);
         $take = $request->input('take'); 
         $skip = $request->input('skip'); 
+        $locale = $request->query('lang',app()->getlocale());
     
         $query = User::where('user_type', 3);
 
     if ($search) 
     {
-        $query->where(function ($q) use ($search) {
-            $q->where('name', 'like', '%' . $search . '%')
-              ->orWhere('email', 'like', '%' . $search . '%')
-              ->orWhere('mobile', 'like', '%' . $search . '%');
+        $query->where(function ($q) use ($search ,$locale) {
+            $q->whereTranslationLike('name', 'like', '%' . $search . '%',$locale)
+              ->orWhereTranslationLike('email', 'like', '%' . $search . '%',$locale)
+              ->orWhereTranslationLike('mobile','like', '%' . $search . '%',$locale);
         });
     }
 
-
     $total = $query->count(); 
 
-    $patients = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+     if ($take)
+    {
+        $query->skip($skip ?? 0)->take($take);
+    } 
+    elseif ($skip) 
+    {
+        $query->skip($skip);
+    }
 
-    $patients =  fractal()->collection($patients)
+    $patients = $query->get();
+
+    $patients = fractal()->collection($patients)
                   ->transformWith(new UserTransform())
+                  ->serializeWith(new ArraySerializer())
                    ->toArray();
 
     return $this->responseApi('',$patients,200,['count' => $total]);
@@ -52,7 +63,7 @@ class PatientController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(RegisterRequest $request)
+    public function create(StoreAdminRequest $request)
     {
         $data = $request->validated();
   
@@ -66,34 +77,32 @@ class PatientController extends Controller
                    ->toMediaCollection('image');
         }
 
-        $patient= fractal($patient, new UserTransform())->toArray();
+        $patient= fractal($patient, new UserTransform())
+                       ->serializeWith(new ArraySerializer())
+                       ->toArray();
 
          return $this->responseApi(__('messages.store_patients'),$patient,200);
     }
 
-    
-
+  
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
        $patient = User::where('id',$id)
-      ->where('user_type',3)
-       ->first();
+                        ->where('user_type',3)
+                        ->firstOrFail();
 
-       if (!$patient)
-        {
-        return $this->responseApi(__('messages.trash'), 404);
-       }
+       
        $patient = fractal()
                   ->item($patient)
                  ->transformWith(new UserTransform())
+                  ->serializeWith(new ArraySerializer())
                  ->toArray();
 
        return $this->responseApi('', $patient, 200);
-
-       
+      
     }
  
     /**
@@ -106,14 +115,9 @@ class PatientController extends Controller
     $uuid = $request->input('uuid');
 
     $patient = User::withTrashed()
-    ->where('uuid', $uuid)
+    ->where('uuid',$uuid)
     ->where('user_type',3)
-    ->first();
-
-    if (!$patient) 
-    {
-        return $this->responseApi(__('messages.trash'), 404);
-    }
+    ->firstOrFail();
 
     if ($patient->trashed()) 
     {
@@ -127,9 +131,10 @@ class PatientController extends Controller
   
     $patient->save();
 
-     $patient = fractal()
+    $patient = fractal()
         ->item($patient)
         ->transformWith(new UserTransform())
+        ->serializeWith(new ArraySerializer())
         ->toArray();
 
     return $this->responseApi(__('messages.update_patient'),$patient,200);
@@ -144,13 +149,8 @@ class PatientController extends Controller
     
         $patient = User::where('user_type',3)
         ->where('uuid',$uuid)
-        ->first();
+        ->firstOrFail();
     
-        if (!$patient) 
-        {
-            return $this->responseApi(__('messages.trash'), 404);
-        }
- 
         $patient->delete();
     
         return $this->responseApi(__('messages.delete_patient'), 200);

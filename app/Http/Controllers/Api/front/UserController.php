@@ -5,14 +5,14 @@ namespace App\Http\Controllers\Api\front;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\front\ChangePassword;
 use App\Http\Requests\Api\front\updateUser;
-use App\Models\Document;
-use App\Models\Rate;
+use App\Http\Requests\Api\front\uploadimageRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\Common;
 use App\Traits\Response;
-use App\Transformers\UserTransform;
+use App\Transformers\front\UserTransform;
 use Illuminate\Support\Facades\Hash;
+use League\Fractal\Serializer\ArraySerializer;
 
 
 class UserController extends Controller
@@ -28,53 +28,52 @@ class UserController extends Controller
         $user = fractal()
                  ->item($user)
                  ->transformWith(new UserTransform())
+                 ->serializeWith(new ArraySerializer())
                  ->toArray();
 
        return $this->responseApi('', $user, 200);
           
     }
 
-
     //upload image
-    public function uploadimage(Request $request)
+    public function uploadimage(uploadimageRequest $request,string $id)
     {
-      $data =  $request->validate([
-            'image' => 'required|mimes:jpeg,jpg,png,pdf|max:5120', 
+        $request->validated();
 
-        ]);
+        $user = User::findOrFail($id);
 
         if ($request->hasFile('image'))
         {
-           $data->addMedia($request->file('image'))
-                   ->toMediaCollection('image');
+           $user->addMedia($request->file('image'))
+                 ->toMediaCollection('image');
         }
 
         return $this->responseApi(__('messages.upload'));
     }
 
 //update data
-    public function update(updateUser $request)
+    public function update(updateUser $request, string $id)
     {
         $data = $request->validated();
 
         $uuid = $request->input('uuid');
-        
-         if ($request->hasFile('image')) {
-        $data['image'] = $this->uploadFile($request->file('image'), 'assets/images'); 
-    }
 
         $types = [2,3];
 
         $user = User::withTrashed()
-        ->whereIn('user_type', $types)
-        ->where('uuid', $uuid)
-       ->first();
+         ->whereIn('user_type', $types)
+         ->where('id',$id)
+         ->where('uuid', $uuid)
+         ->firstOrFail();
 
-    if (!$user) {
-        return $this->responseApi(__('messages.trash'), 404);
-    }
+       if ($request->hasFile('image'))
+        {
+           $user->addMedia($request->file('image'))
+                 ->toMediaCollection('image');
+        }
 
-    if ($user->trashed()) {
+    if ($user->trashed()) 
+    {
         return $this->responseApi(__('messages.trash'), 403);
     }
 
@@ -83,6 +82,7 @@ class UserController extends Controller
     $user = fractal()
         ->item($user)
         ->transformWith(new UserTransform())
+         ->serializeWith(new ArraySerializer())
         ->toArray();
 
    return $this->responseApi(__('profile update successfully'),$user,200);

@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Traits\Response;
 use App\Models\Department;
 use App\Models\User;
-use App\Transformers\UserTransform;
-use DepartmentTransform;
+use App\Transformers\front\DepartmentTransform;
+use App\Transformers\front\UserTransform;
+
 use Illuminate\Http\Request;
+use League\Fractal\Serializer\ArraySerializer;
 
 class ListController extends Controller
 {
@@ -19,22 +21,32 @@ class ListController extends Controller
     {
         $search = $request->input('search', null);
         $take = $request->input('take'); 
-        $skip = $request->input('skip',0); 
+        $skip = $request->input('skip'); 
+        $locale = $request->query('lang', app()->getLocale());
 
       $query = Department::query();
 
       if ($search) 
       {
-        $query->where('name', 'like', '%' . $search . '%');
+       $query->whereTranslationLike('name', '%' . $search . '%', $locale);
       }
-
 
     $total = $query->count(); 
 
-    $department = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+    if ($take)
+    {
+        $query->skip($skip ?? 0)->take($take);
+    } 
+    elseif ($skip) 
+    {
+        $query->skip($skip);
+    }
+
+    $department = $query->get();
 
      $department =  fractal()->collection($department)
                   ->transformWith(new DepartmentTransform())
+                  ->serializeWith(new ArraySerializer())
                    ->toArray();
 
     return $this->responseApi('',$department,200,['count' => $total]);
@@ -46,25 +58,34 @@ class ListController extends Controller
     {
         $search = $request->input('search');
         $take = $request->input('take'); 
-        $skip = $request->input('skip',0);  
+        $skip = $request->input('skip');  
+        $locale = $request->query('lang', app()->getLocale());
     
         $query = User::where('user_type', 2)
-            ->whereHas('department')        
-            ->with('department');          
+                       ->whereHas('department')        
+                       ->with('department');          
     
         if ($search) 
         {
-            $query->where('name', 'like', '%' . $search . '%');
+            $query->whereTranslationLike('name', '%' . $search . '%', $locale);
         }
-    
-
         $total = $query->count();
 
-        $doctors = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+        if ($take)
+    {
+        $query->skip($skip ?? 0)->take($take);
+    } 
+    elseif ($skip) 
+    {
+        $query->skip($skip);
+    }
+
+        $doctors = $query->get();
 
          $doctors = fractal()->collection($doctors)
                   ->transformWith(new UserTransform())
-                   ->toArray();
+                  ->serializeWith(new ArraySerializer())
+                  ->toArray();
 
      return $this->responseApi('',$doctors,200,['count' => $total]);
 

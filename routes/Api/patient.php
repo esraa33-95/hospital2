@@ -19,7 +19,7 @@ Route::middleware(['auth:sanctum', 'api_localization','IsPatient'])->group(funct
 
     Route::controller(UserController::class)->group(function () {
         Route::get('/', 'userprofile');      
-        Route::post('/', 'update');           
+        Route::put('/{id}', 'update');           
         Route::post('/', 'changePassword');
         Route::post('/{id}', 'uploadimage');
         Route::delete('/', 'deleteAccount');

@@ -13,11 +13,11 @@ use App\Http\Requests\Api\front\RegisterRequest;
 use App\Http\Requests\Api\front\ResetPassword;
 use App\Http\Requests\Api\front\SendOtp;
 use App\Http\Requests\Api\front\VerifyEmailOtp;
-use App\Http\Resources\UserResource;
 use App\Models\Otp;
 use App\Traits\Response;
-use App\Transformers\UserTransform;
+use App\Transformers\front\UserTransform;
 use Carbon\Carbon;
+use League\Fractal\Serializer\ArraySerializer;
 
 
 class AuthController extends Controller
@@ -29,20 +29,21 @@ class AuthController extends Controller
    //register
     public function register(RegisterRequest $request)
     {
-        $data = $request->validated();
-
-        if($request->hasfile('image'))
-        {
-           $data['image'] = $this->uploadFile($request->image,'assets/images');
-        }
-        
+    $data = $request->validated();
+ 
      $data['password'] = Hash::make($data['password']);  
 
      $user = User::create($data);
 
+     if($request->hasfile('image'))
+        {
+           $user->addMedia($request->file('image'))
+                   ->toMediaCollection('image');
+        }
+
      event(new UserRegistered($user));
 
-    return $this->responseApi(__('messages.user_register'),$user,201);
+     return $this->responseApi(__('messages.user_register'),$user,201);
 
     }
 
@@ -74,6 +75,7 @@ if ($user->is_verified !== 1)
     $user = fractal()
                  ->item($user)
                  ->transformWith(new UserTransform())
+                  ->serializeWith(new ArraySerializer())
                  ->toArray();
 
    return $this->responseApi(__('messages.login'),$user,200,['token'=>$token]);
@@ -161,7 +163,6 @@ public function verifyEmailOtp(VerifyEmailOtp $request)
      
 }
 
-
 //reset password
 public function resetpassword(ResetPassword $request)
 {
@@ -182,9 +183,9 @@ public function resetpassword(ResetPassword $request)
     }
 
     $otp = Otp::where('user_id', $user->id)
-        ->where('otp', $request->otp)
-        ->where('expires_at', '>=', now())
-        ->first();
+              ->where('otp', $request->otp)
+              ->where('expires_at', '>=', now())
+              ->first();
 
     if (!$otp) 
     {

@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Api\admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\admin\CreateDepartment;
+use App\Http\Requests\Api\Admin\StoreDepartment;
 use App\Http\Requests\Api\admin\UpdateDepartment;
 use App\Models\Department;
 use App\Models\DepartmentTranslation;
 use App\Traits\Response;
-use App\Transformers\DepartmentTransform;
+use App\Transformers\Admin\DepartmentTransform;
 use Illuminate\Http\Request;
 use League\Fractal\Serializer\ArraySerializer;
 
@@ -63,7 +63,8 @@ public function index(Request $request)
     if ($take)
     {
         $query->skip($skip ?? 0)->take($take);
-    } elseif ($skip) 
+    } 
+    elseif ($skip) 
     {
         $query->skip($skip);
     }
@@ -80,7 +81,7 @@ public function index(Request $request)
 
 
 //create
-public function store(CreateDepartment $request)
+public function store(StoreDepartment $request)
 {
     $en = DepartmentTranslation::where('name', $request->name_en)
         ->where('locale', 'en')
@@ -92,8 +93,8 @@ public function store(CreateDepartment $request)
     }
 
     $ar = DepartmentTranslation::where('name', $request->name_ar)
-        ->where('locale', 'ar')
-        ->exists();
+               ->where('locale', 'ar')
+               ->exists();
 
     if ($ar) 
     {

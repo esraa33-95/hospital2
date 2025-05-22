@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Api\admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\front\RegisterRequest;
+use App\Http\Requests\Api\Admin\StoreAdminRequest;
 use App\Http\Requests\Api\front\updateUser;
-use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Traits\Common;
 use App\Traits\Response;
-use App\Transformers\UserTransform;
+use App\Transformers\admin\UserTransform;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use League\Fractal\Serializer\ArraySerializer;
@@ -23,22 +22,23 @@ class PatientController extends Controller
      */
    public function index(Request $request)
     {
-        $search = $request->input('search', null);
-        $take = $request->input('take',0); 
+        $search = $request->input('search');
+        $take = $request->input('take'); 
         $skip = $request->input('skip'); 
-    
+        $locale = $request->query('lang',app()->getLocale());
+
+
         $query = User::where('user_type', 3);
 
     if ($search) 
     {
-        $query->where(function ($q) use ($search) {
-             $q->where('name', 'like', '%' . $search . '%')
-              ->orWhere('email', 'like', '%' . $search . '%')
-              ->orWhere('mobile', 'like', '%' . $search . '%');
+        $query->where(function ($q) use ($search ,$locale) {
+             $q->whereTranslationLike('name', 'like', '%' . $search . '%',$locale)
+              ->orWhereTranslationLike('email', 'like', '%' . $search . '%',$locale)
+              ->orWhereTranslationLike('mobile', 'like', '%' . $search . '%',$locale);
         });
     }
    
-
     $total = $query->count(); 
 
      if ($take)
@@ -63,7 +63,7 @@ class PatientController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(RegisterRequest $request)
+    public function store(StoreAdminRequest $request)
     {
         $data = $request->validated();
     
@@ -74,7 +74,7 @@ class PatientController extends Controller
          if ($request->hasFile('image')) 
          {
             $patient->addMedia($request->file('image'))
-                   ->toMediaCollection('image');
+                     ->toMediaCollection('image');
         }
 
         $patient = fractal($patient, new UserTransform())
@@ -111,8 +111,8 @@ class PatientController extends Controller
     $data = $request->validated();
 
     $patient = User::where('user_type',3)
-    ->where('id',$id)
-    ->firstOrFail();
+                    ->where('id',$id)
+                    ->firstOrFail();
   
    foreach (['name', 'email', 'mobile', 'department_id', 'user_type'] as $field)
     {
@@ -138,10 +138,10 @@ class PatientController extends Controller
     $patient->save();
 
      $patient = fractal()
-        ->item($patient)
-        ->transformWith(new UserTransform())
-        ->serializeWith(new ArraySerializer())
-        ->toArray();
+                  ->item($patient)
+                  ->transformWith(new UserTransform())
+                  ->serializeWith(new ArraySerializer())
+                  ->toArray();
 
     return $this->responseApi(__('messages.update_patient'),$patient,200);
 }

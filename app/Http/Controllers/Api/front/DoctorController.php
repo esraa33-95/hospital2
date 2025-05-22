@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Api\front;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\front\RegisterRequest;
+use App\Http\Requests\Api\front\StoreRequest;
 use App\Http\Requests\Api\front\Updatebyname;
-use App\Http\Resources\DoctorResource;
-use App\Http\Resources\UserResource;
+use League\Fractal\Serializer\ArraySerializer;
 use App\Models\User;
 use App\Traits\Common;
 use App\Traits\Response;
-use App\Transformers\UserTransform;
+use App\Transformers\front\UserTransform;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -26,24 +25,34 @@ class DoctorController extends Controller
         $search = $request->input('search', null);
         $take = $request->input('take'); 
         $skip = $request->input('skip'); 
+        $locale = $request->query('lang', app()->getLocale());
     
         $query = User::where('user_type', 2);
 
     if ($search) 
     {
-        $query->where(function ($q) use ($search) {
-             $q->where('name', 'like', '%' . $search . '%')
-              ->orWhere('email', 'like', '%' . $search . '%')
-              ->orWhere('mobile', 'like', '%' . $search . '%');
+        $query->where(function ($q) use ($search, $locale) {
+             $q->whereTranslationLike('name', 'like', '%' . $search . '%' , $locale)
+              ->orWhereTranslationLike('email', 'like', '%' . $search . '%', $locale)
+              ->orWhereTranslationLike('mobile', 'like', '%' . $search .'%', $locale);   
         });
     }
     
     $total = $query->count(); 
 
-    $doctors = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+     if ($take)
+    {
+        $query->skip($skip ?? 0)->take($take);
+    } elseif ($skip) 
+    {
+        $query->skip($skip);
+    }
+
+    $doctors = $query->get();
 
      $doctors =  fractal()->collection($doctors)
                   ->transformWith(new UserTransform())
+                  ->serializeWith(new ArraySerializer())
                    ->toArray();
 
     return $this->responseApi('',$doctors,200,['count' => $total]);
@@ -52,10 +61,9 @@ class DoctorController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(RegisterRequest $request)
+    public function create(StoreRequest $request)
     {
         $data = $request->validated();
-
 
         $data['password'] = Hash::make($data['password']);  
 
@@ -67,7 +75,9 @@ class DoctorController extends Controller
                    ->toMediaCollection('image');
         }
 
-        $doctor = fractal($doctor, new UserTransform())->toArray();
+        $doctor = fractal($doctor, new UserTransform())
+                 ->serializeWith(new ArraySerializer())
+                 ->toArray();
 
          return $this->responseApi(__('messages.store_doctors'),$doctor,200);
     }
@@ -79,16 +89,12 @@ class DoctorController extends Controller
     {
        $doctor = User::where('id',$id)
        ->where('user_type',2)
-       ->first();
-
-       if (!$doctor)
-        {
-        return $this->responseApi(__('messages.trash'), 404);
-       }
+       ->firstOrFail();
 
        $doctor = fractal()
-                  ->item($doctor)
+                 ->item($doctor)
                  ->transformWith(new UserTransform())
+                 ->serializeWith(new ArraySerializer())
                  ->toArray();
 
        return $this->responseApi('', $doctor, 200);
@@ -107,13 +113,9 @@ class DoctorController extends Controller
     $doctor = User::withTrashed()
     ->where('uuid', $uuid)
     ->where('user_type',2)
-    ->first();
+    ->firstOrFail();
 
-    if (!$doctor) 
-    {
-        return $this->responseApi(__('messages.trash'), 404);
-    }
-
+    
     if ($doctor->trashed()) 
     {
         return $this->responseApi(__('messages.trash'), 403);
@@ -130,6 +132,7 @@ class DoctorController extends Controller
      $doctor = fractal()
         ->item($doctor)
         ->transformWith(new UserTransform())
+        ->serializeWith(new ArraySerializer())
         ->toArray();
 
     return $this->responseApi(__('messages.update_doctors'),$doctor,200);
@@ -144,14 +147,10 @@ class DoctorController extends Controller
         $uuid = $request->input('uuid');
     
         $doctor = User::where('user_type',2)
-        ->where('uuid', $uuid)
-        ->first();
+                   ->where('uuid', $uuid)
+                   ->firstOrFail();
     
-        if (!$doctor) 
-        {
-            return $this->responseApi(__('messages.trash'), 404);
-        }
-
+       
         $doctor->delete();
     
         return $this->responseApi(__('messages.delete_doctor'), 200);

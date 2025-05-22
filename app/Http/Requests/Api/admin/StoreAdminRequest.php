@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Api\front;
+namespace App\Http\Requests\Api\Admin;
 
 use App\Enum\UserType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class RegisterRequest extends FormRequest
+class StoreAdminRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -35,8 +35,9 @@ class RegisterRequest extends FormRequest
                  return request('user_type') == UserType::Doctor->value;
                }),'nullable','exists:departments,id'],
 
-            'user_type' => ['required', 'integer', Rule::in(array_column(UserType::cases(), 'value'))],
+           'user_type' => ['required', 'integer', Rule::in(array_column(UserType::cases(), 'value'))],
         
-            ];
-}
+            
+        ];
+    }
 }
