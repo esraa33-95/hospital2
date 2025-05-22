@@ -83,24 +83,6 @@ public function index(Request $request)
 //create
 public function store(StoreDepartment $request)
 {
-    $en = DepartmentTranslation::where('name', $request->name_en)
-        ->where('locale', 'en')
-        ->exists();
-
-    if ($en)
-    {
-        return $this->responseApi(__('validation.name_en.unique'), [], 422);
-    }
-
-    $ar = DepartmentTranslation::where('name', $request->name_ar)
-               ->where('locale', 'ar')
-               ->exists();
-
-    if ($ar) 
-    {
-        return $this->responseApi(__('validation.name_ar.unique'), [], 422);
-    }
-
      $data = [
         'en' => ['name' => $request->name_en],
         'ar' => ['name' => $request->name_ar],
@@ -150,33 +132,14 @@ public function store(StoreDepartment $request)
 
  public function update(UpdateDepartment $request, $id)
 {
-    $department = Department::findOrFail($id);
-
-    $en = DepartmentTranslation::where('name', $request->name_en)
-        ->where('locale', 'en')
-        ->where('department_id', '!=', $id)
-        ->exists();
-
-        if ($en) 
-        {
-        return $this->responseApi(__('validation.name_en.unique'), [], 422);
-        }
-
-    $ar = DepartmentTranslation::where('name', $request->name_ar)
-        ->where('locale', 'ar')
-        ->where('department_id', '!=', $id)
-        ->exists();
-
-    if ($ar) {
-        return $this->responseApi(__('validation.name_ar.unique'), [], 422);
-    }
-
     $data = [
         'en' => ['name' => $request->name_en],
         'ar' => ['name' => $request->name_ar],
     ];
 
-     $department->update($data);
+    $department = Department::findOrFail($id);
+
+    $department->update($data);
 
     $department = fractal($department, new DepartmentTransform())
                   ->serializeWith(new ArraySerializer())

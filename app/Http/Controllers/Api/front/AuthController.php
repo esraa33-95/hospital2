@@ -30,16 +30,18 @@ class AuthController extends Controller
     public function register(RegisterRequest $request)
     {
     $data = $request->validated();
+
+    if($request->hasfile('image'))
+        {
+        $data['image'] = $this->uploadFile($request->image,'assets/images');
+        
+        }
  
      $data['password'] = Hash::make($data['password']);  
 
      $user = User::create($data);
 
-     if($request->hasfile('image'))
-        {
-           $user->addMedia($request->file('image'))
-                   ->toMediaCollection('image');
-        }
+     
 
      event(new UserRegistered($user));
 

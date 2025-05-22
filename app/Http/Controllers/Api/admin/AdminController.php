@@ -7,11 +7,9 @@ use App\Http\Requests\Api\admin\UpdateAdmin;
 use App\Http\Requests\Api\front\LoginRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\Common;
-use App\Http\Resources\AdminResource;
-use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Traits\Response;
-use App\Transformers\UserTransform;
+use App\Transformers\admin\UserTransform;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller

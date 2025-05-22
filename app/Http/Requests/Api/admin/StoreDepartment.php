@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\Admin;
 
+use App\Models\DepartmentTranslation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -23,11 +24,21 @@ class StoreDepartment extends FormRequest
     public function rules(): array
     {
         return [
-            'name_en' => [ 'required', 'string', 'max:255',
-            Rule::unique('department_translations', 'name')->where('locale', 'en'),
+            'name_en' => ['required',
+            function ($attribute, $value, $error) {
+                if (DepartmentTranslation::where('name', $value)->where('locale', 'en')->exists()) 
+                {
+                    $error(__('validation.custom.name_en.unique'));
+                }
+            }
         ],
-        'name_ar' => [ 'required','string','max:255',
-            Rule::unique('department_translations', 'name')->where('locale', 'ar'),
+        'name_ar' => ['required',
+            function ($attribute, $value, $error) {
+                if (DepartmentTranslation::where('name', $value)->where('locale', 'ar')->exists())
+                 {
+                    $error(__('validation.custom.name_ar.unique'));
+                }
+            }
         ],
         ];
     }

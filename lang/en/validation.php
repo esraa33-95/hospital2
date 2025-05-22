@@ -163,15 +163,7 @@ return [
     'url' => 'The :attribute field must be a valid URL.',
     'ulid' => 'The :attribute field must be a valid ULID.',
     'uuid' => 'The :attribute field must be a valid UUID.',
-     'name_en' => [
-            'unique' => 'The English name already exists',
-            'required'=>'this field is required',
-        ],
-        'name_ar' => [
-            'unique' => 'The Arabic name already exists',
-             'required'=>'this field is required',
-        ],
-
+     
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
@@ -184,7 +176,15 @@ return [
     */
 
     'custom' => [
-          
+        'name_en' => [
+            'unique' => 'The English name already exists',
+            'required'=>'this field is required',
+        ],
+        'name_ar' => [
+            'unique' => 'The Arabic name already exists',
+             'required'=>'this field is required',
+        ],
+      
     'name' => [
         'min' => 'The name must be at least 3 characters.',
         'max' => 'The name must not exceed 255 characters.',
