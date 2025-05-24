@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Admin\StoreDepartment;
 use App\Http\Requests\Api\admin\UpdateDepartment;
 use App\Models\Department;
-use App\Models\DepartmentTranslation;
 use App\Traits\Response;
 use App\Transformers\Admin\DepartmentTransform;
 use Illuminate\Http\Request;
@@ -21,29 +20,6 @@ class DepartmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-//     public function index(Request $request)
-// {
-//     $search = $request->input('search');
-//     $take = $request->input('take'); 
-//     $skip = $request->input('skip');  
- 
-//     $query = Department::query();
-    
-//     if ($search)
-//      {
-//         $query->where(function ($q) use ($search) {
-//             $q->where('name', 'like', '%' . $search . '%');
-//         });
-//     }
-
-
-//     $total = $query->count(); 
-
-//     $departments = $query->skip($skip ?? 0)->take($take ?? 0)->get();
-    
-
-//     return $this->responseApi('',DepartmentResource::collection($departments),200,['count' => $total]);
-// }
     
 public function index(Request $request)
 {
@@ -54,22 +30,13 @@ public function index(Request $request)
 
     $query = Department::query();
 
-    if ($search) {
+      if ($search){
         $query->whereTranslationLike('name', '%' . $search . '%', $locale);
     }
 
     $total = $query->count();
 
-    if ($take)
-    {
-        $query->skip($skip ?? 0)->take($take);
-    } 
-    elseif ($skip) 
-    {
-        $query->skip($skip);
-    }
-
-    $departments = $query->get();
+    $departments = $query->skip($skip ?? 0)->take($take ?? 0)->get();
 
      $departments =  fractal()->collection($departments)
                   ->transformWith(new DepartmentTransform())

@@ -33,16 +33,7 @@ class ListController extends Controller
 
     $total = $query->count(); 
 
-    if ($take)
-    {
-        $query->skip($skip ?? 0)->take($take);
-    } 
-    elseif ($skip) 
-    {
-        $query->skip($skip);
-    }
-
-    $department = $query->get();
+     $department = $query->skip($skip ?? 0)->take($take ?? 0)->get();
 
      $department =  fractal()->collection($department)
                   ->transformWith(new DepartmentTransform())
@@ -71,16 +62,7 @@ class ListController extends Controller
         }
         $total = $query->count();
 
-        if ($take)
-    {
-        $query->skip($skip ?? 0)->take($take);
-    } 
-    elseif ($skip) 
-    {
-        $query->skip($skip);
-    }
-
-        $doctors = $query->get();
+       $doctors = $query->skip($skip ?? 0)->take($take ?? 0)->get();
 
          $doctors = fractal()->collection($doctors)
                   ->transformWith(new UserTransform())
