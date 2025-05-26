@@ -61,4 +61,12 @@ unique' => 'The Arabic name already exists.',
 'uploadpdf'=>' pdf upload successfully',
 'no_deletecerificate'=>'can not delete this certificate',
 
+
+//experience
+'store_experience'=>'store experience successfully',
+'update_experience'=>'update experience successfully',
+'Nodelete_experience'=>' can not delete experience',
+'delete_experience'=>'delete experience successfully',
+
+
 ];

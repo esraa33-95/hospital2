@@ -25,16 +25,16 @@ class DoctorController extends Controller
         $search = $request->input('search');
         $take = $request->input('take'); 
         $skip = $request->input('skip'); 
-        $locale = $request->query('lang', app()->getLocale());
+       
     
         $query = User::where('user_type', 2);
 
     if ($search) 
     {
-        $query->where(function ($q) use ($search ,$locale) {
-             $q->whereTranslationLike('name', 'like', '%' . $search . '%',$locale)
-              ->orwhereTranslationLike('email', 'like', '%' . $search . '%',$locale)
-              ->orwhereTranslationLike('mobile', 'like', '%' . $search . '%',$locale);
+        $query->where(function ($q) use ($search) {
+             $q->where('name', 'like', '%' . $search . '%')
+              ->orwhere('email', 'like', '%' . $search . '%')
+              ->orwhere('mobile', 'like', '%' . $search . '%');
         });
     }
 

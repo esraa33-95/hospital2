@@ -32,10 +32,10 @@ class PatientController extends Controller
 
     if ($search) 
     {
-        $query->where(function ($q) use ($search ,$locale) {
-             $q->whereTranslationLike('name', 'like', '%' . $search . '%',$locale)
-              ->orWhereTranslationLike('email', 'like', '%' . $search . '%',$locale)
-              ->orWhereTranslationLike('mobile', 'like', '%' . $search . '%',$locale);
+        $query->where(function ($q) use ($search ) {
+             $q->where('name', 'like', '%' . $search . '%')
+              ->orwhere('email', 'like', '%' . $search . '%')
+              ->orwhere('mobile', 'like', '%' . $search . '%');
         });
     }
    

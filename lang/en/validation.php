@@ -177,6 +177,23 @@ return [
     */
 
     'custom' => [
+
+        'jobtitle'=>[
+            'required'=>'jobtitle is required',
+            'max' => 'The name must not exceed 255 characters',
+            'unique' => 'jobtitle is exists',
+        ],
+
+        'organization'=>[
+            'required'=>'organization is required',
+            'max' => 'The name must not exceed 255 characters',
+              'unique' => 'organization is exists',
+        ],
+        'current'=>[
+             'required'=>'current is required',
+             'boolean'=>'current must be 0 or 1',
+        ],
+
         'name_en' => [
             'unique' => 'The English name already exists',
             'required'=>'this field is required',
@@ -264,6 +281,9 @@ return [
        'uuid',
        'name_en',
        'name_ar',
+       'jobtitle',
+        'organization',
+        'current',
     ],
 
 ];

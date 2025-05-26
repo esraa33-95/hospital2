@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\admin\CertificateController;
+use App\Http\Controllers\Api\admin\ExperienceController;
 use App\Http\Controllers\Api\front\DoctorController;
 use App\Http\Controllers\Api\front\UserController;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,17 @@ Route::middleware(['auth:sanctum', 'api_localization','IsDoctor'])->group(functi
         Route::put('/{id}', 'update');
         Route::delete('/{id}', 'destroy');
     });
+
+ Route::controller(ExperienceController::class)->group(function () {
+        Route::post('/', 'store');
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+    });
+
+
+
 });
 
       

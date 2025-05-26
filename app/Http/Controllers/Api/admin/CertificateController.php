@@ -37,7 +37,7 @@ class CertificateController extends Controller
 
     $certificates = $query->skip($skip ?? 0)->take($take ?? $total)->get();
 
-     $certificates =  fractal()
+     $certificates = fractal()
                    ->collection($certificates)
                    ->transformWith(new CertificateTransform())
                    ->serializeWith(new ArraySerializer())
@@ -108,9 +108,9 @@ class CertificateController extends Controller
      */
     public function destroy( string $id)
     {
-        $certificate = Certificate::findOrFail($id);
+        $certificate = Certificate::with('users')->findOrFail($id);
 
-        if($certificate->where('user_type',2))
+        if( $certificate)
         {
             return  $this->responseApi(__('messages.no_deletecerificate'),403); 
         }

@@ -64,4 +64,11 @@ return [
 
 //pdf
 'uploadpdf'=>' pdf تم تحميل ',
+
+//experience
+'store_experience'=>'تم تخزين الخبرة بنجاح',
+'update_experience'=>'تم تعديل الخيرة بنجاح',
+'Nodelete_experience'=>'لا يمكن مسح التجربة',
+'delete_experience'=>'تم مسح الخبرة بنجاح',
+
 ];
