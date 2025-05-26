@@ -55,4 +55,13 @@ return [
   'required'=>'هذا الحقل مطلوب',
 ],
     
+
+//certificate
+'store_certificate'=>'تم ادخال الشهادة بنجاح',
+'update_certificate'=>'تم تعديل الشهادة بنجاح',
+'delete_certificate'=>'تم حذف الشهادة بنجاح',
+'no_deletecerificate'=>'لا تستطيع حذف الشهادة ',
+
+//pdf
+'uploadpdf'=>' pdf تم تحميل ',
 ];

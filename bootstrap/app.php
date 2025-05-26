@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\IsAdmin;
+use App\Http\Middleware\IsDoctor;
 use App\Http\Middleware\IsPatient;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -40,7 +41,8 @@ return Application::configure(basePath: dirname(__DIR__))
     $middleware->alias([
         'api_localization' => ApiLocalization::class,
          'IsAdmin' => IsAdmin::class,
-         'IsPatient'=>IsPatient::class
+         'IsPatient'=>IsPatient::class,
+         'IsDoctor'=>IsDoctor::class
     ]);
        
     })

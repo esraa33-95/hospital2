@@ -30,20 +30,21 @@ public function index(Request $request)
 
     $query = Department::query();
 
-      if ($search){
+      if ($search)
+    {
         $query->whereTranslationLike('name', '%' . $search . '%', $locale);
     }
 
     $total = $query->count();
 
-    $departments = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+    $departments = $query->skip($skip ?? 0)->take($take ?? $total)->get();
 
      $departments =  fractal()->collection($departments)
                   ->transformWith(new DepartmentTransform())
                    ->serializeWith(new ArraySerializer())
                    ->toArray();
 
-    return $this->responseApi('', $departments, 200, ['count' => $total]);
+    return $this->responseApi('', $departments, 200, ['count' =>$total]);
 }
 
 

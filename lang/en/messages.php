@@ -52,6 +52,13 @@ return [
 unique' => 'The Arabic name already exists.',
  'required'=>'this field is required'],
    
+//certificate
+'store_certificate'=>' store certificate successfully',
+'update_certificate'=>' update certificate successfully',
+'delete_certificate'=>'delete certificate successfully',
 
+//pdf
+'uploadpdf'=>' pdf upload successfully',
+'no_deletecerificate'=>'can not delete this certificate',
 
 ];

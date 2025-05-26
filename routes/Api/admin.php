@@ -53,8 +53,10 @@ Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function
         Route::put('/{id}', 'update');
         Route::delete('/{id}', 'destroy');
     });
-    
+       
+
 });
 
 
+ 
 

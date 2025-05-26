@@ -40,7 +40,7 @@ class DoctorController extends Controller
 
      $total = $query->count();
   
-      $doctors = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+      $doctors = $query->skip($skip ?? 0)->take($take ?? $total)->get();
 
       $doctors =  fractal()->collection($doctors)
                   ->transformWith(new UserTransform())

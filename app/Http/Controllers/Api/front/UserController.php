@@ -35,8 +35,8 @@ class UserController extends Controller
           
     }
 
-    //upload image
-    public function uploadimage(uploadimageRequest $request,string $id)
+    //upload pdf
+    public function uploadfile(uploadimageRequest $request,string $id)
     {
         $request->validated();
 
@@ -44,11 +44,13 @@ class UserController extends Controller
 
         if ($request->hasFile('image'))
         {
-           $user->addMedia($request->file('image'))
-                 ->toMediaCollection('image');
+             $user->clearMediaCollection('files');
+
+             $user->addMedia($request->file('image'))
+                 ->toMediaCollection('files');
         }
 
-        return $this->responseApi(__('messages.upload'));
+        return $this->responseApi(__('messages.uploadpdf'));
     }
 
 //update data

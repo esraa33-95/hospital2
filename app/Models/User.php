@@ -86,6 +86,11 @@ class User extends Authenticatable implements MustVerifyEmail,HasMedia
         return $this->hasMany(Document::class);
     }
 
+     public function certificate()
+    {
+        return $this->hasOne(Certificate::class);
+    }
+
 protected static function boot()
 {
     parent::boot();
