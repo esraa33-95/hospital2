@@ -49,6 +49,7 @@ class Updatecertificate extends FormRequest
                 }
             }
         ],
+        'uuid' => ['nullable', 'uuid', 'exists:users,uuid'],
     ];
 }
 

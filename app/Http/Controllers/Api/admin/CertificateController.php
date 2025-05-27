@@ -50,10 +50,14 @@ class CertificateController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCeritificate $request ,string $id)
+    public function store(StoreCeritificate $request, string $id)
     {
+        $uuid = $request->input('uuid');
+
+      $user = User::where('uuid', $uuid)->firstOrFail();
+
     $data = [
-         'user_id' => auth()->id(),
+         'user_id' =>  $user->id,
         'ar' => ['name' => $request->name_ar],
         'en' => ['name' => $request->name_en],
     ];
@@ -91,9 +95,13 @@ class CertificateController extends Controller
      */
     public function update(Updatecertificate $request, string $id)
     {
-         $certificate = Certificate::where('id', $id)
-                               ->where('user_id', auth()->id())
-                               ->firstOrFail();
+        $uuid = $request->input('uuid');
+
+      $user = User::where('uuid', $uuid)->firstOrFail();
+
+      $certificate = Certificate::where('id', $id)
+                    ->where('user_id', $user->id)
+                    ->firstOrFail();
 
          $certificate ->update([
             'ar'=>['name'=>$request->name_ar],
