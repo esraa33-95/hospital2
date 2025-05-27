@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\admin\StoreCeritificate;
 use App\Http\Requests\Api\admin\Updatecertificate;
 use App\Models\Certificate;
-use App\Models\CertificateTranslation;
 use App\Models\User;
 use App\Traits\Common;
 use App\Traits\Response;
@@ -51,19 +50,15 @@ class CertificateController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCeritificate $request)
+    public function store(StoreCeritificate $request ,string $id)
     {
-        $uuid = $request->input('uuid');
+    $data = [
+         'user_id' => auth()->id(),
+        'ar' => ['name' => $request->name_ar],
+        'en' => ['name' => $request->name_en],
+    ];
 
-      $user = User::where('uuid', $uuid)->firstOrFail();
-
-      $data = [
-            'user_id'=>$user->id,
-            'ar'=>['name'=>$request->name_ar],
-            'en' => ['name' => $request->name_en],
-        ];
-
-       $certificate = CertificateTranslation::create($data);
+       $certificate = Certificate::create($data);
 
       $certificate = fractal($certificate, new CertificateTransform() )
                     ->serializeWith(new ArraySerializer())
@@ -71,6 +66,7 @@ class CertificateController extends Controller
 
     return $this->responseApi(__('messages.store_certificate'), $certificate, 201);
     }
+
 
     /**
      * Display the specified resource.
@@ -95,7 +91,9 @@ class CertificateController extends Controller
      */
     public function update(Updatecertificate $request, string $id)
     {
-          $certificate = Certificate::findOrFail($id);
+         $certificate = Certificate::where('id', $id)
+                               ->where('user_id', auth()->id())
+                               ->firstOrFail();
 
          $certificate ->update([
             'ar'=>['name'=>$request->name_ar],

@@ -40,7 +40,8 @@ class StoreCeritificate extends FormRequest
                 }
             }
         ],
-         'uuid' => 'required|uuid|exists:users,uuid',
+       
+        
         ];
 
 

@@ -28,15 +28,15 @@ Route::middleware(['auth:sanctum', 'api_localization','IsDoctor'])->group(functi
         // Route::post('rate/{id}', 'rate');         
     });
 
-    Route::controller(CertificateController::class)->group(function () {
-        Route::post('/', 'store');
+    Route::prefix('certificate')->controller(CertificateController::class)->group(function () {
+        Route::post('/{id}', 'store');
         Route::get('/', 'index');
         Route::get('/{id}', 'show');
         Route::put('/{id}', 'update');
         Route::delete('/{id}', 'destroy');
     });
 
- Route::controller(ExperienceController::class)->group(function () {
+ Route::prefix('experience')->controller(ExperienceController::class)->group(function () {
         Route::post('/', 'store');
         Route::get('/', 'index');
         Route::get('/{id}', 'show');
