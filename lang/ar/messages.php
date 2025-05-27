@@ -71,4 +71,17 @@ return [
 'Nodelete_experience'=>'لا يمكن مسح التجربة',
 'delete_experience'=>'تم مسح الخبرة بنجاح',
 
+//surgery
+'store_surgery'=>'تم تخزين الجراحة بنجاح',
+'update_surgery'=>'تم تعديل الجراحة بنجاح',
+'Nodelete_surgery'=>'لا يمكن مسح العملية الجراحية',
+'delete_surgery'=>'تم مسح العملية الجراحية بنجاح',
+
+//allergy
+'store_allergy'=>'تم تخزين الحساسية بنجاح',
+'update_allergy'=>'تم تعديل الحساسية بنجاح',
+'Nodelete_allergy'=>'لا يمكن مسح الحساسية',
+'delete_allergy'=>'تم مسح الحساسية بنجاح',
+
+
 ];

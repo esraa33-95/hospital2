@@ -68,5 +68,19 @@ unique' => 'The Arabic name already exists.',
 'Nodelete_experience'=>' can not delete experience',
 'delete_experience'=>'delete experience successfully',
 
+//surgery
+'store_surgery'=>'store surgery successfully',
+'update_surgery'=>'update surgery successfully',
+'Nodelete_surgery'=>'can not delete surgery',
+'delete_surgery'=>'delete surgery successfully',
+
+//allergy
+'store_allergy'=>'store allergy successfully',
+'update_allergy'=>'update allergy successfully',
+'Nodelete_allergy'=>'can not delete allergy',
+'delete_allergy'=>'delete allergy successfully',
+
+
+
 
 ];

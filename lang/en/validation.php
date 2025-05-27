@@ -177,6 +177,14 @@ return [
     */
 
     'custom' => [
+        'surgery_type'=>[
+             'required'=>'type of surgery is required',
+             'string'=>'surgery must be string',
+        ],
+        'user_id'=>[
+           'required'=>'user is required',
+            'exists'=>'user must be exists',
+        ],
 
         'jobtitle'=>[
             'required'=>'jobtitle is required',
@@ -284,6 +292,8 @@ return [
        'jobtitle',
         'organization',
         'current',
+        'surgery_type',
+        'user_id',
     ],
 
 ];

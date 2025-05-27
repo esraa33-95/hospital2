@@ -18,6 +18,15 @@ return [
    'error'=>'غير مسموح لك بادخال هذا الحقل',
 
     'custom' => [
+        'surgery_type'=>[
+             'required'=>'نوع العملية مطلوب',
+             'string'=>'نوع العملية يجب ان يكون نص',
+        ],
+        'user_id'=>[
+           'required'=>'المستخدم مطلوب',
+             'exists'=>'المستخدم غير موجود',
+        ],
+
        'jobtitle'=>[
             'required'=>'المسمى الوظيفى مطلوب',
             'max' => 'اسم الوظيفة لا يتعدى 255 حرف',
@@ -123,6 +132,8 @@ return [
         'jobtitle',
         'organization',
         'current',
+        'surgery_type',
+        'user_id',
        
     ],
 ];
