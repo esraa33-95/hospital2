@@ -15,6 +15,8 @@ return [
     'old_password'=>'الباسورد القديم غير صحيح',
     'current_password'=>'الباسورد الحالى نفس الباسورد القديم هل تريد المواصلة',
     'change_password'=>'تم تغيير الباسورد بنجاح',
+    'not_show'=>'غير مصرح لك بروية ذلك',
+    
 
     //admin
 'admin'=>'الادمن فقط يستطيع تغيير الداتا',
@@ -61,6 +63,7 @@ return [
 'update_certificate'=>'تم تعديل الشهادة بنجاح',
 'delete_certificate'=>'تم حذف الشهادة بنجاح',
 'no_deletecerificate'=>'لا تستطيع حذف الشهادة ',
+'not_updated'=>'غير مسموح لك بتعديل بيانات دكتور اخر',
 
 //pdf
 'uploadpdf'=>' pdf تم تحميل ',
@@ -70,18 +73,21 @@ return [
 'update_experience'=>'تم تعديل الخيرة بنجاح',
 'Nodelete_experience'=>'لا يمكن مسح التجربة',
 'delete_experience'=>'تم مسح الخبرة بنجاح',
+'not_updated'=>'غير مسموح لك بتعديل بيانات دكتور اخر',
+
 
 //surgery
 'store_surgery'=>'تم تخزين الجراحة بنجاح',
 'update_surgery'=>'تم تعديل الجراحة بنجاح',
 'Nodelete_surgery'=>'لا يمكن مسح العملية الجراحية',
 'delete_surgery'=>'تم مسح العملية الجراحية بنجاح',
+'not_updated'=>'غير مسموح لك بتعديل بيانات مريض اخر',
 
 //allergy
 'store_allergy'=>'تم تخزين الحساسية بنجاح',
 'update_allergy'=>'تم تعديل الحساسية بنجاح',
 'Nodelete_allergy'=>'لا يمكن مسح الحساسية',
 'delete_allergy'=>'تم مسح الحساسية بنجاح',
-
+'not_updated'=>'غير مسموح لك بتعديل بيانات مريض اخر',
 
 ];

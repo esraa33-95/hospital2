@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\admin\StoreCeritificate;
 use App\Http\Requests\Api\admin\Updatecertificate;
 use App\Models\Certificate;
+use App\Models\CertificateTranslation;
+use App\Models\User;
 use App\Traits\Common;
 use App\Traits\Response;
 use App\Transformers\Admin\CertificateTransform;
@@ -51,13 +53,17 @@ class CertificateController extends Controller
      */
     public function store(StoreCeritificate $request)
     {
-        $data = [
-            'user_id' => auth()->id(),
+        $uuid = $request->input('uuid');
+
+      $user = User::where('uuid', $uuid)->firstOrFail();
+
+      $data = [
+            'user_id'=>$user->id,
             'ar'=>['name'=>$request->name_ar],
             'en' => ['name' => $request->name_en],
         ];
 
-       $certificate = Certificate::create($data);
+       $certificate = CertificateTranslation::create($data);
 
       $certificate = fractal($certificate, new CertificateTransform() )
                     ->serializeWith(new ArraySerializer())

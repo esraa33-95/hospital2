@@ -23,7 +23,6 @@ class UpdateAllergy extends FormRequest
     {
         return [
             'allergy_type'=>'nullable|string|max:255',
-            'user_id'=>'nullable|exists:users,id',
         ];
     }
 }

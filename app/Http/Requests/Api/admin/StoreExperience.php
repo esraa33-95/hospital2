@@ -21,11 +21,13 @@ class StoreExperience extends FormRequest
      */
     public function rules(): array
     {
+       
         return [
             'jobtitle'=>'required|string|max:255',
             'organization'=>'required|string|max:255',
             'current'=>'required|boolean',
-            'user_id'=>'required|exists:users,id',
+            'uuid' => 'required|uuid|exists:users,uuid',
+            
         ];
     }
 }

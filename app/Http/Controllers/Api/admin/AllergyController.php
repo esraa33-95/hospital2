@@ -68,6 +68,11 @@ class AllergyController extends Controller
     {
         $allergy = Allergy::findOrFail($id);
 
+        if( $allergy->user_id !== auth()->id())
+        {
+           return $this->responseApi(__('messages.not_show'),403);
+        }
+
         $allergy = fractal()
                   ->item($allergy)
                   ->transformWith(new AllergyTransform())
@@ -86,6 +91,11 @@ class AllergyController extends Controller
 
       $allergy = Allergy::findOrFail($id);
 
+      if( $allergy->user_id !== auth()->id())
+        {
+            return  $this->responseApi(__('messages.not_updated'),403); 
+        }
+
       $allergy->update($data);
 
       $allergy = fractal($allergy, new AllergyTransform() )
@@ -102,7 +112,7 @@ class AllergyController extends Controller
     {
          $allergy = Allergy::with('users')->findOrFail($id);
 
-        if( $allergy)
+        if( $allergy->user_id !== auth()->id())
         {
             return  $this->responseApi(__('messages.Nodelete_allergy'),403); 
         }

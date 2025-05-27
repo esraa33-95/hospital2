@@ -8,6 +8,7 @@ use App\Http\Requests\Api\admin\UpdateExperience;
 use App\Transformers\Admin\ExperienceTransform;
 use League\Fractal\Serializer\ArraySerializer;
 use App\Models\Experience;
+use App\Models\User;
 use App\Traits\Response;
 use App\Traits\Common;
 use Illuminate\Http\Request;
@@ -52,6 +53,12 @@ class ExperienceController extends Controller
     {
         $data = $request->validated();
 
+       $uuid = $request->input('uuid');
+
+      $user = User::where('uuid', $uuid)->firstOrFail();
+
+      $data['user_id'] = $user->id;         
+
        $experience = Experience::create($data);
 
        $experience = fractal($experience,new ExperienceTransform())
@@ -82,7 +89,13 @@ class ExperienceController extends Controller
      */
     public function update(UpdateExperience $request, string $id)
     {
-       $experience = Experience::findOrFail($id);
+     $uuid = $request->input('uuid');
+
+    $user = User::where('uuid', $uuid)->firstOrFail();
+
+    $experience = Experience::where('id', $id)
+                            ->where('user_id', $user->id)
+                            ->firstOrFail();
 
        $data = $request->validated();
 
@@ -102,8 +115,8 @@ class ExperienceController extends Controller
     public function destroy(string $id)
     {
         $experience = Experience::with('users')->findOrFail($id);
-
-        if( $experience)
+        
+        if ($experience) 
         {
             return  $this->responseApi(__('messages.Nodelete_experience'),403); 
         }

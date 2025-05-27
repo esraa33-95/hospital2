@@ -46,7 +46,8 @@ class UpdateExperience extends FormRequest
         ],
            
              'current'=>'nullable|boolean',
-             'user_id'=>'nullable|exists:users,id',
+              'uuid' => 'nullable|uuid|exists:users,uuid',
+           
         ];
     }
 }

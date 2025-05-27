@@ -16,6 +16,8 @@ return [
     'old_password'=>'old password is incorrect',
     'current_password'=>'current password is same as new password can you continue',
     'change_password'=>'Password changed successfully',
+    'not_show'=>'not allowed to show',
+   
 
 //admin
 'admin'=>'admin only can be change his data',
@@ -56,6 +58,7 @@ unique' => 'The Arabic name already exists.',
 'store_certificate'=>' store certificate successfully',
 'update_certificate'=>' update certificate successfully',
 'delete_certificate'=>'delete certificate successfully',
+'not_updated'=>'not allowed to change another data for any doctor',
 
 //pdf
 'uploadpdf'=>' pdf upload successfully',
@@ -67,18 +70,21 @@ unique' => 'The Arabic name already exists.',
 'update_experience'=>'update experience successfully',
 'Nodelete_experience'=>' can not delete experience',
 'delete_experience'=>'delete experience successfully',
+'not_updated'=>'not allowed to change another data for any doctor',
 
 //surgery
 'store_surgery'=>'store surgery successfully',
 'update_surgery'=>'update surgery successfully',
 'Nodelete_surgery'=>'can not delete surgery',
 'delete_surgery'=>'delete surgery successfully',
+'not_updated'=>'not allowed to change another data for any patient',
 
 //allergy
 'store_allergy'=>'store allergy successfully',
 'update_allergy'=>'update allergy successfully',
 'Nodelete_allergy'=>'can not delete allergy',
 'delete_allergy'=>'delete allergy successfully',
+'not_updated'=>'not allowed to change another data for any patient',
 
 
 
