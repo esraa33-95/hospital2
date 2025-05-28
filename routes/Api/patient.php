@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\admin\AllergyController;
+use App\Http\Controllers\Api\admin\BloodController;
+use App\Http\Controllers\Api\admin\DiseaseController;
 use App\Http\Controllers\Api\admin\SurgeryController;
 use App\Http\Controllers\Api\front\PatientController;
 use App\Http\Controllers\Api\front\UserController;
@@ -42,5 +44,20 @@ Route::middleware(['auth:sanctum','api_localization','IsPatient'])->group(functi
         Route::delete('/{id}', 'delete');          
           
     });
+
+    Route::prefix('disease')->controller(DiseaseController::class)->group(function () {                 
+        Route::post('/{id}', 'store');                                
+        Route::put('/{id}', 'update');       
+        Route::delete('/{id}', 'delete');          
+          
+    });
+
+    Route::prefix('blood')->controller(BloodController::class)->group(function () {                 
+        Route::post('/{id}', 'store');                                
+        Route::put('/{id}', 'update');       
+        Route::delete('/{id}', 'delete');          
+          
+    });
+
 
 });

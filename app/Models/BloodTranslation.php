@@ -4,16 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AllergyTranslation extends Model
+class BloodTranslation extends Model
 {
      public $timestamps = false;
 
     protected $fillable = ['name'];
 
 
- public function allergy()
+ public function blood()
 {
-    return $this->belongsTo(Allergy::class);
+    return $this->belongsTo(Blood::class);
 }
-
 }

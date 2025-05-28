@@ -86,6 +86,19 @@ unique' => 'The Arabic name already exists.',
 'delete_allergy'=>'delete allergy successfully',
 'not_updated'=>'not allowed to change another data for any patient',
 
+//disease
+'store_disease'=>'store disease successfully',
+'update_disease'=>'update disease successfully',
+'Nodelete_disease'=>'can not delete disease',
+'delete_disease'=>'delete disease successfully',
+'not_updated'=>'not allowed to change another data for any patient',
+
+//blood
+'store_blood'=>'store blood successfully',
+'update_blood'=>'update blood successfully',
+'Nodelete_blood'=>'can not delete blood',
+'delete_blood'=>'delete blood successfully',
+'not_updated'=>'not allowed to change another data for any patient',
 
 
 

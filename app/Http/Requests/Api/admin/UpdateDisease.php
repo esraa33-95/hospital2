@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\Api\admin;
 
-use App\Models\AllergyTranslation;
+use App\Models\DiseaseTranslation;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateAllergy extends FormRequest
+class UpdateDisease extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,14 +22,14 @@ class UpdateAllergy extends FormRequest
      */
     public function rules(): array
     {
-          $id = $this->allergy; 
+         $id = $this->disease; 
 
     return [
         'name_en' => [ 'nullable',
             function ($attribute, $value, $error) use ($id) {
-                $exists = AllergyTranslation::where('name', $value)
+                $exists = DiseaseTranslation::where('name', $value)
                     ->where('locale', 'en')
-                    ->where('allergy_id', '!=', $id)
+                    ->where('disease_id', '!=', $id)
                     ->exists();
 
                 if ($exists) {
@@ -39,13 +39,13 @@ class UpdateAllergy extends FormRequest
         ],
         'name_ar' => [ 'nullable',
             function ($attribute, $value, $error) use ($id) {
-                $exists = AllergyTranslation::where('name', $value)
+                $exists = DiseaseTranslation::where('name', $value)
                     ->where('locale', 'ar')
-                    ->where('allergy_id', '!=', $id)
+                    ->where('disease_id', '!=', $id)
                     ->exists();
 
                 if ($exists) {
-                    $error(__('validation.custom.name_ar.unique' ));
+                    $error(__('validation.custom.name_ar.unique'));
                 }
             }
         ],

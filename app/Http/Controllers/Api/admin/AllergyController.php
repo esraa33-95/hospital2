@@ -22,7 +22,7 @@ class AllergyController extends Controller
     public function store(StoreAllergy $request,string $id)
     {
          $data = [
-         'user_id' => auth()->id(),
+        'user_id' => auth()->id(),
         'ar' => ['name' => $request->name_ar],
         'en' => ['name' => $request->name_en],
     ];
