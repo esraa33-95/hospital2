@@ -17,7 +17,7 @@ class IsAdmin
 {
     $user = auth()->user();
 
-    if ($user || $user->user_type === 1) 
+    if ($user && $user->user_type === 1) 
     {
           return $next($request);
       

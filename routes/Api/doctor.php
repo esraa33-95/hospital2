@@ -30,18 +30,14 @@ Route::middleware(['auth:sanctum', 'api_localization','IsDoctor'])->group(functi
 
     Route::prefix('certificate')->controller(CertificateController::class)->group(function () {
         Route::post('/{id}', 'store');
-        Route::get('/', 'index');
-        Route::get('/{id}', 'show');
         Route::put('/{id}', 'update');
-        Route::delete('/{id}', 'destroy');
+        Route::delete('/{id}', 'delete');
     });
 
  Route::prefix('experience')->controller(ExperienceController::class)->group(function () {
-        Route::post('/', 'store');
-        Route::get('/', 'index');
-        Route::get('/{id}', 'show');
+        Route::post('/{id}', 'store');
         Route::put('/{id}', 'update');
-        Route::delete('/{id}', 'destroy');
+        Route::delete('/{id}', 'delete');
     });
 
 

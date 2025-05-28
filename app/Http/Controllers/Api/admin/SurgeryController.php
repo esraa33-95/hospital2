@@ -14,42 +14,17 @@ use Illuminate\Http\Request;
 class SurgeryController extends Controller
 {
     use Response;
-    /**
-     * Display a listing of the resource.
-     */
-     public function index(Request $request)
-{
-    $search = $request->input('search');
-    $take = $request->input('take'); 
-    $skip = $request->input('skip');  
    
-    $query = Surgery::query();
-
-      if ($search)
-    {
-        $query->where('surgery_type', 'like', '%' . $search . '%');
-    }
-
-    $total = $query->count();
-
-    $surgery = $query->skip($skip ?? 0)->take($take ?? $total)->get();
-
-     $surgery = fractal()
-                   ->collection($surgery)
-                   ->transformWith(new SurgeryTransform())
-                   ->serializeWith(new ArraySerializer())
-                   ->toArray();
-
-    return $this->responseApi('', $surgery, 200, ['count' =>$total]);
-}
-
-
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSurgery $request)
+    public function store(StoreSurgery $request,string $id)
     {
+          $user = auth()->user();
+
         $data = $request->validated();
+
+        $data['user_id']= $user->id;
 
        $surgery = Surgery::create($data);
 
@@ -62,29 +37,17 @@ class SurgeryController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $surgery = Surgery::findOrFail($id);
-
-        $surgery = fractal()
-                  ->item($surgery)
-                  ->transformWith(new SurgeryTransform())
-                    ->serializeWith(new ArraySerializer())
-                    ->toArray();
-
-        return $this->responseApi('', $surgery, 201);           
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(UpdateSurgery $request, string $id)
     {
-       $data = $request->validated();
+        $user = auth()->user();
 
-      $surgery = Surgery::findOrFail($id);
+    $surgery = Surgery::where('id', $id)
+                      ->where('user_id', $user->id) 
+                      ->firstOrFail();
+                      
+     $data = $request->validated();
 
       $surgery->update($data);
 
@@ -92,18 +55,18 @@ class SurgeryController extends Controller
                     ->serializeWith(new ArraySerializer())
                     ->toArray();
 
-    return $this->responseApi(__('messages.update_surgery'), $surgery, 201);
+    return $this->responseApi(__('messages.update_surgery'), $surgery, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function delete(string $id)
     {
         $surgery = Surgery::with('users')->findOrFail($id);
 
-        if( $surgery)
-        {
+         if ($surgery) {
+        
             return  $this->responseApi(__('messages.Nodelete_surgery'),403); 
         }
 
@@ -112,3 +75,4 @@ class SurgeryController extends Controller
         return  $this->responseApi(__('messages.delete_surgery'),204);
     }
 }
+

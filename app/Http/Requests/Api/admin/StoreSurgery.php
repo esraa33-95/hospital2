@@ -21,9 +21,11 @@ class StoreSurgery extends FormRequest
      */
     public function rules(): array
     {
+     
+
         return [
             'surgery_type'=>'required|string|max:255',
-            'user_id'=>'required|exists:users,id',       
+              
         ];
     }
 }

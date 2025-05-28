@@ -17,7 +17,7 @@ class IsPatient
 {
     $user = auth()->user();
 
-    if ($user || $user->user_type === 3) 
+   if ($user && $user->user_type === 3)  
     {
           return $next($request);
       
@@ -25,4 +25,5 @@ class IsPatient
 
     return response()->json(['message' => 'Unauthorized. patients only can do this'], 403);
 }
+
 }

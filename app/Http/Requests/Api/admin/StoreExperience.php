@@ -26,8 +26,6 @@ class StoreExperience extends FormRequest
             'jobtitle'=>'required|string|max:255',
             'organization'=>'required|string|max:255',
             'current'=>'required|boolean',
-            'uuid' => 'required|uuid|exists:users,uuid',
-            
         ];
     }
 }

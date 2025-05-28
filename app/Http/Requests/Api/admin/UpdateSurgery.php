@@ -23,7 +23,7 @@ class UpdateSurgery extends FormRequest
     {
         return [
             'surgery_type'=>'nullable|string|max:255',
-            'user_id'=>'nullable|exists:users,id',
+          
         ];
     }
 }

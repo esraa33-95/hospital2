@@ -17,7 +17,7 @@ class IsDoctor
     {
        $user = auth()->user();
 
-    if ($user || $user->user_type === 2 ) 
+   if ($user && $user->user_type === 2) 
     {
           return $next($request);
       

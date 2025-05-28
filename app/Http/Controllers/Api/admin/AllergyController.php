@@ -15,42 +15,17 @@ use App\Transformers\admin\AllergyTransform;
 class AllergyController extends Controller
 {
     use Response;
-    /**
-     * Display a listing of the resource.
-     */
-     public function index(Request $request)
-{
-    $search = $request->input('search');
-    $take = $request->input('take'); 
-    $skip = $request->input('skip');  
    
-    $query = Allergy::query();
-
-      if ($search)
-    {
-        $query->where('allergy_type', 'like', '%' . $search . '%');
-    }
-
-    $total = $query->count();
-
-    $allergy  = $query->skip($skip ?? 0)->take($take ?? $total)->get();
-
-     $allergy = fractal()
-                   ->collection($allergy)
-                   ->transformWith(new AllergyTransform())
-                   ->serializeWith(new ArraySerializer())
-                   ->toArray();
-
-    return $this->responseApi('', $allergy, 200, ['count' =>$total]);
-}
-
-
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreAllergy $request)
+    public function store(StoreAllergy $request,string $id)
     {
         $data = $request->validated();
+
+        $user = auth()->user();
+
+        $data['user_id']= $user->id;
 
        $allergy = Allergy::create($data);
 
@@ -61,27 +36,7 @@ class AllergyController extends Controller
        return $this->responseApi(__('messages.store_allergy'), $allergy, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $allergy = Allergy::findOrFail($id);
-
-        if( $allergy->user_id !== auth()->id())
-        {
-           return $this->responseApi(__('messages.not_show'),403);
-        }
-
-        $allergy = fractal()
-                  ->item($allergy)
-                  ->transformWith(new AllergyTransform())
-                  ->serializeWith(new ArraySerializer())
-                  ->toArray();
-
-        return $this->responseApi('', $allergy, 201);
-    }
-
+   
     /**
      * Update the specified resource in storage.
      */
@@ -89,12 +44,11 @@ class AllergyController extends Controller
     {
       $data = $request->validated();
 
-      $allergy = Allergy::findOrFail($id);
+      $user = auth()->user();
 
-      if( $allergy->user_id !== auth()->id())
-        {
-            return  $this->responseApi(__('messages.not_updated'),403); 
-        }
+     $allergy = Allergy::where('id', $id)
+                      ->where('user_id', $user->id) 
+                      ->firstOrFail();
 
       $allergy->update($data);
 
@@ -102,19 +56,19 @@ class AllergyController extends Controller
                     ->serializeWith(new ArraySerializer())
                     ->toArray();
 
-    return $this->responseApi(__('messages.update_allergy'), $allergy, 201);
+    return $this->responseApi(__('messages.update_allergy'), $allergy, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function delete(string $id)
     {
          $allergy = Allergy::with('users')->findOrFail($id);
 
-        if( $allergy->user_id !== auth()->id())
+        if($allergy)
         {
-            return  $this->responseApi(__('messages.Nodelete_allergy'),403); 
+              return  $this->responseApi(__('messages.Nodelete_allergy'),403); 
         }
 
         $allergy->delete();
