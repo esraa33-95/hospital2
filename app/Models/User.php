@@ -115,6 +115,12 @@ class User extends Authenticatable implements MustVerifyEmail,HasMedia
    {
     return $this->hasMany(Blood::class);
    }
+
+    public function banner()
+   {
+    return $this->hasMany(Banner::class);
+   }
+
 protected static function boot()
 {
     parent::boot();
