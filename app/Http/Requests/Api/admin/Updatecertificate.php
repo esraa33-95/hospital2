@@ -29,7 +29,7 @@ class Updatecertificate extends FormRequest
             function ($attribute, $value, $error) use ($id) {
                 $en = CertificateTranslation::where('name', $value)
                     ->where('locale', 'en')
-                    ->where('certificate_id', '=', $id)
+                    ->where('certificate_id', '!=', $id)
                     ->exists();
 
                 if ($en) {
@@ -49,7 +49,7 @@ class Updatecertificate extends FormRequest
                 }
             }
         ],
-        'uuid' => ['nullable', 'uuid', 'exists:users,uuid'],
+       // 'uuid' => ['nullable', 'uuid', 'exists:users,uuid'],
     ];
 }
 

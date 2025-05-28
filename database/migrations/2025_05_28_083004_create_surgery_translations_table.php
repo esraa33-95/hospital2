@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('allergies', function (Blueprint $table) {
+        Schema::create('surgery_translations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('name');
+            $table->foreignId('surgery_id')->constrained()->onDelete('cascade');
+            $table->string('locale')->index();
+
+            $table->unique(['surgery_id','locale']);
             $table->timestamps();
         });
     }
@@ -23,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('allergies');
+        Schema::dropIfExists('surgery_translations');
     }
 };

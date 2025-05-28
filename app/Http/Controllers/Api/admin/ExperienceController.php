@@ -66,9 +66,9 @@ class ExperienceController extends Controller
      */
     public function delete(string $id)
     {
-        $experience = Experience::with('users')->findOrFail($id);
+        $experience = Experience::findOrFail($id);
         
-        if ($experience) 
+        if ($experience->users()->exists()) 
         {
             return  $this->responseApi(__('messages.Nodelete_experience'),403); 
         }

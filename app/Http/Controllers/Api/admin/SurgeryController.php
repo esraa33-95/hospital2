@@ -20,11 +20,11 @@ class SurgeryController extends Controller
      */
     public function store(StoreSurgery $request,string $id)
     {
-          $user = auth()->user();
-
-        $data = $request->validated();
-
-        $data['user_id']= $user->id;
+      $data = [
+         'user_id' => auth()->id(),
+        'ar' => ['name' => $request->name_ar],
+        'en' => ['name' => $request->name_en],
+    ];
 
        $surgery = Surgery::create($data);
 
@@ -41,17 +41,16 @@ class SurgeryController extends Controller
      */
     public function update(UpdateSurgery $request, string $id)
     {
-        $user = auth()->user();
+        $data = [
+        'en' => ['name' => $request->name_en],
+        'ar' => ['name' => $request->name_ar],
+    ];
 
-    $surgery = Surgery::where('id', $id)
-                      ->where('user_id', $user->id) 
-                      ->firstOrFail();
-                      
-     $data = $request->validated();
+    $surgery = Surgery::findOrFail($id);
 
-      $surgery->update($data);
+     $surgery->update($data);
 
-      $surgery = fractal($surgery, new SurgeryTransform() )
+    $surgery = fractal($surgery, new SurgeryTransform() )
                     ->serializeWith(new ArraySerializer())
                     ->toArray();
 
@@ -63,9 +62,10 @@ class SurgeryController extends Controller
      */
     public function delete(string $id)
     {
-        $surgery = Surgery::with('users')->findOrFail($id);
+        $surgery = Surgery::findOrFail($id);
 
-         if ($surgery) {
+         if ($surgery->users()->exists()) 
+         {
         
             return  $this->responseApi(__('messages.Nodelete_surgery'),403); 
         }

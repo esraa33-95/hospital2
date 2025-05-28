@@ -33,8 +33,9 @@ class SurgeryTransform extends TransformerAbstract
     public function transform(Surgery $surgery):array
     {
         return [
-            'surgery_type'=>$surgery->surgery_type,
-            'user_id'=>$surgery->user_id,
+             'id' => $surgery->id,
+              'name_en' => $surgery->translate('en')->name,
+              'name_ar' => $surgery->translate('ar')->name,
             
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\admin;
 
+use App\Models\SurgeryTranslation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSurgery extends FormRequest
@@ -21,11 +22,24 @@ class StoreSurgery extends FormRequest
      */
     public function rules(): array
     {
-     
-
-        return [
-            'surgery_type'=>'required|string|max:255',
-              
+             return [
+            'name_en' => ['required',
+            function ($attribute, $value, $error) {
+                if (SurgeryTranslation::where('name', $value)->where('locale', 'en')->exists()) 
+                {
+                    $error(__('validation.custom.name_en.unique'));
+                }
+            }
+        ],
+        'name_ar' => ['required',
+            function ($attribute, $value, $error) {
+                if (SurgeryTranslation::where('name', $value)->where('locale', 'ar')->exists())
+                 {
+                    $error(__('validation.custom.name_ar.unique'));
+                }
+            }
+        ],
         ];
+              
     }
 }

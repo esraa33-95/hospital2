@@ -21,11 +21,11 @@ class AllergyController extends Controller
      */
     public function store(StoreAllergy $request,string $id)
     {
-        $data = $request->validated();
-
-        $user = auth()->user();
-
-        $data['user_id']= $user->id;
+         $data = [
+         'user_id' => auth()->id(),
+        'ar' => ['name' => $request->name_ar],
+        'en' => ['name' => $request->name_en],
+    ];
 
        $allergy = Allergy::create($data);
 
@@ -42,15 +42,14 @@ class AllergyController extends Controller
      */
     public function update(UpdateAllergy $request, string $id)
     {
-      $data = $request->validated();
+       $data = [
+        'en' => ['name' => $request->name_en],
+        'ar' => ['name' => $request->name_ar],
+    ];
 
-      $user = auth()->user();
+    $allergy = Allergy::findOrFail($id);
 
-     $allergy = Allergy::where('id', $id)
-                      ->where('user_id', $user->id) 
-                      ->firstOrFail();
-
-      $allergy->update($data);
+     $allergy->update($data);
 
       $allergy = fractal($allergy, new AllergyTransform() )
                     ->serializeWith(new ArraySerializer())
@@ -64,9 +63,9 @@ class AllergyController extends Controller
      */
     public function delete(string $id)
     {
-         $allergy = Allergy::with('users')->findOrFail($id);
+         $allergy = Allergy::findOrFail($id);
 
-        if($allergy)
+        if($allergy->users()->exists())
         {
               return  $this->responseApi(__('messages.Nodelete_allergy'),403); 
         }

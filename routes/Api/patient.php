@@ -29,19 +29,18 @@ Route::middleware(['auth:sanctum','api_localization','IsPatient'])->group(functi
     });
 
 //surgery
- Route::prefix('surgery')->controller(SurgeryController::class)->group(function () {                 
+ Route::prefix('surgery')->controller(SurgeryController::class)->group(function (){                 
         Route::post('/{id}', 'store');                                
-        Route::patch('/{id}', 'update');       
+        Route::put('/{id}', 'update');       
         Route::delete('/{id}', 'delete');          
           
     });
 
  Route::prefix('allergy')->controller(AllergyController::class)->group(function () {                 
         Route::post('/{id}', 'store');                                
-        Route::patch('/{id}', 'update');       
+        Route::put('/{id}', 'update');       
         Route::delete('/{id}', 'delete');          
           
     });
-
 
 });

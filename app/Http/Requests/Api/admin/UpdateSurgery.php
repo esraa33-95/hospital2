@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Api\admin;
 
+use App\Models\Surgery;
+use App\Models\SurgeryTranslation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateSurgery extends FormRequest
@@ -21,9 +23,33 @@ class UpdateSurgery extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'surgery_type'=>'nullable|string|max:255',
-          
-        ];
+         $id = $this->surgery; 
+
+    return [
+        'name_en' => [ 'nullable',
+            function ($attribute, $value, $error) use ($id) {
+                $exists = SurgeryTranslation::where('name', $value)
+                    ->where('locale', 'en')
+                    ->where('surgery_id', '!=', $id)
+                    ->exists();
+
+                if ($exists) {
+                    $error(__('validation.custom.name_en.unique'));
+                }
+            }
+        ],
+        'name_ar' => [ 'nullable',
+            function ($attribute, $value, $error) use ($id) {
+                $exists = SurgeryTranslation::where('name', $value)
+                    ->where('locale', 'ar')
+                    ->where('surgery_id', '!=', $id)
+                    ->exists();
+
+                if ($exists) {
+                    $error(__('validation.custom.name_ar.unique'));
+                }
+            }
+        ],
+    ];
     }
 }

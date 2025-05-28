@@ -33,8 +33,9 @@ class AllergyTransform extends TransformerAbstract
     public function transform(Allergy $allergy):array
     {
         return [
-            'allergy_type'=>$allergy->allergy_type,
-            'user_id'=>$allergy->user_id,
+            'id' => $allergy->id,
+              'name_en' => $allergy->translate('en')->name,
+              'name_ar' => $allergy->translate('ar')->name,
         ];
     }
 }

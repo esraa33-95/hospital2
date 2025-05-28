@@ -68,9 +68,9 @@ class CertificateController extends Controller
      */
     public function delete( string $id)
     {
-        $certificate = Certificate::with('users')->findOrFail($id);
+        $certificate = Certificate::findOrFail($id);
 
-        if( $certificate)
+        if( $certificate->users()->exists())
         {
             return  $this->responseApi(__('messages.no_deletecerificate'),403); 
         }
