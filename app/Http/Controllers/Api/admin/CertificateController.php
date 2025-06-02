@@ -22,10 +22,11 @@ class CertificateController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCeritificate $request, string $id)
+    public function store(StoreCeritificate $request)
     {
+        $user = auth()->user();
     $data = [
-         'user_id' => auth()->id(),
+         'user_id' => $user->id,
         'ar' => ['name' => $request->name_ar],
         'en' => ['name' => $request->name_en],
     ];
@@ -45,7 +46,7 @@ class CertificateController extends Controller
      */
     public function update(Updatecertificate $request, string $id)
     {
-      $user = auth()->id();
+      $user = auth()->user();
 
       $certificate = Certificate::where('id', $id)
                     ->where('user_id', $user->id)
@@ -68,9 +69,9 @@ class CertificateController extends Controller
      */
     public function delete( string $id)
     {
-        $certificate = Certificate::findOrFail($id);
+        $certificate = Certificate::with('users')->findOrFail($id);
 
-        if( $certificate->users()->exists())
+        if( $certificate)
         {
             return  $this->responseApi(__('messages.no_deletecerificate'),403); 
         }

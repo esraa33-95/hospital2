@@ -16,7 +16,6 @@ class Surgery extends Model
        
     ];
    
-
 public function users()
 {
     return $this->belongsTo(User::class);

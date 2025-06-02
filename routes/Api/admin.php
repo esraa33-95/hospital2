@@ -60,43 +60,39 @@ Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function
     //     Route::delete('/{id}', 'destroy');
     // });
 
-    Route::prefix('certificate')->controller(CertificateController::class)->group(function () {
-        Route::post('/{id}', 'store');
-        Route::put('/{id}', 'update');
-        Route::delete('/{id}', 'delete');
-    });
-
- Route::prefix('experience')->controller(ExperienceController::class)->group(function () {
-        Route::post('/{id}', 'store');
-        Route::put('/{id}', 'update');
-        Route::delete('/{id}', 'delete');
-    });
-   
-    
+ 
     //surgery
- Route::prefix('surgery')->controller(SurgeryController::class)->group(function (){                 
-        Route::post('/{id}', 'store');                                
+ Route::prefix('surgeries')->controller(SurgeryController::class)->group(function (){                 
+        Route::post('/', 'store'); 
+        Route::get('/{id}', 'show'); 
+         Route::get('/', 'index');                               
         Route::put('/{id}', 'update');       
         Route::delete('/{id}', 'delete');          
           
     });
 //allergy
- Route::prefix('allergy')->controller(AllergyController::class)->group(function () {                 
-        Route::post('/{id}', 'store');                                
+ Route::prefix('allergies')->controller(AllergyController::class)->group(function () {                 
+        Route::post('/', 'store'); 
+         Route::get('/{id}', 'show');  
+         Route::get('/', 'index');                                
         Route::put('/{id}', 'update');       
         Route::delete('/{id}', 'delete');          
           
     });
 //disease
-    Route::prefix('disease')->controller(DiseaseController::class)->group(function () {                 
-        Route::post('/{id}', 'store');                                
+    Route::prefix('diseases')->controller(DiseaseController::class)->group(function () {                 
+        Route::post('/', 'store');  
+         Route::get('/{id}', 'show'); 
+         Route::get('/', 'index');                                
         Route::put('/{id}', 'update');       
         Route::delete('/{id}', 'delete');          
           
     });
 //blood
-    Route::prefix('blood')->controller(BloodController::class)->group(function () {                 
-        Route::post('/{id}', 'store');                                
+    Route::prefix('bloods')->controller(BloodController::class)->group(function () {                 
+        Route::post('/', 'store');  
+         Route::get('/{id}', 'show'); 
+         Route::get('/', 'index');                                
         Route::put('/{id}', 'update');       
         Route::delete('/{id}', 'delete');          
           

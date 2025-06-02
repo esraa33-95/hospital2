@@ -113,7 +113,7 @@ class User extends Authenticatable implements MustVerifyEmail,HasMedia
 
     public function blood()
    {
-    return $this->hasMany(Blood::class);
+    return $this->hasOne(Blood::class);
    }
 
     public function banner()

@@ -15,13 +15,40 @@ class DiseaseController extends Controller
 {
     use Response;
     
+    public function index(Request $request)
+{
+    $search = $request->input('search');
+    $take = $request->input('take'); 
+    $skip = $request->input('skip');  
+    $locale = $request->query('lang', app()->getLocale());
+
+    $query = Disease::query();
+
+      if ($search)
+    {
+        $query->whereTranslationLike('name', '%' . $search . '%', $locale);
+    }
+
+    $total = $query->count();
+
+    $disease = $query->skip($skip ?? 0)->take($take ?? $total)->get();
+
+    $disease =  fractal()->collection($disease)
+                  ->transformWith(new DiseaseTransform())
+                   ->serializeWith(new ArraySerializer())
+                   ->toArray();
+
+    return $this->responseApi('', $disease, 200, ['count' =>$total]);
+}
     /**
      * Store a newly created resource in storage.
      */
-     public function store(StoreDisease $request,string $id)
+     public function store(StoreDisease $request)
     {
+         $user = auth()->user();
+
          $data = [
-        'user_id' => auth()->id(),
+        'user_id' =>$user->id,
         'ar' => ['name' => $request->name_ar],
         'en' => ['name' => $request->name_en],
     ];
@@ -35,15 +62,26 @@ class DiseaseController extends Controller
        return $this->responseApi(__('messages.store_disease'), $disease, 201);
     }
 
-    
+     public function show(string $id)
+    {     
+        $disease = Disease::findOrFail($id);
+
+         $disease = fractal()
+                 ->item($disease)
+                 ->transformWith(new DiseaseTransform())
+                 ->serializeWith(new ArraySerializer())
+                 ->toArray();
+
+        return  $this->responseApi('',$disease,200);
+    }
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateDisease $request, string $id)
-    {
-        $data = [
+    { 
+         $data = [
         'en' => ['name' => $request->name_en],
-        'ar' => ['name' => $request->name_ar],
+        'ar' => ['name' =>  $request->name_ar],
     ];
 
     $disease = Disease::findOrFail($id);
@@ -62,9 +100,9 @@ class DiseaseController extends Controller
      */
     public function delete(string $id)
     {
-        $disease = Disease::findOrFail($id);
+        $disease = Disease::with('users')->findOrFail($id);
 
-        if($disease->users()->exists())
+        if($disease)
         {
               return  $this->responseApi(__('messages.Nodelete_disease'),403); 
         }
