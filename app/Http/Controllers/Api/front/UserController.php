@@ -3,13 +3,21 @@
 namespace App\Http\Controllers\Api\front;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\admin\StoreCeritificate;
+use App\Http\Requests\Api\admin\StoreExperience;
+use App\Http\Requests\Api\admin\Updatecertificate;
+use App\Http\Requests\Api\admin\UpdateExperience;
 use App\Http\Requests\Api\front\ChangePassword;
 use App\Http\Requests\Api\front\updateUser;
 use App\Http\Requests\Api\front\uploadimageRequest;
+use App\Models\Certificate;
+use App\Models\Experience;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\Common;
 use App\Traits\Response;
+use App\Transformers\Admin\CertificateTransform;
+use App\Transformers\admin\ExperienceTransform;
 use App\Transformers\front\UserTransform;
 use Illuminate\Support\Facades\Hash;
 use League\Fractal\Serializer\ArraySerializer;
@@ -160,38 +168,190 @@ public function changePassword(ChangePassword $request)
 
 // }
 
-//     public function uploadimage(Request $request, string $id)
-// {
-//     $request->validate([
-//         'file' => 'required|mimes:jpeg,jpg,png,pdf|max:5120', 
-//     ]);
+//add certificate
+public function addcertificate(StoreCeritificate $request)
+    {
+     $user = auth()->user();
+                
+     $data = [
+        'ar' => ['name' => $request->name_ar],
+        'en' => ['name' => $request->name_en],
+      ];
 
-//     if ($request->hasFile('file')) {
-      
-//         $file = $request->file('file');
-//         $filePath = $file->store('assets/images', 'public'); 
+         if ($user->user_type !== 2)
+            {
+            return $this->responseApi(__('unauthorized')); 
+            }
 
-       
-//         $document = new Document();
-//         $document->file_path = $filePath;
-//         $document->file_type = $file->getClientOriginalExtension(); 
-//         $document->save();
+       $certificate = Certificate::create($data);
 
-//         return response()->json([
-//             'message' => 'File uploaded and saved to database.',
-//             'document' => $document,
-//         ], 201);
-//     }
+       $certificate = fractal($certificate, new CertificateTransform())
+                    ->serializeWith(new ArraySerializer())
+                    ->toArray();
 
-//     return response()->json([
-//         'message' => 'No file was uploaded.',
-//     ], 400);
-// }
+    return $this->responseApi(__('messages.store_certificate'), $certificate, 201);
+    }
+
+   //update certificate 
+    public function updatecertificate(Updatecertificate $request, string $id)
+    {
+        $user = auth()->user();
+
+      if ($user->user_type !== 2)
+            {
+            return $this->responseApi(__('unauthorized')); 
+            }
+
+         $data =[
+            'ar'=>['name'=>$request->name_ar],
+            'en' => ['name' => $request->name_en],
+              ];
+
+         $certificate = Certificate::findOrFail($id);
+
+        $certificate->update($data);
+
+      $certificate = fractal($certificate, new CertificateTransform() )
+                    ->serializeWith(new ArraySerializer())
+                    ->toArray();
+
+    return $this->responseApi(__('messages.update_certificate'), $certificate, 200);
+    }
 
 
+    //show certificate
+    public function showcertificate(Request $request,string $id)
+    {     
+        $certificate = Certificate::findOrFail($id);
+
+         $certificate = fractal()
+                 ->item($certificate)
+                 ->transformWith(new CertificateTransform())
+                 ->serializeWith(new ArraySerializer())
+                 ->toArray();
+
+        return  $this->responseApi('',$certificate,200);
+    }
+
+//delete certificate
+ public function deletecertificate( string $id)
+    {
+        $certificate = Certificate::with('users')->findOrFail($id);
+    
+        if($certificate)
+        {
+            return  $this->responseApi(__('messages.no_deletecerificate'),403); 
+        }
+
+        $certificate->delete();
+        
+        return  $this->responseApi(__('messages.delete_certificate'),204); 
+    }
+
+//experience
+public function addexperience(StoreExperience $request)
+    {
+     $user = auth()->user();
+
+      if ($user->user_type !== 2)
+            {
+            return $this->responseApi(__('unauthorized')); 
+            }
+
+    if ($request->current == 1) 
+         {
+            Experience::where('user_id', $user->id)
+                       ->update(['current' => 0]);
+        }
+                
+     $data = [
+      'user_id'=>$user->id,
+        'ar' => ['jobtitle' => $request->jobtitle_ar,
+                  'organization' => $request->organization_ar],
+
+        'en' => ['jobtitle' => $request->jobtitle_en,
+                   'organization'=>$request->organization_en],
+
+        'current'=> $request->current,         
+      ];
+
+       $experience = Experience::create($data);
+
+       $experience = fractal($experience, new ExperienceTransform())
+                    ->serializeWith(new ArraySerializer())
+                    ->toArray();
+
+    return $this->responseApi(__('messages.store_experience'), $experience, 201);
+    }
 
 
+//show experience
 
+ public function showexperience(Request $request,string $id)
+    {     
+        $experience = Experience::findOrFail($id);
+
+         $experience = fractal()
+                 ->item($experience)
+                 ->transformWith(new ExperienceTransform())
+                 ->serializeWith(new ArraySerializer())
+                 ->toArray();
+
+        return  $this->responseApi('',$experience,200);
+    }
+
+//update experience
+public function updateexperience(UpdateExperience $request,string $id)
+    {
+     $user = auth()->user();
+
+      if ($user->user_type !== 2)
+            {
+            return $this->responseApi(__('unauthorized')); 
+            }
+
+     $experience = Experience::where('user_id', $user->id)->findOrFail($id);
+  
+      if ($request->current == 1) 
+         {
+            Experience::where('user_id', $user->id)
+                       ->update(['current' => 0]);
+        }
+                
+     $data = [
+      'user_id'=>$user->id,
+        'ar' => ['jobtitle' => $request->jobtitle_ar,
+                  'organization' => $request->organization_ar],
+
+        'en' => ['jobtitle' => $request->jobtitle_en,
+                   'organization'=>$request->organization_en],
+
+        'current'=> $request->current ?? 0,         
+      ];
+ 
+        $experience->update($data);
+
+       $experience = fractal($experience, new ExperienceTransform())
+                    ->serializeWith(new ArraySerializer())
+                    ->toArray();
+
+    return $this->responseApi(__('messages.update_experience'), $experience, 200);
+    }
+
+//deleteexperience
+public function deleteexperience( string $id)
+    {
+        $experience = Experience::with('users')->findOrFail($id);
+    
+        if($experience)
+        {
+            return  $this->responseApi(__('messages.no_deleteexperience'),403); 
+        }
+
+        $experience->delete();
+        
+        return  $this->responseApi(__('messages.delete_experience'),204); 
+    }
 
 
 }

@@ -18,10 +18,9 @@ class SurgeryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSurgery $request,string $id)
+    public function store(StoreSurgery $request)
     {
       $data = [
-         'user_id' => auth()->id(),
         'ar' => ['name' => $request->name_ar],
         'en' => ['name' => $request->name_en],
     ];

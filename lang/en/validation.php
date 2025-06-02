@@ -177,6 +177,8 @@ return [
     */
 
     'custom' => [
+        'current'=>'not allowed to more one',
+
         'surgery_type'=>[
              'required'=>'type of surgery is required',
              'string'=>'surgery must be string',
@@ -294,6 +296,7 @@ return [
         'current',
         'surgery_type',
         'user_id',
+        'current',
     ],
 
 ];

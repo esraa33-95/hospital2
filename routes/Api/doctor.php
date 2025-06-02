@@ -23,8 +23,24 @@ Route::middleware(['auth:sanctum', 'api_localization','IsDoctor'])->group(functi
         Route::put('/{id}', 'update');           
         Route::post('/', 'changePassword');
         Route::delete('/', 'deleteAccount');
-         Route::post('{id}', 'uploadfile');  
-        // Route::post('rate/{id}', 'rate');         
+        Route::post('{id}','uploadfile'); 
+         // Route::post('rate/{id}', 'rate');
+        //certificate
+        Route::post('/', 'addcertificate');
+        Route::get('/{id}', 'showcertificate');
+        Route::put('/{id}', 'updatecertificate');
+        Route::delete('/{id}', 'deletecertificate');
+       //experience
+       Route::post('/', 'addexperience');
+        Route::get('/{id}', 'showexperience');
+        Route::put('/{id}', 'updateexperience');
+        Route::delete('/{id}', 'deleteexperience');
+
+
+
+         
+        
+        
     });
 
     

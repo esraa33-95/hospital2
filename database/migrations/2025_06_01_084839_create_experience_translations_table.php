@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('experiences', function (Blueprint $table) {
+        Schema::create('experience_translations', function (Blueprint $table) {
             $table->id();
             $table->string('jobtitle');
             $table->string('organization');
-            $table->boolean('current');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('locale')->index();
+            $table->foreignId('experience_id')->constrained()->onDelete('cascade');
+
+            $table->unique(['experience_id','locale']);
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('experiences');
+        Schema::dropIfExists('experience_translations');
     }
 };

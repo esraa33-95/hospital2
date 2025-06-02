@@ -35,6 +35,26 @@ class RegisterRequest extends FormRequest
                  return request('user_type') == UserType::Doctor->value;
                }),'nullable','exists:departments,id'],
 
+             'surgery_id' => [
+                 Rule::requiredIf(function () {
+                 return request('user_type') == UserType::Patient->value;
+               }),'nullable','exists:surgeries,id'],   
+
+             'allergy_id' => [
+                 Rule::requiredIf(function () {
+                 return request('user_type') == UserType::Patient->value;
+               }),'nullable','exists:allergies,id'], 
+
+            'disease_id' => [
+                 Rule::requiredIf(function () {
+                 return request('user_type') == UserType::Patient->value;
+               }),'nullable','exists:diseases,id'], 
+
+            'blood_id' => [
+                 Rule::requiredIf(function () {
+                 return request('user_type') == UserType::Patient->value;
+               }),'nullable','exists:bloods,id'], 
+
             'user_type' => ['required', 'integer', Rule::in(array_column(UserType::cases(), 'value'))],
         
             ];

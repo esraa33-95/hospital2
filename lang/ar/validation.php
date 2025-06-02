@@ -18,6 +18,9 @@ return [
    'error'=>'غير مسموح لك بادخال هذا الحقل',
 
     'custom' => [
+
+       'current'=>'لا يمكن قبول اكثر من قيمة واحد',
+       
         'surgery_type'=>[
              'required'=>'نوع العملية مطلوب',
              'string'=>'نوع العملية يجب ان يكون نص',
@@ -134,6 +137,7 @@ return [
         'current',
         'surgery_type',
         'user_id',
+        'current',
        
     ],
 ];

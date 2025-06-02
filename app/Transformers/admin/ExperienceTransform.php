@@ -13,8 +13,10 @@ class ExperienceTransform extends TransformerAbstract
     {
         return [
             'id'=>$experience->id,
-            'jobtitle'=>$experience->jobtitle,
-            'organization'=>$experience->organization,
+            'jobtitle_en'=>$experience->translate('en')->jobtitle,
+            'jobtitle_ar'=>$experience->translate('ar')->jobtitle,
+            'organization_en'=>$experience->translate('en')->organization,
+           'organization_ar'=>$experience->translate('ar')->organization,
             'current'=>($experience->current) ? 'work' : 'notwork',
             
         ];

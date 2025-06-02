@@ -80,21 +80,21 @@ Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function
         Route::delete('/{id}', 'delete');          
           
     });
-
+//allergy
  Route::prefix('allergy')->controller(AllergyController::class)->group(function () {                 
         Route::post('/{id}', 'store');                                
         Route::put('/{id}', 'update');       
         Route::delete('/{id}', 'delete');          
           
     });
-
+//disease
     Route::prefix('disease')->controller(DiseaseController::class)->group(function () {                 
         Route::post('/{id}', 'store');                                
         Route::put('/{id}', 'update');       
         Route::delete('/{id}', 'delete');          
           
     });
-
+//blood
     Route::prefix('blood')->controller(BloodController::class)->group(function () {                 
         Route::post('/{id}', 'store');                                
         Route::put('/{id}', 'update');       

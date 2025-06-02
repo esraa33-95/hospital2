@@ -22,11 +22,15 @@ class UpdateExperience extends FormRequest
      */
     public function rules(): array
     {
+        $id = $this->experience; 
+        $user= auth()->id();
+
         return [
             'jobtitle' => [ 'nullable',
-            function ($attribute, $value, $error)  {
+            function ($attribute, $value, $error) use ($id)  {
                 $exists = Experience::where('jobtitle', $value)
-                    ->exists();
+                          ->where('experience_id','!=', $id)
+                          ->exists();
 
                 if ($exists) {
                     $error(__('validation.custom.jobtitle.unique'));
@@ -35,9 +39,10 @@ class UpdateExperience extends FormRequest
         ],
 
         'organization' => [ 'nullable',
-            function ($attribute, $value, $error)  {
+            function ($attribute, $value, $error) use ($id)  {
                 $exists = Experience::where('organization', $value)
-                    ->exists();
+                         ->where('experience_id','!=', $id)   
+                         ->exists();
 
                 if ($exists) {
                     $error(__('validation.custom.organization.unique'));
@@ -45,9 +50,8 @@ class UpdateExperience extends FormRequest
             }
         ],
            
-             'current'=>'nullable|boolean',
-             
-           
+          'current'=>['nullable','boolean'], 
+               
         ];
     }
 }

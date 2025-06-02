@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('certificates', function (Blueprint $table) {
+        Schema::create('experiences', function (Blueprint $table) {
             $table->id();
+            $table->boolean('current')->default(false);
+             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
-        }); 
+        });
     }
 
     /**
@@ -22,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('certificates');
+        Schema::dropIfExists('experiences');
     }
 };
