@@ -25,7 +25,7 @@ class CertificateController extends Controller
     public function store(StoreCeritificate $request)
     {
         $user = auth()->user();
-    $data = [
+     $data = [
          'user_id' => $user->id,
         'ar' => ['name' => $request->name_ar],
         'en' => ['name' => $request->name_en],

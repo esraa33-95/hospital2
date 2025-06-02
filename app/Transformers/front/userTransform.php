@@ -40,6 +40,7 @@ class userTransform extends TransformerAbstract
             'image' => $user->getFirstMediaUrl('image') ?: asset('storage/default.png'),
             'department_name' => ($user->user_type == 2 && $user->department) ? $user->department->name : null,
             'user_type' => $user->user_type,
+           'certificate_name'=>($user->user_type == 2 && $user->certificate) ? $user->certificate->name: null,
         ];
     }
 }

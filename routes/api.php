@@ -25,9 +25,9 @@ Route::middleware('api_localization')->controller(AuthController::class)->group(
 });
 
 //lists of doctors and departments
-Route::controller(ListController::class)
-    ->middleware('auth:sanctum')->group(function () {   
+Route::middleware('api_localization')->controller(ListController::class)->middleware('auth:sanctum')->group(function () {   
         Route::get('departments', 'departments');
-         Route::get('doctors', 'doctors');
+        Route::get('doctors', 'doctors');
+        Route::get('patients', 'patients');
         
 });

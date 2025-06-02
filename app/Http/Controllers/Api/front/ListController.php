@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Transformers\front\DepartmentTransform;
 use App\Transformers\front\UserTransform;
 
+
 use Illuminate\Http\Request;
 use League\Fractal\Serializer\ArraySerializer;
 
@@ -50,15 +51,14 @@ class ListController extends Controller
         $search = $request->input('search');
         $take = $request->input('take'); 
         $skip = $request->input('skip');  
-        $locale = $request->query('lang', app()->getLocale());
+       
     
         $query = User::where('user_type', 2)
-                       ->whereHas('department')        
-                       ->with('department');          
-    
+                ->with(['department', 'certificate']);
+
         if ($search) 
         {
-            $query->whereTranslationLike('name', '%' . $search . '%', $locale);
+            $query->where('name','like', '%' . $search . '%');
         }
         $total = $query->count();
 
@@ -73,6 +73,33 @@ class ListController extends Controller
 
     }
     
+    //patients
+      public function patients(Request $request)
+    {
+        $search = $request->input('search');
+        $take = $request->input('take'); 
+        $skip = $request->input('skip');  
+        
+        $query = User::where('user_type', 3)       
+                       ->whereHas('surgery');          
+    
+        if ($search) 
+        {
+            $query->where('name','like' ,'%' . $search . '%');
+        }
+        
+        $total = $query->count();
+
+       $patients = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+
+        $patients = fractal()->collection($patients)
+                  ->transformWith(new UserTransform())
+                  ->serializeWith(new ArraySerializer())
+                  ->toArray();
+
+     return $this->responseApi('',$patients,200,['count' => $total]);
+
+    }
 
     
 }
