@@ -138,36 +138,6 @@ public function changePassword(ChangePassword $request)
 }
 
 
-
-//rate for doctor
-// public function rate(Request $request,string $id)
-//     {
-//         $request->validate([
-//             'rate'=>'required|decimal:1',
-//         ]);
-
-//         $doctor = User::where('user_type',2)->findOrfail($id);
-
-//         Rate::create([
-//             'user_id' => $doctor->id,
-//             'rate' => $request->rate,
-//         ]);
-
-//     $ratings = Rate::where('user_id', $doctor->id)->get();
-
-//     $average = round($ratings->avg('rate'), 2);
-//     $number_rate = $ratings->count();
-
-//      $doctor->number_rate = $number_rate;
-//      $doctor->save();
-
-//     return response()->json([
-//         'average' => $average,
-//         'total_rate' => $number_rate,
-//     ]);     
-
-// }
-
 //add certificate
 public function addcertificate(StoreCeritificate $request)
     {
@@ -353,5 +323,34 @@ public function deleteexperience( string $id)
         return  $this->responseApi(__('messages.delete_experience'),204); 
     }
 
+
+    //rate for doctor
+// public function rate(Request $request,string $id)
+//     {
+//         $request->validate([
+//             'rate'=>'required|decimal:1',
+//         ]);
+
+//         $doctor = User::where('user_type',2)->findOrfail($id);
+
+//         Rate::create([
+//             'user_id' => $doctor->id,
+//             'rate' => $request->rate,
+//         ]);
+
+//     $ratings = Rate::where('user_id', $doctor->id)->get();
+
+//     $average = round($ratings->avg('rate'), 2);
+//     $number_rate = $ratings->count();
+
+//      $doctor->number_rate = $number_rate;
+//      $doctor->save();
+
+//     return response()->json([
+//         'average' => $average,
+//         'total_rate' => $number_rate,
+//     ]);     
+
+// }
 
 }

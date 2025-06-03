@@ -8,8 +8,6 @@ use App\Models\Department;
 use App\Models\User;
 use App\Transformers\front\DepartmentTransform;
 use App\Transformers\front\UserTransform;
-
-
 use Illuminate\Http\Request;
 use League\Fractal\Serializer\ArraySerializer;
 
@@ -34,7 +32,7 @@ class ListController extends Controller
 
     $total = $query->count(); 
 
-     $department = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+     $department = $query->skip($skip ?? 0)->take($take ?? $total)->get();
 
      $department =  fractal()->collection($department)
                   ->transformWith(new DepartmentTransform())
@@ -51,18 +49,21 @@ class ListController extends Controller
         $search = $request->input('search');
         $take = $request->input('take'); 
         $skip = $request->input('skip');  
-       
+         $locale = $request->query('lang', app()->getLocale());
     
         $query = User::where('user_type', 2)
-                ->with(['department', 'certificate']);
+                      ->whereHas('certificate')
+                      ->whereHas('experiences')
+                      ->with(['experiences','certificate']);
+                      
 
         if ($search) 
         {
-            $query->where('name','like', '%' . $search . '%');
+           $query->whereTranslationLike('name', '%' . $search . '%', $locale);
         }
         $total = $query->count();
 
-       $doctors = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+       $doctors = $query->skip($skip ?? 0)->take($take ?? $total)->get();
 
          $doctors = fractal()->collection($doctors)
                   ->transformWith(new UserTransform())
@@ -79,18 +80,20 @@ class ListController extends Controller
         $search = $request->input('search');
         $take = $request->input('take'); 
         $skip = $request->input('skip');  
+        $locale = $request->query('lang', app()->getLocale());
         
         $query = User::where('user_type', 3)       
-                       ->whereHas('surgery');          
+                       ->whereHas('surgeries')
+                       ->with('surgeries');          
     
         if ($search) 
         {
-            $query->where('name','like' ,'%' . $search . '%');
+           $query->whereTranslationLike('name', '%' . $search . '%', $locale);
         }
         
         $total = $query->count();
 
-       $patients = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+       $patients = $query->skip($skip ?? 0)->take($take ?? $total)->get();
 
         $patients = fractal()->collection($patients)
                   ->transformWith(new UserTransform())

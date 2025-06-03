@@ -28,6 +28,6 @@ Route::middleware('api_localization')->controller(AuthController::class)->group(
 Route::middleware('api_localization')->controller(ListController::class)->middleware('auth:sanctum')->group(function () {   
         Route::get('departments', 'departments');
         Route::get('doctors', 'doctors');
-        Route::get('patients', 'patients');
+        Route::get('patients','patients');
         
 });

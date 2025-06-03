@@ -43,12 +43,10 @@ class DiseaseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-     public function store(StoreDisease $request)
+     public function store(StoreDisease $request ,string $id)
     {
-         $user = auth()->user();
-
          $data = [
-        'user_id' =>$user->id,
+        'user_id'=>$id,
         'ar' => ['name' => $request->name_ar],
         'en' => ['name' => $request->name_en],
     ];
