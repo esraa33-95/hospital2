@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('image_right')->nullable();
             $table->string('image_left')->nullable();
-            $table->enum('position',['left','right']);
+            $table->enum('position',['doctor','patient']);
             $table->enum('direction',['left','right']);
             $table->timestamps();
         });
