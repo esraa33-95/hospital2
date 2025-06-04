@@ -15,4 +15,5 @@ class BloodTranslation extends Model
 {
     return $this->belongsTo(Blood::class);
 }
+
 }

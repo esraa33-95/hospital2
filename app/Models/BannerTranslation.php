@@ -6,14 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class BannerTranslation extends Model
 {
-    public $timestamps = false;
+     public $timestamps = false;
 
-    protected $fillable = ['image', 'description'];
+    protected $fillable = [
+        'description'   
+    ];
 
-     public function banner()
+ public function banner()
 {
     return $this->belongsTo(Banner::class);
 }
+
 
 
 

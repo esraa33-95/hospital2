@@ -30,7 +30,7 @@ class UserTransform extends TransformerAbstract
      *
      * @return array
      */
-    public function transform(User $user)
+    public function transform(User $user) :array
     {
         return [
             'id' => $user->id,
@@ -40,6 +40,14 @@ class UserTransform extends TransformerAbstract
             'image' => $user->getFirstMediaUrl('image') ?: asset('storage/default.png'),
             'department_name' => ($user->user_type == 2 && $user->department) ? $user->department->name : null,
             'user_type' => $user->user_type,
+
+            'surgeries' =>$user->user_type == 3? $user->surgeries->map(function ($surgery) {
+                return [
+                    'name_ar' => $surgery->translate('ar')->name,
+                    'name_en' => $surgery->translate('en')->name,
+                    
+                ];
+            }): null,
         ];
     }
 }

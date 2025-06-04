@@ -16,7 +16,7 @@ class ExperienceTransform extends TransformerAbstract
             'jobtitle_en'=>$experience->translate('en')->jobtitle,
             'jobtitle_ar'=>$experience->translate('ar')->jobtitle,
             'organization_en'=>$experience->translate('en')->organization,
-           'organization_ar'=>$experience->translate('ar')->organization,
+            'organization_ar'=>$experience->translate('ar')->organization,
             'current'=>($experience->current) ? 'work' : 'notwork',
             
         ];

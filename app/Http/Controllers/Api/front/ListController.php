@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Traits\Response;
 use App\Models\Department;
 use App\Models\User;
+use App\Transformers\admin\UserTransform as AdminUserTransform;
 use App\Transformers\front\DepartmentTransform;
 use App\Transformers\front\UserTransform;
 use Illuminate\Http\Request;
@@ -66,7 +67,7 @@ class ListController extends Controller
        $doctors = $query->skip($skip ?? 0)->take($take ?? $total)->get();
 
          $doctors = fractal()->collection($doctors)
-                  ->transformWith(new UserTransform())
+                  ->transformWith(new AdminUserTransform())
                   ->serializeWith(new ArraySerializer())
                   ->toArray();
 

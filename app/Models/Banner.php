@@ -2,26 +2,27 @@
 
 namespace App\Models;
 
-use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 
-class Banner extends Model
+class Banner extends Model implements TranslatableContract
 {
     use Translatable;
+   
 
-    public $translatedAttributes = ['image', 'description'];
+    public $translatedAttributes = ['description'];
 
-    protected $fillable = ['position','user_id'];
+    protected $fillable = [
+        'image_right',
+        'image_left',
+        'position',
+        'direction',
+    ];
 
-       public function users()
-{
-    return $this->belongsTo(User::class);
-}
-
- public function translates()
+     public function translates()
 {
     return $this->hasMany(BannerTranslation::class);
 }
-
 
 }

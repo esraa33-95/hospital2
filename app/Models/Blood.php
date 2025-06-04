@@ -5,7 +5,7 @@ namespace App\Models;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 
-class Blood extends Model
+class Blood extends Model implements Translatable
 {
     use Translatable;
 

@@ -19,7 +19,15 @@ return [
 
     'custom' => [
 
-       'current'=>'لا يمكن قبول اكثر من قيمة واحد',
+         'description_en' => [
+        'required' => 'الوصف العربى مطلوب',
+        'unique' => 'هذا الوصف العربى موجود بالفعل',
+    ],
+    'description_ar' => [
+        'required' => 'الوصف الانجليزى مطلوب',
+        'unique' => 'هذا الوصف الانجليزى موجود بالفعل',
+    ],
+       
        
         'surgery_type'=>[
              'required'=>'نوع العملية مطلوب',
@@ -137,7 +145,8 @@ return [
         'current',
         'surgery_type',
         'user_id',
-        'current',
+       'description_en',
+       'description_ar',
        
     ],
 ];

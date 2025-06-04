@@ -100,6 +100,10 @@ unique' => 'The Arabic name already exists.',
 'delete_blood'=>'delete blood successfully',
 'not_updated'=>'not allowed to change another data for any patient',
 
+//banner
+'store_banner'=>'Banner created successfully',
+'delete_banner'=>'Banner deleted successfully',
+
 
 
 ];

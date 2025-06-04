@@ -177,7 +177,14 @@ return [
     */
 
     'custom' => [
-        'current'=>'not allowed to more one',
+          'description_en' => [
+        'required' => 'this arabic description is required ',
+        'unique' => 'this arabic description is exists',
+    ],
+    'description_ar' => [
+        'required' => 'this english description is required ',
+        'unique' => 'this english description is exists',
+    ],
 
         'surgery_type'=>[
              'required'=>'type of surgery is required',
@@ -297,6 +304,8 @@ return [
         'surgery_type',
         'user_id',
         'current',
+        'description_en',
+        'description_ar' 
     ],
 
 ];

@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('banner_translations', function (Blueprint $table) {
+        Schema::create('banners', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('banner_id')->constrained()->onDelete('cascade');
-            $table->string('locale')->index();
-
-             $table->text('description');
-             $table->string('image');
-            $table->unique(['banner_id','locale']);
+            $table->string('image_right')->nullable();
+            $table->string('image_left')->nullable();
+            $table->enum('position',['left','right']);
+            $table->enum('direction',['left','right']);
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('banner_translations');
+        Schema::dropIfExists('banners');
     }
 };

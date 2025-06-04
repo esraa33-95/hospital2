@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('banners', function (Blueprint $table) {
+        Schema::create('banner_translations', function (Blueprint $table) {
             $table->id();
-             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-             $table->enum('position', ['doctor', 'patient']);
+            $table->string('description');
+            $table->foreignId('banner_id')->constrained()->onDelete('cascade');
+            $table->string('locale')->index();
+
+            $table->unique(['banner_id','locale']);
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('banners');
+        Schema::dropIfExists('banner_translations');
     }
 };
