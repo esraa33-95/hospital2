@@ -50,28 +50,28 @@ class ListController extends Controller
         $search = $request->input('search');
         $take = $request->input('take'); 
         $skip = $request->input('skip');  
-         $locale = $request->query('lang', app()->getLocale());
+       
     
         $query = User::where('user_type', 2)
                       ->whereHas('certificate')
-                      ->whereHas('experiences')
-                      ->with(['experiences','certificate']);
+                      ->with('certificate');
                       
 
         if ($search) 
         {
-           $query->whereTranslationLike('name', '%' . $search . '%', $locale);
+           $query->where('name','like', '%' . $search . '%');
         }
+
         $total = $query->count();
 
        $doctors = $query->skip($skip ?? 0)->take($take ?? $total)->get();
 
          $doctors = fractal()->collection($doctors)
-                  ->transformWith(new AdminUserTransform())
+                  ->transformWith(new UserTransform())
                   ->serializeWith(new ArraySerializer())
                   ->toArray();
 
-     return $this->responseApi('',$doctors,200,['count' => $total]);
+      return $this->responseApi('',$doctors,200,['count' => $total]);
 
     }
     
@@ -81,7 +81,7 @@ class ListController extends Controller
         $search = $request->input('search');
         $take = $request->input('take'); 
         $skip = $request->input('skip');  
-        $locale = $request->query('lang', app()->getLocale());
+        
         
         $query = User::where('user_type', 3)       
                        ->whereHas('surgeries')
@@ -89,7 +89,7 @@ class ListController extends Controller
     
         if ($search) 
         {
-           $query->whereTranslationLike('name', '%' . $search . '%', $locale);
+           $query->where('name','like', '%' . $search . '%');
         }
         
         $total = $query->count();
@@ -101,7 +101,7 @@ class ListController extends Controller
                   ->serializeWith(new ArraySerializer())
                   ->toArray();
 
-     return $this->responseApi('',$patients,200,['count' => $total]);
+    return $this->responseApi('',$patients,200,['count' => $total]);
 
     }
 

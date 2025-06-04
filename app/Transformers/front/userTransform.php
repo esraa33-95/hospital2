@@ -59,7 +59,14 @@ class userTransform extends TransformerAbstract
                 ];
             }): null,
 
-            
+             'surgeries' =>$user->user_type == 3? $user->surgeries->map(function ($surgery) {
+                return [
+                    'name_ar' => $surgery->translate('ar')->name,
+                    'name_en' => $surgery->translate('en')->name,
+                    
+                ];
+            }): null,
+        
 
            
 

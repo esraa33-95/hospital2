@@ -139,11 +139,12 @@ public function changePassword(ChangePassword $request)
 
 
 //add certificate
-public function addcertificate(StoreCeritificate $request)
+public function addcertificate(StoreCeritificate $request, string $id)
     {
      $user = auth()->user();
                 
      $data = [
+        'user_id'=>$user->id,
         'ar' => ['name' => $request->name_ar],
         'en' => ['name' => $request->name_en],
       ];
@@ -173,6 +174,7 @@ public function addcertificate(StoreCeritificate $request)
             }
 
          $data =[
+            'user_id'=>$user->id,
             'ar'=>['name'=>$request->name_ar],
             'en' => ['name' => $request->name_en],
               ];
@@ -219,7 +221,7 @@ public function addcertificate(StoreCeritificate $request)
     }
 
 //experience
-public function addexperience(StoreExperience $request)
+public function addexperience(StoreExperience $request, string $id)
     {
      $user = auth()->user();
 
