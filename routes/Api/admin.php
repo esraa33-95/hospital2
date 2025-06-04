@@ -91,10 +91,7 @@ Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function
 
     //banner
     Route::prefix('banners')->controller(BannerController::class)->group(function () {                 
-        Route::post('/', 'store');  
-         Route::get('/{id}', 'show'); 
-         Route::get('/', 'index');                                
-        Route::put('/{id}', 'update');       
+        Route::post('/', 'store');         
         Route::delete('/{id}', 'delete');          
           
     });
