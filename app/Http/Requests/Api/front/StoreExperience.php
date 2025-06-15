@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\admin;
+namespace App\Http\Requests\Api\front;
 
 use App\Models\CertificateTranslation;
 use App\Models\Experience;

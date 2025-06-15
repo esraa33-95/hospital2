@@ -3,6 +3,8 @@
 
 use App\Http\Controllers\Api\front\DoctorController;
 use App\Http\Controllers\Api\front\UserController;
+use App\Http\Controllers\Api\front\CertificateController;
+use App\Http\Controllers\Api\front\ExperienceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\IsDoctor;
 
@@ -25,26 +27,30 @@ Route::middleware(['auth:sanctum', 'api_localization','IsDoctor'])->group(functi
         Route::delete('/', 'deleteAccount');
         Route::post('{id}','uploadfile'); 
          // Route::post('rate/{id}', 'rate');
-         
-        //certificate
-        Route::post('/certificate/{id}', 'addcertificate');
-        Route::get('/{id}', 'showcertificate');
-        Route::put('/cert/{id}', 'updatecertificate');
-        Route::delete('/{id}', 'deletecertificate');
-
-
-       //experience
-        Route::post('/{id}', 'addexperience');
-        Route::get('/{id}', 'showexperience');
-        Route::put('/{id}', 'updateexperience');
-        Route::delete('/{id}', 'deleteexperience');
-
-
-
-         
-        
-        
+      
     });
+
+     Route::controller(CertificateController::class)->group(function () {
+      
+        Route::post('{id}', 'store');
+        Route::get('/{id}', 'show');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'delete');
+      
+    });
+    
+
+     Route::controller(ExperienceController::class)->group(function () {
+      
+        Route::post('/{id}', 'store');
+        Route::get('/{id}', 'show');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'delete');
+      
+    });
+
+      
+       
 
     
 
