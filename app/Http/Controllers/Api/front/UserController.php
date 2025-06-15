@@ -174,7 +174,6 @@ public function addcertificate(StoreCeritificate $request, string $id)
             }
 
          $data =[
-            'user_id'=>$user->id,
             'ar'=>['name'=>$request->name_ar],
             'en' => ['name' => $request->name_en],
               ];
@@ -221,7 +220,7 @@ public function addcertificate(StoreCeritificate $request, string $id)
     }
 
 //experience
-public function addexperience(StoreExperience $request, string $id)
+public function addexperience(StoreExperience $request,string $id)
     {
      $user = auth()->user();
 
@@ -237,7 +236,7 @@ public function addexperience(StoreExperience $request, string $id)
         }
                 
      $data = [
-      'user_id'=>$user->id,
+        'user_id'=>$user->id,
         'ar' => ['jobtitle' => $request->jobtitle_ar,
                   'organization' => $request->organization_ar],
 
@@ -291,7 +290,6 @@ public function updateexperience(UpdateExperience $request,string $id)
         }
                 
      $data = [
-      'user_id'=>$user->id,
         'ar' => ['jobtitle' => $request->jobtitle_ar,
                   'organization' => $request->organization_ar],
 

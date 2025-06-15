@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('experiences', function (Blueprint $table) {
             $table->id();
             $table->boolean('current')->default(false);
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
             $table->timestamps();
         });
     }

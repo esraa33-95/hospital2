@@ -53,6 +53,7 @@ class User extends Authenticatable implements MustVerifyEmail,HasMedia
      *
      * @return array<string, string>
      */
+
     protected function casts(): array
     {
         return [

@@ -12,7 +12,7 @@ class Experience extends Model implements TranslatableContract
 
 public $translatedAttributes = [ 'jobtitle','organization'];
 
-    protected $fillable=[ 'current'];
+    protected $fillable=[ 'current','user_id'];
 
       public function users()
     {
