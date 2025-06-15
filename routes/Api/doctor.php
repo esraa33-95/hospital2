@@ -25,13 +25,14 @@ Route::middleware(['auth:sanctum', 'api_localization','IsDoctor'])->group(functi
         Route::put('/{id}', 'update');           
         Route::post('/', 'changePassword');
         Route::delete('/', 'deleteAccount');
-        Route::post('{id}','uploadfile'); 
+      
          // Route::post('rate/{id}', 'rate');
       
     });
 
      Route::controller(CertificateController::class)->group(function () {
-      
+        
+        Route::post('{id}','uploadfile'); 
         Route::post('{id}', 'store');
         Route::get('/{id}', 'show');
         Route::put('/{id}', 'update');

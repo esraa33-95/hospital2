@@ -35,23 +35,7 @@ class UserController extends Controller
           
     }
 
-    //upload pdf
-    public function uploadfile(uploadimageRequest $request,string $id)
-    {
-        $request->validated();
-
-        $user = User::findOrFail($id);
-
-        if ($request->hasFile('image'))
-        {
-             $user->clearMediaCollection('files');
-
-             $user->addMedia($request->file('image'))
-                 ->toMediaCollection('files');
-        }
-
-        return $this->responseApi(__('messages.uploadpdf'));
-    }
+    
 
 //update data
     public function update(updateUser $request, string $id)

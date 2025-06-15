@@ -11,11 +11,31 @@ use App\Transformers\front\UserTransform;
 use League\Fractal\Serializer\ArraySerializer;
 use App\Http\Requests\Api\front\StoreCeritificate;
 use App\Http\Requests\Api\front\Updatecertificate;
+use App\Traits\Common;
+use App\Http\Requests\Api\front\uploadimageRequest;
 
 class CertificateController extends Controller
 {
     use Response;
-    
+    use Common;
+
+    //upload pdf
+    public function uploadfile(uploadimageRequest $request,string $id)
+    {
+        $request->validated();
+
+        $user = User::findOrFail($id);
+
+        if ($request->hasFile('image'))
+        {
+             $user->clearMediaCollection('files');
+
+             $user->addMedia($request->file('image'))
+                 ->toMediaCollection('files');
+        }
+
+        return $this->responseApi(__('messages.uploadpdf'));
+    }
     /**
      * Store a newly created resource in storage.
      */

@@ -6,10 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Traits\Response;
 use App\Models\Department;
 use App\Models\Disease;
+use App\Models\Surgery;
+use App\Models\Allergy;
+use App\Models\Blood;
 use App\Models\User;
 use App\Transformers\admin\UserTransform as AdminUserTransform;
 use App\Transformers\front\DepartmentTransform;
 use App\Transformers\front\UserTransform;
+use App\Transformers\front\surgeryTransform;
+use App\Transformers\front\AllergyTransform;
+use App\Transformers\front\DiseaseTransform;
+use App\Transformers\front\BloodTransform;
 use Illuminate\Http\Request;
 use League\Fractal\Serializer\ArraySerializer;
 
@@ -158,6 +165,62 @@ class ListController extends Controller
                    ->toArray();
 
     return $this->responseApi('',$allergy,200,['count' => $total]);
+
+    }
+
+  //surgery
+   public function surgery(Request $request)
+    {
+        $search = $request->input('search');
+        $take = $request->input('take'); 
+        $skip = $request->input('skip'); 
+        $locale = $request->query('lang', app()->getLocale());
+
+      $query = Surgery::query();
+
+      if ($search) 
+      {
+       $query->whereTranslationLike('name', '%' . $search . '%', $locale);
+      }
+
+    $total = $query->count(); 
+
+    $surgery = $query->skip($skip ?? 0)->take($take ?? $total)->get();
+
+    $surgery =  fractal()->collection($surgery)
+                  ->transformWith(new surgeryTransform())
+                  ->serializeWith(new ArraySerializer())
+                   ->toArray();
+
+    return $this->responseApi('',$surgery,200,['count' => $total]);
+
+    }
+
+    //blood
+     public function blood(Request $request)
+    {
+        $search = $request->input('search');
+        $take = $request->input('take'); 
+        $skip = $request->input('skip'); 
+        $locale = $request->query('lang', app()->getLocale());
+
+      $query = Blood::query();
+
+      if ($search) 
+      {
+       $query->whereTranslationLike('name', '%' . $search . '%', $locale);
+      }
+
+    $total = $query->count(); 
+
+    $blood = $query->skip($skip ?? 0)->take($take ?? $total)->get();
+
+    $blood =  fractal()->collection($blood)
+                  ->transformWith(new BloodTransform())
+                  ->serializeWith(new ArraySerializer())
+                   ->toArray();
+
+    return $this->responseApi('',$blood,200,['count' => $total]);
 
     }
 
