@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Transformers\admin;
+namespace App\Transformers\front;
 
 use App\Models\Experience;
 use League\Fractal\TransformerAbstract;
