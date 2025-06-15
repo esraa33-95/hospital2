@@ -81,6 +81,7 @@ class User extends Authenticatable implements MustVerifyEmail,HasMedia
     {
         return $this->hasMany(Report::class);
     }
+    
     // public function documents()
     // {
     //     return $this->hasMany(Document::class);
@@ -98,17 +99,17 @@ class User extends Authenticatable implements MustVerifyEmail,HasMedia
 
    public function surgeries()
    {
-    return $this->hasMany(Surgery::class);
+    return $this->belongsToMany(Surgery::class);
    }
 
    public function allergies()
    {
-    return $this->hasMany(Allergy::class);
+    return $this->belongsToMany(Allergy::class);
    }
 
   public function diseases()
    {
-    return $this->hasMany(Disease::class);
+    return $this->belongsToMany(Disease::class);
    }
 
     public function blood()

@@ -233,7 +233,7 @@ public function addexperience(StoreExperience $request, string $id)
     if ($request->current == 1) 
          {
             Experience::where('user_id', $user->id)
-                       ->update(['current' => 0]);
+                        ->update(['current' => 0]);
         }
                 
      $data = [

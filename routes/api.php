@@ -24,10 +24,12 @@ Route::middleware('api_localization')->controller(AuthController::class)->group(
  
 });
 
-//lists of doctors and departments
+
 Route::middleware('api_localization')->controller(ListController::class)->middleware('auth:sanctum')->group(function () {   
         Route::get('departments', 'departments');
         Route::get('doctors', 'doctors');
         Route::get('patients','patients');
+        Route::get('diseases','diseases');
+        Route::get('allergy','allergy');
         
 });

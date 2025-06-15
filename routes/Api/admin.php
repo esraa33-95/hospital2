@@ -54,7 +54,7 @@ Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function
 
     //surgery
  Route::prefix('surgeries')->controller(SurgeryController::class)->group(function (){                 
-        Route::post('/{id}', 'store'); 
+        Route::post('/', 'store'); 
         Route::get('/{id}', 'show'); 
          Route::get('/', 'index');                               
         Route::put('/{id}', 'update');       
@@ -63,7 +63,7 @@ Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function
     });
 //allergy
  Route::prefix('allergies')->controller(AllergyController::class)->group(function () {                 
-        Route::post('/{id}', 'store'); 
+        Route::post('/', 'store'); 
          Route::get('/{id}', 'show');  
          Route::get('/', 'index');                                
         Route::put('/{id}', 'update');       
@@ -72,7 +72,7 @@ Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function
     });
 //disease
     Route::prefix('diseases')->controller(DiseaseController::class)->group(function () {                 
-        Route::post('/{id}', 'store');  
+        Route::post('/', 'store');  
          Route::get('/{id}', 'show'); 
          Route::get('/', 'index');                                
         Route::put('/{id}', 'update');       
@@ -81,7 +81,7 @@ Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function
     });
 //blood
     Route::prefix('bloods')->controller(BloodController::class)->group(function () {                 
-        Route::post('/{id}', 'store');  
+        Route::post('/', 'store');  
          Route::get('/{id}', 'show'); 
          Route::get('/', 'index');                                
         Route::put('/{id}', 'update');       
@@ -91,7 +91,8 @@ Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function
 
     //banner
     Route::prefix('banners')->controller(BannerController::class)->group(function () {                 
-        Route::post('/', 'store');         
+        Route::post('/', 'store'); 
+        Route::put('/{id}', 'update');         
         Route::delete('/{id}', 'delete');          
           
     });

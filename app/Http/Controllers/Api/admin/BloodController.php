@@ -43,10 +43,9 @@ use Response;
     /**
      * Store a newly created resource in storage.
      */
-     public function store(StoreBlood $request ,string $id)
+     public function store(StoreBlood $request)
     {
          $data = [
-       'user_id'=>$id,
         'ar' => ['name' => $request->name_ar],
         'en' => ['name' => $request->name_en],
     ];

@@ -20,8 +20,7 @@ class BannerController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StoreBanner $request)
-    {
-       
+    { 
         $data =[  
         'ar'=>['description'=>$request->description_ar],
         'en'=>['description'=>$request->description_en],
@@ -49,12 +48,47 @@ class BannerController extends Controller
                     ->serializeWith(new ArraySerializer())
                     ->toArray();
 
-
     return $this->responseApi(__('messages.store_banner'), $banner, 201);
+
+    }
+
+
+    public function update(StoreBanner $request,string $id)
+    {
+    $data =[  
+        'ar'=>['description'=>$request->description_ar],
+        'en'=>['description'=>$request->description_en],
+
+        ];
+
+       if($request->hasfile('image_right'))
+        {
+        $data['image_right'] = $this->uploadFile($request->image_right,'assets/images');
+        
+        }
+
+        if($request->hasfile('image_left'))
+        {
+        $data['image_left'] = $this->uploadFile($request->image_left,'assets/images');
+        
+        }
+
+        $banner = Banner::findOrFail($id);
+
+        $banner->update($data);
+
+        $banner->position = $request->position; 
+        $banner->direction = $request->direction;
+        
+       $banner = fractal($banner, new BannerTransform())
+                    ->serializeWith(new ArraySerializer())
+                    ->toArray();
+
+
+    return $this->responseApi(__('messages.update_banner'), $banner, 200);
     }
 
     
-
     /**
      * Remove the specified resource from storage.
      */

@@ -12,10 +12,7 @@ class Blood extends Model implements TranslatableContract
 
     public $translatedAttributes = ['name'];
 
-    protected $fillable=[
-        'user_id',
-       
-    ];
+    protected $fillable=[ ];
  
     public function users()
 {

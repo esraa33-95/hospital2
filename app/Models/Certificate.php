@@ -15,7 +15,7 @@ class Certificate extends Model implements TranslatableContract,HasMedia
 
     public $translatedAttributes = ['name'];
 
-    protected $fillable=['user_id'];
+    protected $fillable=[];
     
     public function users()
     {
