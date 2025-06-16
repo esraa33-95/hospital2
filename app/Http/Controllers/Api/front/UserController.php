@@ -35,7 +35,6 @@ class UserController extends Controller
           
     }
 
-    
 
 //update data
     public function update(updateUser $request, string $id)

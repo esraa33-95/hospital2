@@ -29,7 +29,9 @@ Route::middleware('api_localization')->controller(ListController::class)->middle
         Route::get('departments', 'departments');
         Route::get('doctors', 'doctors');
         Route::get('patients','patients');
-        Route::get('diseases','diseases');
-        Route::get('allergy','allergy');
+        Route::get('diseases','disease');
+        Route::get('allergies','allergy');
+        Route::get('blood','blood');
+        Route::get('surgeries','surgery');
         
 });

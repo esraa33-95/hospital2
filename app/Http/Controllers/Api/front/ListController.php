@@ -10,7 +10,6 @@ use App\Models\Surgery;
 use App\Models\Allergy;
 use App\Models\Blood;
 use App\Models\User;
-use App\Transformers\admin\UserTransform as AdminUserTransform;
 use App\Transformers\front\DepartmentTransform;
 use App\Transformers\front\UserTransform;
 use App\Transformers\front\surgeryTransform;
@@ -113,7 +112,7 @@ class ListController extends Controller
     }
 
     //disease
-  public function diseases(Request $request)
+  public function disease(Request $request)
     {
         $search = $request->input('search');
         $take = $request->input('take'); 
