@@ -98,7 +98,11 @@ use Response;
      */
     public function delete(string $id)
     {
-        $blood = Blood::with('users')->findOrFail($id);
+        $user = auth()->user();
+        
+        $blood = Blood::with('users')
+                        ->where('user_id',$user->id)
+                        ->findOrFail($id);
 
         if($blood)
         {

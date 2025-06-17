@@ -97,7 +97,11 @@ class DiseaseController extends Controller
      */
     public function delete(string $id)
     {
-        $disease = Disease::with('users')->findOrFail($id);
+        $user = auth()->user();
+
+        $disease = Disease::with('users')
+                   ->where('user_id',$user->id)
+                    ->findOrFail($id);
 
         if($disease)
         {

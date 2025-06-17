@@ -16,7 +16,7 @@ class Disease extends Model implements TranslatableContract
     
     public function users()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class,'disease_user');
     }
 
     public function translates()

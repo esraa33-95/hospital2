@@ -100,22 +100,22 @@ class User extends Authenticatable implements MustVerifyEmail,HasMedia
 
    public function surgeries()
    {
-    return $this->belongsToMany(Surgery::class);
+    return $this->belongsToMany(Surgery::class,'surgery_user')->withTimestamps();
    }
 
    public function allergies()
    {
-    return $this->belongsToMany(Allergy::class);
+    return $this->belongsToMany(Allergy::class,'allergy_user')->withTimestamps();
    }
 
   public function diseases()
    {
-    return $this->belongsToMany(Disease::class);
+    return $this->belongsToMany(Disease::class,'disease_user')->withTimestamps();
    }
 
     public function blood()
    {
-    return $this->hasOne(Blood::class);
+       return $this->belongsToMany(Blood::class, 'blood_user')->withTimestamps();
    }
 
     public function banner()

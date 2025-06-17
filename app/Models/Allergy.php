@@ -16,7 +16,7 @@ class Allergy extends Model implements TranslatableContract
  
     public function users()
 {
-    return $this->belongsToMany(User::class);
+    return $this->belongsToMany(User::class,'allergy_user');
 }
 
  public function translates()

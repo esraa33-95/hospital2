@@ -16,7 +16,7 @@ class Surgery extends Model implements TranslatableContract
    
 public function users()
 {
-    return $this->belongsToMany(User::class);
+  return $this->belongsToMany(User::class,'surgery_user');
 }
 
    public function translates()

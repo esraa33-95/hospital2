@@ -101,7 +101,8 @@ class ExperienceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function delete(string $id)
+
+ public function delete(string $id)
     {
         $experience = Experience::with('users')->findOrFail($id);
     

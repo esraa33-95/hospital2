@@ -7,12 +7,12 @@ use Illuminate\Http\Request;
 use App\Models\Certificate;
 use App\Traits\Response;
 use App\Transformers\front\CertificateTransform;
-use App\Transformers\front\UserTransform;
 use League\Fractal\Serializer\ArraySerializer;
 use App\Http\Requests\Api\front\StoreCeritificate;
 use App\Http\Requests\Api\front\Updatecertificate;
 use App\Traits\Common;
 use App\Http\Requests\Api\front\uploadimageRequest;
+use App\Models\User;
 
 class CertificateController extends Controller
 {
@@ -83,6 +83,7 @@ class CertificateController extends Controller
         $user = auth()->user();
 
          $data =[
+             'user_id'=>$user->id,
             'ar'=>['name'=>$request->name_ar],
             'en' => ['name' => $request->name_en],
               ];
@@ -103,7 +104,11 @@ class CertificateController extends Controller
      */
     public function delete(string $id)
     {
-        $certificate = Certificate::with('users')->findOrFail($id);
+         $user = auth()->user();
+
+         $certificate = Certificate::with('users')
+                                   ->where('user_id',$user->id)
+                                   ->findOrFail($id);
     
         if($certificate)
         {

@@ -16,7 +16,7 @@ class Blood extends Model implements TranslatableContract
  
     public function users()
 {
-    return $this->belongsTo(User::class);
+    return $this->belongsToMany(User::class,'blood_user');
 }
 
  public function translates()
