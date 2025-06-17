@@ -19,23 +19,7 @@ class CertificateController extends Controller
     use Response;
     use Common;
 
-    //upload pdf
-    public function uploadfile(uploadimageRequest $request,string $id)
-    {
-        $request->validated();
-
-        $user = User::findOrFail($id);
-
-        if ($request->hasFile('image'))
-        {
-             $user->clearMediaCollection('files');
-
-             $user->addMedia($request->file('image'))
-                 ->toMediaCollection('files');
-        }
-
-        return $this->responseApi(__('messages.uploadpdf'));
-    }
+    
     /**
      * Store a newly created resource in storage.
      */
@@ -48,6 +32,14 @@ class CertificateController extends Controller
         'ar' => ['name' => $request->name_ar],
         'en' => ['name' => $request->name_en],
       ];
+
+      if ($request->hasFile('image'))
+        {
+             $user->clearMediaCollection('files');
+
+             $user->addMedia($request->file('image'))
+                   ->toMediaCollection('files');
+        }
 
        $certificate = Certificate::create($data);
 
@@ -108,12 +100,8 @@ class CertificateController extends Controller
 
          $certificate = Certificate::with('users')
                                    ->where('user_id',$user->id)
-                                   ->findOrFail($id);
-    
-        if($certificate)
-        {
-            return  $this->responseApi(__('messages.no_deletecerificate'),403); 
-        }
+                                   ->firstOrFail();
+     
 
         $certificate->delete();
         

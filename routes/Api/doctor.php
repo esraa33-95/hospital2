@@ -25,14 +25,12 @@ Route::middleware(['auth:sanctum', 'api_localization','IsDoctor'])->group(functi
         Route::put('/{id}', 'update');           
         Route::post('/', 'changePassword');
         Route::delete('/', 'deleteAccount');
-      
          // Route::post('rate/{id}', 'rate');
       
     });
 
-     Route::controller(CertificateController::class)->group(function () {
+     Route::prefix('certificate')->controller(CertificateController::class)->group(function () {
         
-        Route::post('{id}','uploadfile'); 
         Route::post('{id}', 'store');
         Route::get('/{id}', 'show');
         Route::put('/{id}', 'update');
@@ -41,7 +39,7 @@ Route::middleware(['auth:sanctum', 'api_localization','IsDoctor'])->group(functi
     });
     
 
-     Route::controller(ExperienceController::class)->group(function () {
+     Route::prefix('experience')->controller(ExperienceController::class)->group(function () {
       
         Route::post('/{id}', 'store');
         Route::get('/{id}', 'show');

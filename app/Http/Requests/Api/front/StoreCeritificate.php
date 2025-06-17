@@ -41,6 +41,9 @@ class StoreCeritificate extends FormRequest
             }
         ],
       
+  'image' => 'required|mimes:pdf|max:5120',
+
+
         ];
 
 

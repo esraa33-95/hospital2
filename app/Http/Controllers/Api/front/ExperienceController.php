@@ -97,19 +97,18 @@ class ExperienceController extends Controller
                     ->toArray();
 
     return $this->responseApi(__('messages.update_experience'), $experience, 200);
-
+    }
     /**
      * Remove the specified resource from storage.
      */
 
  public function delete(string $id)
     {
-        $experience = Experience::with('users')->findOrFail($id);
-    
-        if($experience)
-        {
-            return  $this->responseApi(__('messages.no_deleteexperience'),403); 
-        }
+      $user = auth()->user();
+      
+        $experience = Experience::with('users')
+                     ->where('user_id',$user->id)
+                    ->firstOrFail();
 
         $experience->delete();
         
