@@ -70,7 +70,7 @@ class CertificateController extends Controller
     /**
      * Update the specified resource in storage.
      */
-   public function updatecertificate(Updatecertificate $request, string $id)
+   public function update(Updatecertificate $request, string $id)
     {
         $user = auth()->user();
 
@@ -80,9 +80,19 @@ class CertificateController extends Controller
             'en' => ['name' => $request->name_en],
               ];
 
+        if ($request->hasFile('image'))
+        {
+             $user->clearMediaCollection('files');
+
+             $user->addMedia($request->file('image'))
+                   ->toMediaCollection('files');
+        }
+
          $certificate = Certificate::findOrFail($id);
 
         $certificate->update($data);
+
+         
 
       $certificate = fractal($certificate, new CertificateTransform() )
                     ->serializeWith(new ArraySerializer())

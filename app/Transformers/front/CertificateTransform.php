@@ -34,8 +34,10 @@ class CertificateTransform extends TransformerAbstract
     {
         return [
               'id' => $certificate->id,
-              'name_en' => $certificate->translate('en')->name,
-              'name_ar' => $certificate->translate('ar')->name,
+              'name_en' => $certificate->translate('en')->name ?: null,
+              'name_ar' => $certificate->translate('ar')->name ?: null,
+              'image' => $certificate->getFirstMediaUrl('files') ?: null,
+
         ];
     }
 }

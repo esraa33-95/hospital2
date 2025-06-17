@@ -49,7 +49,8 @@ class Updatecertificate extends FormRequest
                 }
             }
         ],
-       // 'uuid' => ['nullable', 'uuid', 'exists:users,uuid'],
+      
+     'image' => 'nullable|mimes:pdf|max:5120',   
     ];
 }
 
