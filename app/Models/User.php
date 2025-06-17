@@ -115,7 +115,7 @@ class User extends Authenticatable implements MustVerifyEmail,HasMedia
 
     public function blood()
    {
-       return $this->belongsToMany(Blood::class, 'blood_user')->withTimestamps();
+    return $this->belongsToMany(Blood::class, 'blood_user')->withTimestamps();
    }
 
     public function banner()

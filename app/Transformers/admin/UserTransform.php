@@ -38,10 +38,12 @@ class UserTransform extends TransformerAbstract
             'email' => $user->email,
             'mobile' => $user->mobile,
             'image' => $user->getFirstMediaUrl('image') ?: asset('storage/default.png'),
+             'user_type' => $user->user_type,
             'department_name' => ($user->user_type == 2 && $user->department) ? $user->department->name : null,
-            'user_type' => $user->user_type,
+           
 
-            
+
+       
         ];
     }
 }
