@@ -22,10 +22,35 @@ class UpdateAllergy extends FormRequest
      */
     public function rules(): array
     {
-          
+            $id = $this->allergy; 
 
     return [
-         'allergy_id'=>'nullable|exists:allergies,id',
+        'name_en' => [ 'nullable',
+            function ($attribute, $value, $error) use ($id) {
+                $exists = AllergyTranslation::where('name', $value)
+                    ->where('locale', 'en')
+                    ->where('allergy_id', '!=', $id)
+                    ->exists();
+
+                if ($exists) {
+                    $error(__('validation.custom.name_en.unique'));
+                }
+            }
+        ],
+        'name_ar' => [ 'nullable',
+            function ($attribute, $value, $error) use ($id) {
+                $exists = AllergyTranslation::where('name', $value)
+                    ->where('locale', 'ar')
+                    ->where('allergy_id', '!=', $id)
+                    ->exists();
+
+                if ($exists) {
+                    $error(__('validation.custom.name_ar.unique' ));
+                }
+            }
+        ],
     ];
+
+    
     }
 }

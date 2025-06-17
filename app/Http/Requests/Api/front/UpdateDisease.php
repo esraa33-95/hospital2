@@ -24,8 +24,33 @@ class UpdateDisease extends FormRequest
     {
       $id = $this->disease; 
 
+
     return [
-         'disease_id'=>'nullable|exists:diseases,id',
+        'name_en' => [ 'nullable',
+            function ($attribute, $value, $error) use ($id) {
+                $exists = DiseaseTranslation::where('name', $value)
+                    ->where('locale', 'en')
+                    ->where('disease_id', '!=', $id)
+                    ->exists();
+
+                if ($exists) {
+                    $error(__('validation.custom.name_en.unique'));
+                }
+            }
+        ],
+        'name_ar' => [ 'nullable',
+            function ($attribute, $value, $error) use ($id) {
+                $exists = DiseaseTranslation::where('name', $value)
+                    ->where('locale', 'ar')
+                    ->where('disease_id', '!=', $id)
+                    ->exists();
+
+                if ($exists) {
+                    $error(__('validation.custom.name_ar.unique'));
+                }
+            }
+        ],
     ];
+    
     }
 }

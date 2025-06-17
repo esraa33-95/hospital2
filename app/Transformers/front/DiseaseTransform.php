@@ -30,12 +30,12 @@ class DiseaseTransform extends TransformerAbstract
      *
      * @return array
      */
-     public function transform(Disease $disease)
+     public function transform(Disease $disease):array
     {
         return [
                'id' => $disease->id,
-              'name_en' => $disease->translate('en')->name,
-              'name_ar' => $disease->translate('ar')->name,
+              'name_en' => $disease->translate('en')->name ?? 'no Name',
+              'name_ar' => $disease->translate('ar')->name ?? 'لا يوجد اسم',
         ];
     }
 }

@@ -23,7 +23,7 @@ class AllergyController extends Controller
 
         $user = auth()->user();
 
-       $user->allergies()->sync($data);
+       $user->allergies()->attach($data);
 
      $allergy = Allergy::findOrfail($request->allergy_id);
 
@@ -38,10 +38,8 @@ class AllergyController extends Controller
      * Display the specified resource.
      */
     public function show(string $id)
-    {     
-         $user = auth()->user();
-
-       $allergy = $user->allergies()->first();
+    {  
+       $allergy = Allergy::findOrFail($id);
 
          $allergy = fractal()
                  ->item($allergy)
@@ -58,13 +56,14 @@ class AllergyController extends Controller
      */
     public function update(UpdateAllergy $request, string $id)
     {
-         $data = $request->validated();
+          $data = [
+        'en' => ['name' => $request->name_en],
+        'ar' => ['name' =>  $request->name_ar],
+    ];
 
-          $user = auth()->user();
+    $allergy = Allergy::findOrFail($id);
 
-        $user->allergies()->sync($data);
-
-       $allergy = Allergy::findOrFail($id);
+     $allergy->update($data);
 
       $allergy = fractal($allergy, new AllergyTransform() )
                     ->serializeWith(new ArraySerializer())
@@ -84,8 +83,9 @@ class AllergyController extends Controller
                     ->where('user_id',$user->id)
                     ->firstOrfail();
   
-        $allergy->delete();
+       // $allergy->delete();
+         $user->Allergies()->detach($allergy->id);
         
-        return  $this->responseApi(__('messages.delete_disease'),204);
+       return  $this->responseApi(__('messages.delete_disease'),204);
     }
 }

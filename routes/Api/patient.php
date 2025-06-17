@@ -46,7 +46,7 @@ Route::prefix('diseases')->controller(DiseaseController::class)->group(function 
         Route::delete('/{id}', 'delete');          
           
     });    
-
+//allergy
 Route::prefix('allergies')->controller(AllergyController::class)->group(function () {                 
         Route::post('/', 'store');  
         Route::get('/{id}', 'show');                               
@@ -55,7 +55,7 @@ Route::prefix('allergies')->controller(AllergyController::class)->group(function
           
     });
 
-
+//surgery
     Route::prefix('surgeries')->controller(SurgeryController::class)->group(function () {                 
         Route::post('/', 'store');  
         Route::get('/{id}', 'show');                               

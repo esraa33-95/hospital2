@@ -24,7 +24,7 @@ class DiseaseController extends Controller
 
      $user = auth()->user();
 
-     $user->diseases()->sync($data);
+     $user->diseases()->attach($data);
 
      $disease = Disease::findOrfail($request->disease_id);
 
@@ -40,9 +40,7 @@ class DiseaseController extends Controller
      */
     public function show(string $id)
     {     
-         $user = auth()->user();
-
-       $disease = $user->diseases()->first();
+         $disease = Disease::findOrFail($id);
 
          $disease = fractal()
                  ->item($disease)
@@ -58,13 +56,14 @@ class DiseaseController extends Controller
      */
     public function update(UpdateDisease $request, string $id)
     { 
-         $data = $request->validated();
+          $data = [
+        'en' => ['name' => $request->name_en],
+        'ar' => ['name' =>  $request->name_ar],
+    ];
 
-          $user = auth()->user();
+    $disease = Disease::findOrFail($id);
 
-        $user->blood()->sync($data);
-
-       $disease = Disease::findOrFail($id);
+     $disease->update($data);
 
       $disease = fractal($disease, new DiseaseTransform() )
                     ->serializeWith(new ArraySerializer())
@@ -84,7 +83,8 @@ class DiseaseController extends Controller
                     ->where('user_id',$user->id)
                     ->firstOrfail();
   
-        $disease->delete();
+      //  $disease->delete();
+        $user->diseases()->detach($disease->id);
         
         return  $this->responseApi(__('messages.delete_disease'),204);
     }

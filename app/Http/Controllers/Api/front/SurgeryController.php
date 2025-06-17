@@ -25,7 +25,7 @@ class SurgeryController extends Controller
 
      $user = auth()->user();
 
-     $user->surgeries()->sync($data);
+     $user->surgeries()->attach($data);
 
      $surgery = Surgery::findOrfail($request->surgery_id);
 
@@ -41,9 +41,7 @@ class SurgeryController extends Controller
      */
     public function show(string $id)
     {
-         $user = auth()->user();
-
-       $surgery = $user->surgeries()->first();
+         $surgery = Surgery::findOrFail($id);
        
          $surgery = fractal()
                  ->item($surgery)
@@ -59,15 +57,16 @@ class SurgeryController extends Controller
      */
     public function update(UpdateSurgery $request, string $id)
     {
-         $data = $request->validated();
+       $data = [
+        'en' => ['name' => $request->name_en],
+        'ar' => ['name' =>  $request->name_ar],
+    ];
 
-          $user = auth()->user();
+    $surgery = Surgery::findOrFail($id);
 
-        $user->surgeries()->sync($data);
-
-       $surgery = Surgery::findOrFail($id);
-
-         $surgery = fractal($surgery, new SurgeryTransform() )
+     $surgery->update($data);
+      
+      $surgery = fractal($surgery, new SurgeryTransform() )
                     ->serializeWith(new ArraySerializer())
                     ->toArray();
 
@@ -85,7 +84,8 @@ class SurgeryController extends Controller
                        ->where('user_id',$user->id)
                        ->firstOrfail();
 
-        $surgery->delete(); 
+       // $surgery->delete(); 
+         $user->surgeries()->detach($surgery->id);
 
          return  $this->responseApi(__('messages.delete_surgery'),204);
 
