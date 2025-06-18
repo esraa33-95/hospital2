@@ -109,6 +109,23 @@ return [
 'store_banner'=>'تم اضافةالبانر بنجاح',
 'delete_banner'=>'تم حذف البانر بنجاح',
 
+//country
+'store_countries'=>'تم تخزين الدولة بنجاح',
+'update_countries'=>'تم تعديل الدولة بنجاح',
+'no_delete_country'=>'لا يمكن حذف الدولة',
+'delete_country'=>'تم حذف الدولة بنجاح',
+
+//city
+'store_cities'=>'تم تخزين المحافظة بنجاح',
+'update_cities'=>'تم تعديل المحافظة بنجاح',
+'no_delete_city'=>'لا يمكن حذف المحافظة',
+'delete_city'=>'تم حذف المحافظة بنجاح',
+
+//area
+'store_areas'=>'تم تخزين المنطقة بنجاح',
+'update_areas'=>'تم تعديل المنطقة بنجاح',
+'no_delete_area'=>'لا يمكن حذف المنطقة',
+'delete_area'=>'تم حذف المنطقة بنجاح',
 
 
 ];

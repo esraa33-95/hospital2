@@ -104,6 +104,24 @@ unique' => 'The Arabic name already exists.',
 'store_banner'=>'Banner created successfully',
 'delete_banner'=>'Banner deleted successfully',
 
+//country
+'store_countries'=>'store country successfully',
+'update_countries'=>'update country successfully',
+'no_delete_country'=>'can not delete country',
+'delete_country'=>'delete country successfully',
 
+
+//city
+'store_cities'=>'store city successfully',
+'update_cities'=>'update city successfully',
+'no_delete_city'=>'can not delete city',
+'delete_city'=>'delete city successfully',
+
+
+//area
+'store_areas'=>'store area successfully',
+'update_areas'=>'update area successfully',
+'no_delete_area'=>'can not delete area',
+'delete_area'=>'delete area successfully',
 
 ];

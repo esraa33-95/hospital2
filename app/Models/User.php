@@ -123,6 +123,12 @@ class User extends Authenticatable implements MustVerifyEmail,HasMedia
     return $this->hasMany(Banner::class);
    }
 
+
+   public function address()
+{
+    return $this->hasMany(Address::class);
+}
+
 protected static function boot()
 {
     parent::boot();
