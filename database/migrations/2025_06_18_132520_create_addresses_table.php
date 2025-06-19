@@ -12,17 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('addresses', function (Blueprint $table) {
-           $table->id();
+         $table->id();
          $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
          $table->foreignId('country_id')->constrained('countries')->onDelete('cascade');
          $table->foreignId('city_id')->constrained('cities')->onDelete('cascade');
          $table->foreignId('area_id')->constrained('areas')->onDelete('cascade');
 
-           $table->decimal('lat');   
-           $table->decimal('lng');
+         $table->decimal('lat');   
+         $table->decimal('lng');
            
-    
-            $table->timestamps();
+         $table->timestamps();
         });
     }
 

@@ -124,4 +124,8 @@ unique' => 'The Arabic name already exists.',
 'no_delete_area'=>'can not delete area',
 'delete_area'=>'delete area successfully',
 
+//messages
+'store_address'=>'store address successfully',
+'update_address'=>'update address successfully',
+
 ];

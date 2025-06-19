@@ -127,5 +127,9 @@ return [
 'no_delete_area'=>'لا يمكن حذف المنطقة',
 'delete_area'=>'تم حذف المنطقة بنجاح',
 
+//messages
+'store_address'=>'تم تخزين العنوان بنجاح',
+'update_address'=>'تم تعديل للعنوان بنجاح',
+
 
 ];

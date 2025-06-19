@@ -10,7 +10,7 @@ class Address extends Model implements TranslatableContract
 {
     use Translatable;
 
-     public $translatedAttributes = [ 'street_name','building_number', 'floor_number','landmark'];
+    public $translatedAttributes = [ 'street_name','building_number', 'floor_number','landmark'];
 
       protected $fillable=[
         'user_id',
@@ -19,6 +19,7 @@ class Address extends Model implements TranslatableContract
         'area_id',
         'lat',
         'lng',
+       
      ];
 
      public function user()

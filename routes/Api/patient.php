@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\front\DiseaseController;
 use App\Http\Controllers\Api\front\PatientController;
 use App\Http\Controllers\Api\front\SurgeryController;
 use App\Http\Controllers\Api\front\UserController;
+use App\Http\Controllers\Api\front\AdressController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -58,6 +59,16 @@ Route::prefix('allergies')->controller(AllergyController::class)->group(function
 //surgery
     Route::prefix('surgeries')->controller(SurgeryController::class)->group(function () {                 
         Route::post('/', 'store');  
+        Route::get('/{id}', 'show');                               
+        Route::put('/{id}', 'update');       
+        Route::delete('/{id}', 'delete');          
+          
+    });
+
+
+//address
+Route::prefix('addresses')->controller(AdressController::class)->group(function () {                 
+        Route::post('/{id}', 'store');  
         Route::get('/{id}', 'show');                               
         Route::put('/{id}', 'update');       
         Route::delete('/{id}', 'delete');          

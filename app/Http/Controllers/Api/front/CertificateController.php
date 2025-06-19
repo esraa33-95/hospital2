@@ -92,8 +92,6 @@ class CertificateController extends Controller
 
         $certificate->update($data);
 
-         
-
       $certificate = fractal($certificate, new CertificateTransform() )
                     ->serializeWith(new ArraySerializer())
                     ->toArray();

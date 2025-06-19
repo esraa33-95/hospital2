@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('address_translations', function (Blueprint $table) {
             $table->id();
-            $table->text('street_name');
-            $table->text('building_number');
-            $table->text('floor_number');
+            $table->text('street_name')->default(false);
+            $table->text('building_number')->default(false);
+            $table->text('floor_number')->default(false);
             $table->text('landmark')->nullable();
 
             $table->foreignId('address_id')->constrained()->onDelete('cascade');
