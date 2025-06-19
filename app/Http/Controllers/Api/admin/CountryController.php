@@ -106,9 +106,9 @@ class CountryController extends Controller
      */
     public function delete(string $id)
     {
-        $country = Country::findOrFail($id);
+        $country = Country::with('cities')->findOrFail($id);
 
-        if ($country->cities()->exists())
+        if ($country)
         {
             return  $this->responseApi(__('messages.no_delete_country'),403); 
         }

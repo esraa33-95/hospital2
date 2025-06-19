@@ -49,7 +49,10 @@ class CityController extends Controller
      */
     public function store(StoreCity $request)
     {
+       $country = $request->input('country_id');
+
         $data = [
+        'country_id'=>$country,
         'ar' => ['name' => $request->name_ar],
         'en' => ['name' => $request->name_en],
     ];
@@ -84,8 +87,11 @@ class CityController extends Controller
      * Update the specified resource in storage.
      */
     public function update(UpdateCity $request, string $id)
-    {
-          $data = [
+    { 
+        $country = $request->input('country_id');
+
+        $data = [
+        'country_id'=>$country,
         'ar' => ['name' => $request->name_ar],
         'en' => ['name' => $request->name_en],
     ];
@@ -106,9 +112,9 @@ class CityController extends Controller
      */
     public function delete(string $id)
     {
-        $city = City::findOrFail($id);
+        $city = City::with('areas')->findOrFail($id);
 
-        if($city->areas()->exists())
+        if($city)
         {
             return  $this->responseApi(__('messages.no_delete_city'),403); 
         }

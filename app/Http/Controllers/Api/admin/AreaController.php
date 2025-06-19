@@ -49,7 +49,10 @@ class AreaController extends Controller
      */
     public function store(StoreArea $request)
     {
-         $data = [
+         $city = $request->input('city_id');
+         
+        $data = [
+        'city_id'=>$city,
         'ar' => ['name' => $request->name_ar],
         'en' => ['name' => $request->name_en],
     ];
@@ -84,8 +87,11 @@ class AreaController extends Controller
      * Update the specified resource in storage.
      */
     public function update(UpdateArea $request, string $id)
-    {
-         $data = [
+    { 
+        $city = $request->input('city_id');
+
+        $data = [
+        'city_id'=>$city,
         'ar' => ['name' => $request->name_ar],
         'en' => ['name' => $request->name_en],
     ];
@@ -106,9 +112,9 @@ class AreaController extends Controller
      */
     public function delete(string $id)
     {
-         $area = Area::findOrFail($id);
+         $area = Area::with('cities')->findOrFail($id);
          
-        if ($area->cities()->exists())
+        if ($area)
          {
         return $this->responseApi(__('messages.no_delete_area'), 403);
     }
