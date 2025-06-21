@@ -34,6 +34,24 @@ class AddressTransform extends TransformerAbstract
     {
         return [
             'id'=>$address->id,
+
+    'country' => $address->countries? [
+        'name_ar' => optional($address->countries->translate('ar'))->name,
+        'name_en' => optional($address->countries->translate('en'))->name,
+    ] : null,
+
+    'city' => $address->cities? [
+        'name_ar' => optional($address->cities->translate('ar'))->name,
+        'name_en' => optional($address->cities->translate('en'))->name,
+    ] : null,
+
+    'area' => $address->area ? [
+        'name_ar' => optional($address->areas->translate('ar'))->name,
+        'name_en' => optional($address->areas->translate('en'))->name,
+    ] : null,
+
+
+
             'street_name_ar'=>$address->translate('ar')->street_name,
             'street_name_en'=>$address->translate('en')->street_name,
 

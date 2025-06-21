@@ -105,13 +105,17 @@ class AdressController extends Controller
     {
          $user = auth()->user();
 
-         $address = Address::where('current', 0)
-                                   ->where('user_id',$user->id)
-                                   ->firstOrFail();
+         $address = Address::where('id', $id)
+                             ->where('user_id',$user->id)
+                             ->firstOrFail();
+
+        $orders = $address->order()
+                             ->where('is_current',1)
+                             ->exists();                           
      
-        if($user->current !== 0)
+        if($orders)
     {
-    return  $this->responseApi(__('can not delete')); 
+    return  $this->responseApi(__('messages.cant_delete')); 
     }
 
         $address->delete();

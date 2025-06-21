@@ -45,4 +45,9 @@ public function areas()
     return $this->hasMany(AddressTranslation::class);
 }
 
+    public function order()
+{
+    return $this->hasMany(Order::class);
+}
+
 }

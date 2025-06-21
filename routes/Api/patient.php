@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\front\PatientController;
 use App\Http\Controllers\Api\front\SurgeryController;
 use App\Http\Controllers\Api\front\UserController;
 use App\Http\Controllers\Api\front\AdressController;
+use App\Http\Controllers\Api\front\RequestController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -72,6 +73,13 @@ Route::prefix('addresses')->controller(AdressController::class)->group(function 
         Route::get('/{id}', 'show');                               
         Route::put('/{id}', 'update');       
         Route::delete('/{id}', 'delete');          
+          
+    });
+
+//requests
+    Route::prefix('requests')->controller(RequestController::class)->group(function () {                 
+        Route::post('/', 'store');  
+               
           
     });
 
