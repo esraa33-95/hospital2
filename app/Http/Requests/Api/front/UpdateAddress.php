@@ -130,8 +130,9 @@ class UpdateAddress extends FormRequest
             'city_id'=>'nullable|exists:cities,id',
             'country_id'=>'nullable|exists:countries,id',
             'area_id'=>'nullable|exists:areas,id',
-            'lng'=>'nullable|numeric',
-            'lat'=>'nullable|numeric',
+
+            'lat' => 'nullable|decimal:1|between:-90,90',
+            'lng' => 'nullable|decimal:1|between:-180,180',
 
     ];
 

@@ -26,8 +26,9 @@ class StoreAddress extends FormRequest
             'city_id'=>'required|exists:cities,id',
             'country_id'=>'required|exists:countries,id',
             'area_id'=>'required|exists:areas,id',
-            'lng'=>'required|numeric',
-            'lat'=>'required|numeric',
+
+            'lat' => 'required|decimal:1|between:-90,90',
+            'lng' => 'required|decimal:1|between:-180,180',
 
             'building_number_en'=> ['required','string','max:15',
             function ($attribute, $value, $error) {

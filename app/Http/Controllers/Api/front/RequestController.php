@@ -19,7 +19,6 @@ class RequestController extends Controller
      $data = [
         'address_id'=>$request->address_id,
         'is_current'=>$request->is_current,
-   
       ];
    
      $order = Order::create($data);
