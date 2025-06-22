@@ -32,26 +32,30 @@ class AddressTransform extends TransformerAbstract
      */
     public function transform(Address $address):array
     {
-        return [
+    return [
             'id'=>$address->id,
 
-    'country' => $address->countries? [
-        'name_ar' => optional($address->countries->translate('ar'))->name,
-        'name_en' => optional($address->countries->translate('en'))->name,
-    ] : null,
+             'country' => ( $address->countries ) ? $address->countries->map(function ($country) {
+               return [
+                'name_ar' => $country->translate('ar')->name,
+                'name_en' => $country->translate('en')->name,
+                  ];
+           }) : null,
 
-    'city' => $address->cities? [
-        'name_ar' => optional($address->cities->translate('ar'))->name,
-        'name_en' => optional($address->cities->translate('en'))->name,
-    ] : null,
+    'city' => ( $address->cities ) ?  $address->cities->map(function ($city) {
+               return [
+                'name_ar' => $city->translate('ar')->name,
+                'name_en' => $city->translate('en')->name,
+                  ];
+           }) : null,
 
-    'area' => $address->area ? [
-        'name_ar' => optional($address->areas->translate('ar'))->name,
-        'name_en' => optional($address->areas->translate('en'))->name,
-    ] : null,
-
-
-
+'area' => ( $address->areas ) ?  $address->areas->map(function ($area) {
+               return [
+                'name_ar' => $area->translate('ar')->name,
+                'name_en' => $area->translate('en')->name,
+                  ];
+           }) : null,
+     
             'street_name_ar'=>$address->translate('ar')->street_name,
             'street_name_en'=>$address->translate('en')->street_name,
 
