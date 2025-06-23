@@ -8,14 +8,20 @@ use App\Models\Department;
 use App\Models\Disease;
 use App\Models\Surgery;
 use App\Models\Allergy;
+use App\Models\Area;
 use App\Models\Blood;
+use App\Models\City;
+use App\Models\Country;
 use App\Models\User;
 use App\Transformers\front\DepartmentTransform;
 use App\Transformers\front\UserTransform;
 use App\Transformers\front\surgeryTransform;
 use App\Transformers\front\AllergyTransform;
+use App\Transformers\front\AreaTransform;
 use App\Transformers\front\DiseaseTransform;
 use App\Transformers\front\BloodTransform;
+use App\Transformers\front\CityTransform;
+use App\Transformers\front\CountryTransform;
 use Illuminate\Http\Request;
 use League\Fractal\Serializer\ArraySerializer;
 
@@ -223,6 +229,90 @@ class ListController extends Controller
 
     }
 
+  //countries
+   public function countries(Request $request)
+    {
+        $search = $request->input('search');
+        $take = $request->input('take'); 
+        $skip = $request->input('skip'); 
+        $locale = $request->query('lang', app()->getLocale());
 
+      $query = Country::query();
+
+      if ($search) 
+      {
+       $query->whereTranslationLike('name', '%' . $search . '%', $locale);
+      }
+
+    $total = $query->count(); 
+
+    $country = $query->skip($skip ?? 0)->take($take ?? $total)->get();
+
+    $country =  fractal()->collection($country)
+                  ->transformWith(new CountryTransform())
+                  ->serializeWith(new ArraySerializer())
+                   ->toArray();
+
+    return $this->responseApi('',$country,200,['count' => $total]);
+
+    }
+
+
+//city
+ public function cities(Request $request)
+    {
+        $search = $request->input('search');
+        $take = $request->input('take'); 
+        $skip = $request->input('skip'); 
+        $locale = $request->query('lang', app()->getLocale());
+
+      $query = City::query();
+
+      if ($search) 
+      {
+       $query->whereTranslationLike('name', '%' . $search . '%', $locale);
+      }
+
+    $total = $query->count(); 
+
+    $city = $query->skip($skip ?? 0)->take($take ?? $total)->get();
+
+    $city =  fractal()->collection($city)
+                  ->transformWith(new CityTransform())
+                  ->serializeWith(new ArraySerializer())
+                   ->toArray();
+
+    return $this->responseApi('',$city,200,['count' => $total]);
+
+    }
+
+
+ //area
+  public function areas(Request $request)
+    {
+        $search = $request->input('search');
+        $take = $request->input('take'); 
+        $skip = $request->input('skip'); 
+        $locale = $request->query('lang', app()->getLocale());
+
+      $query = Area::query();
+
+      if ($search) 
+      {
+       $query->whereTranslationLike('name', '%' . $search . '%', $locale);
+      }
+
+    $total = $query->count(); 
+
+    $area = $query->skip($skip ?? 0)->take($take ?? $total)->get();
+
+    $area =  fractal()->collection($area)
+                  ->transformWith(new AreaTransform())
+                  ->serializeWith(new ArraySerializer())
+                   ->toArray();
+
+    return $this->responseApi('',$area,200,['count' => $total]);
+
+    }   
 
 }

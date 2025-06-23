@@ -33,5 +33,8 @@ Route::middleware('api_localization')->controller(ListController::class)->middle
         Route::get('allergies','allergy');
         Route::get('blood','blood');
         Route::get('surgeries','surgery');
+        Route::get('countries','countries');
+        Route::get('cities','cities');
+        Route::get('areas','areas');  
         
 });
