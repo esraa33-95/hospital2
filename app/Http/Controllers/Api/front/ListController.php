@@ -10,6 +10,7 @@ use App\Models\Surgery;
 use App\Models\Allergy;
 use App\Models\Area;
 use App\Models\Blood;
+use App\Models\Banner;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\User;
@@ -20,6 +21,7 @@ use App\Transformers\front\AllergyTransform;
 use App\Transformers\front\AreaTransform;
 use App\Transformers\front\DiseaseTransform;
 use App\Transformers\front\BloodTransform;
+use App\Transformers\front\BannerTransform;
 use App\Transformers\front\CityTransform;
 use App\Transformers\front\CountryTransform;
 use Illuminate\Http\Request;
@@ -314,5 +316,33 @@ class ListController extends Controller
     return $this->responseApi('',$area,200,['count' => $total]);
 
     }   
+
+//banners
+public function banners(Request $request)
+    {
+       $position = $request->input('position');
+        $take = $request->input('take'); 
+        $skip = $request->input('skip'); 
+      
+      $query = Banner::query();
+
+     if ($position) 
+     {
+        $query->where('position', 'like', '%' . $position . '%');
+    }
+
+    $total = $query->count(); 
+
+    $banner = $query->skip($skip ?? 0)->take($take ?? $total)->get();
+
+    $banner =  fractal()->collection($banner)
+                  ->transformWith(new BannerTransform())
+                  ->serializeWith(new ArraySerializer())
+                   ->toArray();
+
+    return $this->responseApi('',$banner,200,['count' => $total]);
+
+    }  
+
 
 }

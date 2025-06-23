@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\admin\StoreBanner;
+use App\Http\Requests\Api\admin\UpdateBanner;
 use App\Models\Banner;
 use App\Traits\Common;
 use App\Traits\Response;
@@ -22,28 +23,17 @@ class BannerController extends Controller
     public function store(StoreBanner $request)
     { 
         $data =[  
-        'ar'=>['description'=>$request->description_ar],
-        'en'=>['description'=>$request->description_en],
+        'ar'=>['description'=>$request->description_ar,
+                 'image'=>$request->image_ar],
 
+        'en'=>['description'=>$request->description_en,
+                'image'=>$request->image_en ],
+
+        'position'=>$request->position,
         ];
-
-       if($request->hasfile('image_right'))
-        {
-        $data['image_right'] = $this->uploadFile($request->image_right,'assets/images');
-        
-        }
-
-        if($request->hasfile('image_left'))
-        {
-        $data['image_left'] = $this->uploadFile($request->image_left,'assets/images');
-        
-        }
-
+ 
         $banner = Banner::create($data);
-
-        $banner->position = $request->position; 
-        $banner->direction = $request->direction;
-        
+ 
        $banner = fractal($banner, new BannerTransform())
                     ->serializeWith(new ArraySerializer())
                     ->toArray();
@@ -52,34 +42,23 @@ class BannerController extends Controller
 
     }
 
-
-    public function update(StoreBanner $request,string $id)
+//update
+    public function update(UpdateBanner $request,string $id)
     {
-    $data =[  
-        'ar'=>['description'=>$request->description_ar],
-        'en'=>['description'=>$request->description_en],
+   $data =[  
+        'ar'=>['description'=>$request->description_ar,
+                 'image'=>$request->image_ar],
 
+        'en'=>['description'=>$request->description_en,
+                'image'=>$request->image_en ],
+
+        'position'=>$request->position,
         ];
-
-       if($request->hasfile('image_right'))
-        {
-        $data['image_right'] = $this->uploadFile($request->image_right,'assets/images');
-        
-        }
-
-        if($request->hasfile('image_left'))
-        {
-        $data['image_left'] = $this->uploadFile($request->image_left,'assets/images');
-        
-        }
 
         $banner = Banner::findOrFail($id);
 
         $banner->update($data);
-
-        $banner->position = $request->position; 
-        $banner->direction = $request->direction;
-        
+   
        $banner = fractal($banner, new BannerTransform())
                     ->serializeWith(new ArraySerializer())
                     ->toArray();

@@ -12,11 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('banners', function (Blueprint $table) {
-            $table->id();
-            $table->string('image_right')->nullable();
-            $table->string('image_left')->nullable();
+            $table->id(); 
             $table->enum('position',['doctor','patient']);
-            $table->enum('direction',['left','right']);
+          
             $table->timestamps();
         });
     }

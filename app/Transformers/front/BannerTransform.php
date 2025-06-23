@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Transformers\admin;
+namespace App\Transformers\front;
 
 use App\Models\Banner;
 use League\Fractal\TransformerAbstract;
@@ -35,8 +35,8 @@ class BannerTransform extends TransformerAbstract
         return [
             'id'=>$banner->id,
             'position'=>$banner->position ?? '',
-            'description_en'=>$banner->translate('en')->description ?? '',
-            'description_ar'=>$banner->translate('ar')->description ?? '',
+            'description_en'=>$banner->translate('en')->description ?? null,
+            'description_ar'=>$banner->translate('ar')->description ?? null,
            'image_en' =>$banner->image_en ? asset('storage/' . $banner->image_en): asset('asset/default.png'),
            'image_ar' => $banner->image_ar ? asset('storage/' . $banner->image_ar): asset('asset/default.png'),
 

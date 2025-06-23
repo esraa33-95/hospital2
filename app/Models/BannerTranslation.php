@@ -9,7 +9,8 @@ class BannerTranslation extends Model
      public $timestamps = false;
 
     protected $fillable = [
-        'description'   
+        'description' ,
+        'image'  
     ];
 
  public function banner()

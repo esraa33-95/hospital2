@@ -177,6 +177,17 @@ return [
     */
 
     'custom' => [
+
+        'image_ar' => [
+        'unique' => 'الصورة العربية مستخدمة قبل ذلك',
+        'mimes' => 'png,jpg,jpeg يجب أن تكون الصورة العربية نوع',
+        'max' => 'يجب ألا تتجاوز الصورة العربية 2 ميجا',
+    ],
+    'image_en' => [
+        'unique' => 'الصورة الانجليزية مستخدمة قبل ذلك',
+        'mimes' => 'png,jpg,jpeg يجب أن تكون الصورة الانجليزية نوع',
+        'max' => 'يجب ألا تتجاوز الصورة الانجليزية 2 ميجا',
+    ],
           'description_en' => [
         'required' => 'this arabic description is required ',
         'unique' => 'this arabic description is exists',
@@ -305,7 +316,9 @@ return [
         'user_id',
         'current',
         'description_en',
-        'description_ar' 
+        'description_ar',
+         'image_en',
+         'image_ar', 
     ],
 
 ];

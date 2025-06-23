@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('banner_translations', function (Blueprint $table) {
             $table->id();
             $table->string('description');
+            $table->string('image');
             $table->foreignId('banner_id')->constrained()->onDelete('cascade');
             $table->string('locale')->index();
 

@@ -19,6 +19,19 @@ return [
 
     'custom' => [
 
+'image_ar' => [
+        'unique' => 'The Arabic image is used',
+        'mimes' => 'The Arabic image must be  png, jpg, jpeg',
+        'max' => 'The Arabic image should not greater than 2Mega',
+    ],
+    'image_en' => [
+        'unique' => 'The English image is used',
+        'mimes' => 'The English image must be  png, jpg, jpeg',
+        'max' => 'The English image may should not greater than 2Mega',
+    ],
+
+
+
          'description_en' => [
         'required' => 'الوصف العربى مطلوب',
         'unique' => 'هذا الوصف العربى موجود بالفعل',
@@ -147,6 +160,8 @@ return [
         'user_id',
        'description_en',
        'description_ar',
+       'image_en',
+       'image_ar',
        
     ],
 ];
