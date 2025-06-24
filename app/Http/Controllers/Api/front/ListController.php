@@ -328,16 +328,11 @@ public function banners(Request $request)
 
           $query = Banner::query();
 
-        if ($position && in_array($position, ['doctor', 'patient']))
+        if (in_array($position, ['doctor', 'patient']))
          {
               $query->where('position', $position);
         }
-     
-      if ($search) 
-      {
-       $query->whereTranslationLike('description', '%' . $search . '%', $locale);
-      }
-     
+       
     $total = $query->count(); 
 
     $banner = $query->skip($skip ?? 0)->take($take ?? $total)->get();
