@@ -17,47 +17,70 @@ class BannerController extends Controller
     use Response;
     use Common;
     
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreBanner $request)
-    { 
-        $data =[  
-        'ar'=>['description'=>$request->description_ar,
-                 'image'=>$request->image_ar],
+{ 
+    $data = [  
+        'ar' => ['description' => $request->description_ar],
+        'en' => ['description' => $request->description_en],
+        'position' => $request->position,
+    ];
 
-        'en'=>['description'=>$request->description_en,
-                'image'=>$request->image_en ],
+    $banner = Banner::create($data);
 
-        'position'=>$request->position,
-        ];
- 
-        $banner = Banner::create($data);
- 
-       $banner = fractal($banner, new BannerTransform())
-                    ->serializeWith(new ArraySerializer())
-                    ->toArray();
+    if ($request->hasFile('image_ar')) {
+        $banner->addMedia($request->file('image_ar'))
+               ->withCustomProperties(['locale' => 'ar'])
+               ->toMediaCollection('files');
+    }
+
+   
+    if ($request->hasFile('image_en')) {
+        $banner->addMedia($request->file('image_en'))
+               ->withCustomProperties(['locale' => 'en'])
+               ->toMediaCollection('files');
+    }
+
+    $banner = fractal($banner, new BannerTransform())
+                ->serializeWith(new ArraySerializer())
+                ->toArray();
 
     return $this->responseApi(__('messages.store_banner'), $banner, 201);
+}
 
-    }
 
 //update
     public function update(UpdateBanner $request,string $id)
     {
    $data =[  
-        'ar'=>['description'=>$request->description_ar,
-                 'image'=>$request->image_ar],
-
-        'en'=>['description'=>$request->description_en,
-                'image'=>$request->image_en ],
+        'ar'=>['description'=>$request->description_ar],
+        'en'=>['description'=>$request->description_en],
 
         'position'=>$request->position,
         ];
 
         $banner = Banner::findOrFail($id);
-
         $banner->update($data);
+
+         if ($request->hasFile('image_ar')) 
+         {
+
+        $banner->clearMediaCollection('files');
+       
+        $banner->addMedia($request->file('image_ar'))
+               ->withCustomProperties(['locale' => 'ar'])
+               ->toMediaCollection('files');
+    }
+
+    if ($request->hasFile('image_en'))
+     {
+        $banner->clearMediaCollection('files');
+        
+        $banner->addMedia($request->file('image_en'))
+               ->withCustomProperties(['locale' => 'en'])
+               ->toMediaCollection('files');
+    }
+
+     
    
        $banner = fractal($banner, new BannerTransform())
                     ->serializeWith(new ArraySerializer())

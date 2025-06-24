@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('banners', function (Blueprint $table) {
             $table->id(); 
             $table->enum('position',['doctor','patient']);
-          
             $table->timestamps();
         });
     }

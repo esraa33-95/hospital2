@@ -10,15 +10,14 @@ class BannerTranslation extends Model
 
     protected $fillable = [
         'description' ,
-        'image'  
+        'image'
+         
     ];
 
  public function banner()
 {
     return $this->belongsTo(Banner::class);
 }
-
-
 
 
 }

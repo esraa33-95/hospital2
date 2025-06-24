@@ -27,7 +27,7 @@ class UpdateBanner extends FormRequest
         return [
             'description_en' => ['nullable',
             function ($attribute, $value, $error) use ($id) {
-                $exists = BannerTranslation::where('name', $value)
+                $exists = BannerTranslation::where('description', $value)
                     ->where('locale', 'en')
                     ->where('banner_id', '!=', $id)
                     ->exists();
@@ -40,7 +40,7 @@ class UpdateBanner extends FormRequest
 
         'description_ar' => ['nullable',
            function ($attribute, $value, $error) use ($id) {
-                $exists = BannerTranslation::where('name', $value)
+                $exists = BannerTranslation::where('description', $value)
                     ->where('locale', 'ar')
                     ->where('banner_id', '!=', $id)
                     ->exists();
@@ -51,38 +51,8 @@ class UpdateBanner extends FormRequest
             }
         ],
 
-          'image_ar' => ['nullable','mimes:png,jpg,jpeg','max:2048',
-           function ($attribute, $value, $fail) use($id) {
-                if ($value && $value->isValid()) {
-                    $image = $value->getClientOriginalName();
-
-                    $exists = BannerTranslation::where('image', $image)
-                        ->where('locale', 'en')
-                        ->where('banner_id', '!=', $id)
-                        ->exists();
-
-                    if ($exists) {
-                        $fail(__('validation.custom.image_en.unique'));
-                    }
-                }
-            }
-        ],
-            'image_en'=>['nullable','mimes:png,jpg,jpeg','max:2048',
-          function ($attribute, $value, $fail) use($id) {
-                if ($value && $value->isValid()) {
-                    
-                    $image = $value->getClientOriginalName();
-                     $exists = BannerTranslation::where('image', $image)
-                        ->where('locale', 'ar')
-                        ->where('banner_id', '!=', $id)
-                        ->exists();
-
-                    if ($exists) {
-                        $fail(__('validation.custom.image_ar.unique'));
-                    }
-                }
-            }
-        ],
+          'image_ar' => ['nullable','mimes:png,jpg,jpeg','max:2048'],
+            'image_en'=>['nullable','mimes:png,jpg,jpeg','max:2048'],
            'position' => 'nullable|in:doctor,patient',
         ];
     }

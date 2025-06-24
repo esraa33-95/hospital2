@@ -108,6 +108,7 @@ return [
 //banner
 'store_banner'=>'تم اضافةالبانر بنجاح',
 'delete_banner'=>'تم حذف البانر بنجاح',
+'update_banner'=>'تم تعديل البانر بنجاح',
 
 //country
 'store_countries'=>'تم تخزين الدولة بنجاح',

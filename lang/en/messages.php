@@ -103,6 +103,7 @@ unique' => 'The Arabic name already exists.',
 //banner
 'store_banner'=>'Banner created successfully',
 'delete_banner'=>'Banner deleted successfully',
+'update_banner'=>'Banner updated successfully',
 
 //country
 'store_countries'=>'store country successfully',

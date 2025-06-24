@@ -42,29 +42,11 @@ class StoreBanner extends FormRequest
         ],
 
 
-
-          'image_ar' => ['required','mimes:png,jpg,jpeg','max:2048',
-           function ($attribute, $value, $fail) {
-                if ($value && $value->isValid()) {
-
-                    $image = $value->getClientOriginalName();
-                    if (BannerTranslation::where('image', $image)->where('locale', 'ar')->exists()) {
-                        $fail(__('validation.custom.image_ar.unique'));
-                    }
-                }
-            }
-        ],
-            'image_en'=>['required','mimes:png,jpg,jpeg','max:2048',
-          function ($attribute, $value, $fail) {
-            
-                if ($value && $value->isValid()) {
-                    $image = $value->getClientOriginalName();
-                    if (BannerTranslation::where('image', $image)->where('locale', 'en')->exists()) {
-                        $fail(__('validation.custom.image_en.unique'));
-                    }
-                }
-            }
-        ],
+          'image_ar' => ['required','mimes:png,jpg,jpeg','max:2048'],
+          
+          'image_en'=>['required','mimes:png,jpg,jpeg','max:2048'],
+          
+        
            'position' => 'required|in:doctor,patient',
         ];
     }

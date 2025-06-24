@@ -30,16 +30,23 @@ class BannerTransform extends TransformerAbstract
      *
      * @return array
      */
-    public function transform(Banner $banner):array
-    {
-        return [
-            'id'=>$banner->id,
-            'position'=>$banner->position ?? '',
-            'description_en'=>$banner->translate('en')->description ?? '',
-            'description_ar'=>$banner->translate('ar')->description ?? '',
-           'image_en' =>$banner->image_en ? asset('storage/' . $banner->image_en): asset('asset/default.png'),
-           'image_ar' => $banner->image_ar ? asset('storage/' . $banner->image_ar): asset('asset/default.png'),
+   
+     public function transform(Banner $banner): array
+{
+    $locale = app()->getLocale();
 
-        ];
-    }
+    $media = $banner->getMedia('files')->firstWhere('custom_properties.locale', $locale);
+    $image = $media ? $media->getFullUrl() : null;
+
+    return [
+        'id' => $banner->id,
+        'position' => $banner->position,
+        'description_en'=>$banner->translate('en')->description ?? '',
+        'description_ar'=>$banner->translate('ar')->description ?? '',
+        'image_ar' => $image,
+        'image_en' => $image,
+    ];
+}
+
+
 }
