@@ -321,12 +321,18 @@ class ListController extends Controller
 public function banners(Request $request)
     {
         $search = $request->input('search');
+        $position = $request->input('position');
         $take = $request->input('take'); 
         $skip = $request->input('skip'); 
         $locale = $request->query('lang', app()->getLocale());
 
-      $query = Banner::whereIn('position',['doctor','patient']);
+          $query = Banner::query();
 
+        if ($position && in_array($position, ['doctor', 'patient']))
+         {
+              $query->where('position', $position);
+        }
+     
       if ($search) 
       {
        $query->whereTranslationLike('description', '%' . $search . '%', $locale);
