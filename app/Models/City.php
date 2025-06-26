@@ -21,7 +21,7 @@ public $translatedAttributes = [ 'name'];
     return $this->hasMany(Address::class);
 }
 
-public function countries()
+public function country()
 {
     return $this->belongsTo(Country::class);
 }

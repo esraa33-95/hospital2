@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\front\StoreAddress;
 use App\Http\Requests\Api\front\UpdateAddress;
 use App\Models\Address;
+use App\Models\Area;
 use App\Traits\Response;
 use App\Transformers\front\AddressTransform;
 use Illuminate\Http\Request;
@@ -19,12 +20,17 @@ class AdressController extends Controller
     public function store(StoreAddress $request, string $id)
     {
      $user = auth()->user();
-                   
+
+    $area = $request->area_id;  
+
+     $area = Area::with('city.country')
+                  ->findOrFail($area);
+
      $data = [
         'user_id'=>$user->id,
-        'country_id'=>$request->country_id,
-        'city_id'=>$request->city_id,
-        'area_id'=>$request->area_id,
+        'country_id'=>$area->city->country->id,
+        'city_id'=>$area->city->id,
+        'area_id'=>$area->id,
 
         'ar' => ['street_name' =>$request->street_name_ar,
                 'building_number'=>$request->building_number_ar, 
@@ -40,13 +46,9 @@ class AdressController extends Controller
         'lat' =>$request->lat,     
       ];
    
-     $address = Address::create($data);
+      Address::create($data);
 
-     $address = fractal($address, new AddressTransform())
-                    ->serializeWith(new ArraySerializer())
-                    ->toArray();
-
-    return $this->responseApi(__('messages.store_address'), $address, 201);
+    return $this->responseApi(__('messages.store_address'),'');
     }
 
     //show
@@ -69,11 +71,16 @@ class AdressController extends Controller
     {
      $user = auth()->user();
                    
+    $area = $request->area_id;  
+
+     $area = Area::with('city.country')
+                  ->findOrFail($area);
+
      $data = [
         'user_id'=>$user->id,
-        'country_id'=>$request->country_id,
-        'city_id'=>$request->city_id,
-        'area_id'=>$request->area_id,
+        'country_id'=>$area->city->country->id,
+        'city_id'=>$area->city->id,
+        'area_id'=>$area->id,
 
         'ar' => ['street_name' =>$request->street_name_ar,
                 'building_number'=>$request->building_number_ar, 

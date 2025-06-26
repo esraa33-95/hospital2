@@ -27,15 +27,16 @@ class Address extends Model implements TranslatableContract
     return $this->belongsTo(User::class);
 }
 
-public function countries()
+public function country()
 {
     return $this->belongsTo(Country::class);
 }
-public function cities()
+public function city()
 {
     return $this->belongsTo(City::class);
 }
-public function areas()
+
+public function area()
 {
     return $this->belongsTo(Area::class);
 }

@@ -33,7 +33,6 @@ class BannerController extends Controller
                ->toMediaCollection('files');
     }
 
-   
     if ($request->hasFile('image_en')) {
         $banner->addMedia($request->file('image_en'))
                ->withCustomProperties(['locale' => 'en'])
@@ -80,8 +79,6 @@ class BannerController extends Controller
                ->toMediaCollection('files');
     }
 
-     
-   
        $banner = fractal($banner, new BannerTransform())
                     ->serializeWith(new ArraySerializer())
                     ->toArray();

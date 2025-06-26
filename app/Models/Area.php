@@ -21,7 +21,7 @@ public function address()
     return $this->hasMany(Address::class);
 }
 
-public function cities()
+public function city()
 {
     return $this->belongsTo(City::class);
 }

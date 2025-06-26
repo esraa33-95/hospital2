@@ -3,6 +3,7 @@
 namespace App\Transformers\front;
 
 use App\Models\Address;
+use Illuminate\Support\Facades\App;
 use League\Fractal\TransformerAbstract;
 
 class AddressTransform extends TransformerAbstract
@@ -32,44 +33,24 @@ class AddressTransform extends TransformerAbstract
      */
     public function transform(Address $address):array
     {
+    $locale = App::getLocale(); 
+
     return [
-            'id'=>$address->id,
+        'id' => $address->id,
 
-             'country' => ( $address->countries ) ? $address->countries->map(function ($country) {
-               return [
-                'name_ar' => $country->translate('ar')->name,
-                'name_en' => $country->translate('en')->name,
-                  ];
-           }) : null,
+        'country' => ($address->area && $address->area->city && $address->area->city->country)
+            ? $address->area->city->country->translate($locale)->name
+             : null,
 
-    'city' => ( $address->cities ) ?  $address->cities->map(function ($city) {
-               return [
-                'name_ar' => $city->translate('ar')->name,
-                'name_en' => $city->translate('en')->name,
-                  ];
-           }) : null,
-
-'area' => ( $address->areas ) ?  $address->areas->map(function ($area) {
-               return [
-                'name_ar' => $area->translate('ar')->name,
-                'name_en' => $area->translate('en')->name,
-                  ];
-           }) : null,
+        'city' => ($address->area && $address->area->city) 
+                 ? $address->area->city->translate($locale)->name : null,
+        'area' =>( $address->area ) ? $address->area->translate($locale)->name : null,
      
-            'street_name_ar'=>$address->translate('ar')->street_name,
-            'street_name_en'=>$address->translate('en')->street_name,
+        'street_name' => $address->translate($locale)->street_name,
+        'building_number' => $address->translate($locale)->building_number,
+        'floor_number' => $address->translate($locale)->floor_number,
+        'landmark' => $address->translate($locale)->landmark,
 
-            'building_number_ar'=>$address->translate('ar')->building_number,
-             'building_number_en'=>$address->translate('en')->building_number,
-
-            'floor_number_ar'=>$address->translate('ar')->floor_number,
-             'floor_number_en'=>$address->translate('en')->floor_number,
-
-            'landmark_ar'=>$address->translate('ar')->landmark,
-             'landmark_en'=>$address->translate('en')->landmark,
-
-            'lng'=>$address->lng,
-            'lat'=>$address->lat,
             
         ];
     }
