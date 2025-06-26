@@ -112,7 +112,7 @@ class AreaController extends Controller
      */
     public function delete(string $id)
     {
-         $area = Area::with('cities')->findOrFail($id);
+         $area = Area::with('city')->findOrFail($id);
          
         if ($area)
          {

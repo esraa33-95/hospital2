@@ -106,7 +106,7 @@ class CountryController extends Controller
      */
     public function delete(string $id)
     {
-        $country = Country::with('cities')->findOrFail($id);
+        $country = Country::with('city')->findOrFail($id);
 
         if ($country)
         {
