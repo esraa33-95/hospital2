@@ -23,8 +23,7 @@ class AdressController extends Controller
 
     $area = $request->area_id;  
 
-     $area = Area::with('city.country')
-                  ->findOrFail($area);
+     $area = Area::findOrFail($area);
 
      $data = [
         'user_id'=>$user->id,
@@ -66,15 +65,14 @@ class AdressController extends Controller
     }
 
 
-
+//update
    public function update(UpdateAddress $request, string $id)
     {
      $user = auth()->user();
                    
     $area = $request->area_id;  
 
-     $area = Area::with('city.country')
-                  ->findOrFail($area);
+     $area = Area::findOrFail($area);
 
      $data = [
         'user_id'=>$user->id,
@@ -107,7 +105,7 @@ class AdressController extends Controller
     return $this->responseApi(__('messages.update_address'), $address, 200);
     }
 
-
+//delete
     public function delete(string $id)
     {
          $user = auth()->user();
@@ -115,15 +113,6 @@ class AdressController extends Controller
          $address = Address::where('id', $id)
                              ->where('user_id',$user->id)
                              ->firstOrFail();
-
-        $orders = $address->order()
-                             ->where('is_current',1)
-                             ->exists();                           
-     
-        if($orders)
-    {
-    return  $this->responseApi(__('messages.cant_delete')); 
-    }
 
         $address->delete();
         
