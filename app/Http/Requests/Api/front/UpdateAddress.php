@@ -44,6 +44,7 @@ class UpdateAddress extends FormRequest
 
         'street_name_ar' => ['nullable','string','max:100' ],
    
+        'is_main'=>['nullable','boolean'],
         ];
 
 

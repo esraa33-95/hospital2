@@ -16,6 +16,7 @@ class AdressController extends Controller
 {
     use Response;
 
+//add address
 
     public function store(StoreAddress $request, string $id)
     {
@@ -25,11 +26,16 @@ class AdressController extends Controller
 
      $area = Area::findOrFail($area);
 
+     $main = $user->address()->exists();
+
      $data = [
         'user_id'=>$user->id,
         'country_id'=>$area->city->country->id,
         'city_id'=>$area->city->id,
         'area_id'=>$area->id,
+        'lng' =>$request->lng,
+        'lat' =>$request->lat, 
+        'is_main'=>!$main,
 
         'ar' => ['street_name' =>$request->street_name_ar,
                 'building_number'=>$request->building_number_ar, 
@@ -39,10 +45,8 @@ class AdressController extends Controller
         'en' => ['street_name' => $request->street_name_en,
                 'building_number'=>$request->building_number_en, 
                  'floor_number'=>$request->floor_number_en,
-                 'landmark'=>$request->landmark_en],
-
-        'lng' =>$request->lng,
-        'lat' =>$request->lat,     
+                 'landmark'=>$request->landmark_en
+                ],    
       ];
    
       Address::create($data);
@@ -50,7 +54,7 @@ class AdressController extends Controller
     return $this->responseApi(__('messages.store_address'),'');
     }
 
-    //show
+//show
    public function show(string $id)
     {     
          $address = Address::findOrFail($id);
@@ -74,11 +78,23 @@ class AdressController extends Controller
 
      $area = Area::findOrFail($area);
 
+     $address = $user->address()->findOrFail($id);
+
+     if ($request->is_main) 
+     {
+        
+       $user->address()->where('id', '!=', $address->id)
+                   ->update(['is_main' => false]);
+        $address->is_main = true;
+    }
+
      $data = [
         'user_id'=>$user->id,
         'country_id'=>$area->city->country->id,
         'city_id'=>$area->city->id,
         'area_id'=>$area->id,
+         'lng' =>$request->lng,
+        'lat' =>$request->lat, 
 
         'ar' => ['street_name' =>$request->street_name_ar,
                 'building_number'=>$request->building_number_ar, 
@@ -90,13 +106,11 @@ class AdressController extends Controller
                  'floor_number'=>$request->floor_number_en,
                  'landmark'=>$request->landmark_en],
 
-        'lng' =>$request->lng,
-        'lat' =>$request->lat,     
+           
       ];
    
-     $address = Address::findOrFail($id);
 
-     $address->update($data);
+     $address->save();
 
      $address = fractal($address, new AddressTransform())
                     ->serializeWith(new ArraySerializer())

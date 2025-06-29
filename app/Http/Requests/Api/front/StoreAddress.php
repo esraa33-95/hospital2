@@ -42,6 +42,8 @@ class StoreAddress extends FormRequest
         'street_name_en' => ['required','string','max:100' ],
 
         'street_name_ar' => ['required','string','max:100' ],
+        
+    
    
         ];
     }

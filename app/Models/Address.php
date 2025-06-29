@@ -19,6 +19,7 @@ class Address extends Model implements TranslatableContract
         'area_id',
         'lat',
         'lng',
+        'is_main'
        
      ];
 

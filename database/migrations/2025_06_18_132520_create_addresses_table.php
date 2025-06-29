@@ -20,6 +20,7 @@ return new class extends Migration
 
          $table->decimal('lat');   
          $table->decimal('lng');
+         $table->boolean('is_main')->default(false);
            
          $table->timestamps();
         });
