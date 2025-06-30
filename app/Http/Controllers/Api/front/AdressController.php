@@ -128,7 +128,7 @@ class AdressController extends Controller
 
            $address = $user->address()->findOrFail($id);
 
-           if ($user->address()->count() >= 0) 
+           if ($user->address()->count() > 0) 
             {
              return $this->responseApi(__('messages.cant_delete'));
             }
