@@ -132,6 +132,7 @@ return [
 'store_address'=>'تم تخزين العنوان بنجاح',
 'update_address'=>'تم تعديل للعنوان بنجاح',
 'cant_delete'=>'لا يمكن حذف العنوان',
+'delete_address'=>'تم حذف العنوان بنجاح',
 
 //request
 'store_request'=>'تم تخزين الطلب بنجاح',

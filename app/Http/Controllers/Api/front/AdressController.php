@@ -80,11 +80,13 @@ class AdressController extends Controller
 
      $address = $user->address()->findOrFail($id);
 
-     if ($request->is_main) 
-     {
-        
-       $user->address()->where('id', '!=', $address->id)
-                   ->update(['is_main' => false]);
+      $is_main = $request->input('is_main');
+
+    if ($is_main) 
+    {
+        $user->address()->where('id', '!=', $address->id)
+                        ->update(['is_main' => false]);
+
         $address->is_main = true;
     }
 
@@ -95,6 +97,7 @@ class AdressController extends Controller
         'area_id'=>$area->id,
          'lng' =>$request->lng,
         'lat' =>$request->lat, 
+       
 
         'ar' => ['street_name' =>$request->street_name_ar,
                 'building_number'=>$request->building_number_ar, 
@@ -105,12 +108,10 @@ class AdressController extends Controller
                 'building_number'=>$request->building_number_en, 
                  'floor_number'=>$request->floor_number_en,
                  'landmark'=>$request->landmark_en],
-
-           
+     
       ];
    
-
-     $address->save();
+     $address->update($data);
 
      $address = fractal($address, new AddressTransform())
                     ->serializeWith(new ArraySerializer())
@@ -119,14 +120,31 @@ class AdressController extends Controller
     return $this->responseApi(__('messages.update_address'), $address, 200);
     }
 
+
 //delete
     public function delete(string $id)
     {
          $user = auth()->user();
 
-         $address = Address::where('id', $id)
-                             ->where('user_id',$user->id)
-                             ->firstOrFail();
+           $address = $user->address()->findOrFail($id);
+
+           if ($user->address()->count() >= 0) 
+            {
+             return $this->responseApi(__('messages.cant_delete'));
+            }
+
+       if ($address->is_main)
+        {
+        $main = $user->address()
+                        ->where('id', '!=', $address->id)
+                        ->orderBy('created_at', 'asc')
+                        ->first();
+
+          if ($main) 
+            {
+              $main->update(['is_main' => true]);
+            }
+    }
 
         $address->delete();
         

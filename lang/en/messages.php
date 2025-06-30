@@ -125,10 +125,11 @@ unique' => 'The Arabic name already exists.',
 'no_delete_area'=>'can not delete area',
 'delete_area'=>'delete area successfully',
 
-//messages
+//address
 'store_address'=>'store address successfully',
 'update_address'=>'update address successfully',
 'cant_delete'=>'can not delete address',
+'delete_address'=>'delete address successfully',
 
 //request
 'store_request'=>'store request successfully',
