@@ -19,20 +19,37 @@ return [
 
     'custom' => [
 
-'image_ar' => [
-        'unique' => 'The Arabic image is used',
-        'mimes' => 'The Arabic image must be  png, jpg, jpeg',
-        'max' => 'The Arabic image should not greater than 2Mega',
+    'visit_type_en' => [
+        'string' => 'نوع الزيارة بالإنجليزية يجب أن يكون نص',
+        'max' => 'نوع الزيارة بالإنجليزية يجب ألا يتجاوز 255 حرف',
+    ],
+    'visit_type_ar' => [
+        'string' => 'نوع الزيارة بالعربية يجب أن يكون نص',
+        'max' => 'نوع الزيارة بالعربية يجب ألا يتجاوز 255 حرف',
+    ],
+    'min_price' => [
+        'decimal' => 'يجب أن يكون الحد الأدنى للسعر رقم عشري بدقتين',
+        'min' => 'الحد الأدنى للسعر يجب أن يكون على الأقل 0',
+    ],
+    'max_price' => [
+        'decimal' => 'يجب أن يكون الحد الأقصى للسعر رقم عشري بدقتين',
+        'gt' => 'يجب أن يكون الحد الأقصى للسعر أكبر من الحد الأدنى',
+    ],
+
+
+     'image_ar' => [
+        'unique' => 'الصورة العربية مستخدمة قبل ذلك',
+        'mimes' => 'png,jpg,jpeg يجب أن تكون الصورة العربية نوع',
+        'max' => 'يجب ألا تتجاوز الصورة العربية 2 ميجا',
     ],
     'image_en' => [
-        'unique' => 'The English image is used',
-        'mimes' => 'The English image must be  png, jpg, jpeg',
-        'max' => 'The English image may should not greater than 2Mega',
+        'unique' => 'الصورة الانجليزية مستخدمة قبل ذلك',
+        'mimes' => 'png,jpg,jpeg يجب أن تكون الصورة الانجليزية نوع',
+        'max' => 'يجب ألا تتجاوز الصورة الانجليزية 2 ميجا',
     ],
 
 
-
-         'description_en' => [
+    'description_en' => [
         'required' => 'الوصف العربى مطلوب',
         'unique' => 'هذا الوصف العربى موجود بالفعل',
     ],
@@ -162,6 +179,10 @@ return [
        'description_ar',
        'image_en',
        'image_ar',
+       'visit_type_ar',
+        'visit_type_en',
+        'min_price',
+        'max_price',
        
     ],
 ];

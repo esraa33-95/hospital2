@@ -178,15 +178,32 @@ return [
 
     'custom' => [
 
-        'image_ar' => [
-        'unique' => 'الصورة العربية مستخدمة قبل ذلك',
-        'mimes' => 'png,jpg,jpeg يجب أن تكون الصورة العربية نوع',
-        'max' => 'يجب ألا تتجاوز الصورة العربية 2 ميجا',
+        'visit_type_en' => [
+        'string' => 'The visit type in English should string',
+        'max' => 'The visit type in English should not be greater than 255 char',
+    ],
+    'visit_type_ar' => [
+        'string' => 'The visit type in Arabic should  string',
+        'max' => 'The visit type in Arabic should not be greater than 255 char',
+    ],
+    'min_price' => [
+        'decimal' => 'The minimum price must be a decimal with 2 digits',
+        'min' => 'The minimum price must be at least 0',
+    ],
+    'max_price' => [
+        'decimal' => 'The maximum price should a decimal with 2 digits',
+        'gt' => 'The maximum price should be greater than the minimum price',
+    ],
+       
+       'image_ar' => [
+        'unique' => 'The Arabic image is used',
+        'mimes' => 'The Arabic image must be  png, jpg, jpeg',
+        'max' => 'The Arabic image should not greater than 2Mega',
     ],
     'image_en' => [
-        'unique' => 'الصورة الانجليزية مستخدمة قبل ذلك',
-        'mimes' => 'png,jpg,jpeg يجب أن تكون الصورة الانجليزية نوع',
-        'max' => 'يجب ألا تتجاوز الصورة الانجليزية 2 ميجا',
+        'unique' => 'The English image is used',
+        'mimes' => 'The English image must be  png, jpg, jpeg',
+        'max' => 'The English image may should not greater than 2Mega',
     ],
           'description_en' => [
         'required' => 'this arabic description is required ',
@@ -319,6 +336,10 @@ return [
         'description_ar',
          'image_en',
          'image_ar', 
+         'visit_type_ar',
+         'visit_type_en',
+        'min_price',
+        'max_price',
     ],
 
 ];

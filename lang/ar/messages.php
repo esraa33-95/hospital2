@@ -134,7 +134,10 @@ return [
 'cant_delete'=>'لا يمكن حذف العنوان',
 'delete_address'=>'تم حذف العنوان بنجاح',
 
-//request
-'store_request'=>'تم تخزين الطلب بنجاح',
+//visits
+'store_visit'=>'تم تخزين الزيارة بنجاح',
+'update_visit'=>'تم تعديل الزيارة بنجاح',
+'cant_delete'=>'لا يمكن حذف الزيارة',
+'delete_visit'=>'تم حذف الزيارة بنجاح',
 
 ];

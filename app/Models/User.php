@@ -129,6 +129,12 @@ class User extends Authenticatable implements MustVerifyEmail,HasMedia
     return $this->hasMany(Address::class);
 }
 
+   public function visits()
+{
+    return $this->belongsToMany(Visit::class,'visit_doctors')
+                 ->withPivot('active','price')->withTimestamps();
+}
+
 protected static function boot()
 {
     parent::boot();

@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\admin\DoctorController;
 use App\Http\Controllers\Api\admin\PatientController;
 use App\Http\Controllers\Api\admin\ReportController;
 use App\Http\Controllers\Api\admin\SurgeryController;
+use App\Http\Controllers\Api\admin\VisitController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\IsAdmin;
 
@@ -117,8 +118,6 @@ Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function
     });
 
 
-
-
     //banner
     Route::prefix('banners')->controller(BannerController::class)->group(function () {                 
         Route::post('/', 'store'); 
@@ -126,6 +125,15 @@ Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function
         Route::delete('/{id}', 'delete');          
           
     });
+
+    Route::prefix('visits')->controller(VisitController::class)->group(function () {                 
+        Route::post('/', 'store');  
+        Route::get('/{id}', 'show'); 
+        Route::get('/', 'index');                                
+        Route::put('/{id}', 'update');       
+        Route::delete('/{id}', 'delete');                
+    });
+
      //  Route::prefix('reports')->controller(ReportController::class)->group(function ()  {
     //     Route::post('/', 'store');
     //     Route::get('/', 'index');

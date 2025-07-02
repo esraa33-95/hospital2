@@ -131,7 +131,10 @@ unique' => 'The Arabic name already exists.',
 'cant_delete'=>'can not delete address',
 'delete_address'=>'delete address successfully',
 
-//request
-'store_request'=>'store request successfully',
+//visits
+'store_visit'=>'store visit successfully',
+'update_visit'=>'update visit successfully',
+'cant_delete'=>'can not delete visit',
+'delete_visit'=>'delete visit successfully',
 
 ];
