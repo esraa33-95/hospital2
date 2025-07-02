@@ -126,24 +126,23 @@ class AdressController extends Controller
     {
          $user = auth()->user();
 
-           $address = $user->address()
-                     ->findOrFail($id);
+           $address = $user->address()->findOrFail($id);
 
            if($user->address()->count() == 1)
             {
              return $this->responseApi(__('messages.cant_delete'));
             }
             
-            else{
-                 $main = $user->address()
-                        ->where('id', '!=', $address->id)
-                        ->orderBy('created_at', 'asc')
-                        ->firstOrFail();
+            if ($address->is_main) 
+            {
+               $newaddress = $user->address()
+                           ->where('id', '!=', $address->id)
+                           ->orderBy('created_at', 'asc')
+                           ->firstOrFail();
 
-                  $main->update(['is_main' => true]);        
-            }
-
-
+            $newaddress->update(['is_main' => true]);
+           
+    }
         $address->delete();
         
         return  $this->responseApi(__('messages.delete_address'),204); 
