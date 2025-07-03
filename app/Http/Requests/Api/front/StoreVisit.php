@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\front;
 
+use App\Models\Visit;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreVisit extends FormRequest
@@ -21,12 +22,30 @@ class StoreVisit extends FormRequest
      */
     public function rules(): array
     {
-        $user = auth()->user();
+     
         return [
-            'user_id'=>$user,
-            'visit_id'=>'required|exists:visits,id',
-            'price'=>'required|decimal:2',
-            'active'=>'required|boolean'
-        ];
+           
+            'visit_id' => ['required', 'exists:visits,id'],
+            
+            'price'=>['required','decimal:2',
+            function ($attribute, $value, $error) 
+            {
+                 $visit = $this->input('visit_id');
+
+                if ($visit) 
+                {
+                    $visit = Visit::find($visit);
+
+                    if ($visit) 
+                    {
+                        if ($value < $visit->min_price || $value > $visit->max_price) {
+                            $error(__('validation.custom.price.required'));
+                        }
+                    }
+                }
+            }
+
+        ],
+    ];
     }
 }

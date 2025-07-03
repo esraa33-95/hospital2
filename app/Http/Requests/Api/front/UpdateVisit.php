@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\front;
 
+use App\Models\VisitTranslation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateVisit extends FormRequest
@@ -21,13 +22,40 @@ class UpdateVisit extends FormRequest
      */
    public function rules(): array
     {
-        $user = auth()->user();
+      $id = $this->visit;
 
         return [
-            'user_id'=>$user,
-            'visit_id'=>'nullable|exists:visits,id',
-            'price'=>'nullable|decimal:2',
-            'active'=>'nullable|boolean',
+           'visit_type_en' => [ 'nullable','string',
+            function ($attribute, $value, $error) use ($id) {
+                $exists = VisitTranslation::where('visit_type', $value)
+                    ->where('locale', 'en')
+                    ->where('visit_id', '!=', $id)
+                    ->exists();
+
+                if ($exists) {
+                    $error(__('validation.custom.visit_type_en.unique'));
+                }
+            }
+        ],
+           
+        'visit_type_ar' => [ 'nullable','string',
+            function ($attribute, $value, $error) use ($id) {
+                $exists = VisitTranslation::where('visit_type', $value)
+                    ->where('locale', 'ar')
+                    ->where('visit_id', '!=', $id)
+                    ->exists();
+
+                if ($exists) {
+                    $error(__('validation.custom.visit_type_en.unique'));
+                }
+            }
+        ],
+            
+            'min_price'=>'nullable|decimal:2',
+            'max_price'=>'nullable|decimal:2|gt:min_price',
+            
         ];
+          
+
     }
 }

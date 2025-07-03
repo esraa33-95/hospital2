@@ -38,6 +38,7 @@ class VisitTransform extends TransformerAbstract
               'visit_type_ar' => $visit->translate('ar')->visit_type,
               'min_price'=>$visit->min_price,
               'max_price'=>$visit->max_price,
+              
              
                
         ];

@@ -178,13 +178,19 @@ return [
 
     'custom' => [
 
+        'price' => [
+        'decimal' => 'The minimum price must be a decimal with 2 digits',
+        'required' => 'price must be between min,max price',
+    ],
         'visit_type_en' => [
         'string' => 'The visit type in English should string',
         'max' => 'The visit type in English should not be greater than 255 char',
+         'unique'=>'english of visit type is exists',
     ],
     'visit_type_ar' => [
         'string' => 'The visit type in Arabic should  string',
         'max' => 'The visit type in Arabic should not be greater than 255 char',
+         'unique'=>'arabic of visit type is exists',
     ],
     'min_price' => [
         'decimal' => 'The minimum price must be a decimal with 2 digits',
@@ -340,6 +346,7 @@ return [
          'visit_type_en',
         'min_price',
         'max_price',
+        'price',
     ],
 
 ];

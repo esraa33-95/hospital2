@@ -15,6 +15,37 @@ class VisitController extends Controller
 {
     use Response;
     
+     public function index(Request $request,string $id)
+    {
+        $search = $request->input('search');
+        $take = $request->input('take'); 
+        $skip = $request->input('skip'); 
+        $locale = $request->query('lang', app()->getLocale());
+
+        $user = auth()->user();
+
+      $query = $user->visits()
+                 ->wherePivot('active', true);
+
+      if ($search) 
+      {
+       $query->whereTranslationLike('visit_type', '%' . $search . '%', $locale);
+      }
+
+    $total = $query->count(); 
+
+    $visit = $query->skip($skip ?? 0)->take($take ?? $total)->get();
+
+    $visit =  fractal()->collection($visit)
+                  ->transformWith(new VisitTransform())
+                  ->serializeWith(new ArraySerializer())
+                   ->toArray();
+
+    return $this->responseApi('',$visit,200,['count' => $total]);
+
+    }
+
+
     /**
      * Store a newly created resource in storage.
      */
@@ -24,23 +55,41 @@ class VisitController extends Controller
 
         $user = auth()->user();
 
-        $visit = Visit::findOrFail($request->visit_id);
+       $user->visits()->syncWithoutDetaching([
+          $data['visit_id'] => [
+            'price' => $data['price'],
+            'active' => false
+          ]
+    ]);
 
-        if($data['price'] < $visit->min_price || $data['price'] > $visit->max_price )
-        {
-             return $this->responseApi(__('price should be between min,max'));     
-        }
+       $visit = Visit::findOrFail($data['visit_id']);
 
-       $user->visits()->attach($visit->id, [
-                              'price' => $data['price'],
-                               'active' =>  $data['active'] ,
-                            ]);
-
-         $visit = fractal($visit,new VisitTransform())
+        $visit = fractal($visit,new VisitTransform())
                     ->serializeWith(new ArraySerializer())
                     ->toArray();
 
        return $this->responseApi(__('messages.store_visit'), $visit, 201);
+    }
+
+    //active and non active
+    public function active(Request $request,string $id )
+    {
+        $user = auth()->user();
+
+        $request->validate([
+          'active'=>'required|boolean',
+       ]);
+
+       $visit = $user->visits()
+                     ->where('visit_id', $id)
+                     ->firstOrfail();
+     
+      $user->visits()->updateExistingPivot($id, [
+                           'active' => $request->active,
+                          ]);
+
+      return  $this->responseApi('update active');
+
     }
 
     /**
@@ -65,25 +114,17 @@ class VisitController extends Controller
      */
     public function update(UpdateVisit $request, string $id)
     {
-        $data = $request->validated();
+        
+    $data = [
+        'en' => ['visit_type' => $request->visit_type_en],
+        'ar' => ['visit_type' =>  $request->visit_type_ar],
+        'min_price'=>$request->min_price,
+        'max_price'=>$request->max_price,
+    ];
 
-        $user = auth()->user();
- 
-        $visit = $user->visits()
-                 ->where('visit_id', $id)
-                 ->firstOrFail();
+    $visit = visit::findOrFail($id);
 
-
-        if($data['price'] < $visit->min_price || $data['price'] > $visit->max_price )
-        {
-             return $this->responseApi(__('price should be between min,max'));     
-        }
-
-       $user->visits()->updateExistingPivot($id, [
-                                        'price' => $data['price'] ??  $visit->pivot->price,
-                                        'active' => $data['active'] ??  $visit->pivot->active,
-                                        ]);
-
+     $visit->update($data);
 
         $visit = fractal($visit, new VisitTransform() )
                     ->serializeWith(new ArraySerializer())
@@ -102,8 +143,9 @@ class VisitController extends Controller
         
         $visit = $user->visits()
                        ->where('visit_id',$id)
-                       ->where('active',1)
+                       ->where('active',true)
                        ->exists();
+
       
       if ($visit) 
       {
