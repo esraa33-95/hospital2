@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\front\DoctorController;
 use App\Http\Controllers\Api\front\UserController;
 use App\Http\Controllers\Api\front\CertificateController;
 use App\Http\Controllers\Api\front\ExperienceController;
+use App\Http\Controllers\Api\front\VisitController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\IsDoctor;
 
@@ -48,6 +49,14 @@ Route::middleware(['auth:sanctum', 'api_localization','IsDoctor'])->group(functi
       
     });
 
+     Route::prefix('visits')->controller(VisitController::class)->group(function () {
+      
+        Route::post('/{id}', 'store');
+        Route::get('/{id}', 'show');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'delete');
+      
+    });
       
        
 

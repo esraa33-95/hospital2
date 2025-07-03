@@ -37,5 +37,6 @@ Route::middleware('api_localization')->controller(ListController::class)->middle
         Route::get('cities','cities');
         Route::get('areas','areas'); 
         Route::get('banners','banners'); 
+        Route::get('visits','visits'); 
         
 });

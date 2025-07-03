@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('visit_id')->constrained('visits')->onDelete('cascade');
-            $table->decimal('price'); 
+            $table->decimal('price')->default(false); 
             $table->boolean('active')->default(false);
             $table->timestamps();
         });

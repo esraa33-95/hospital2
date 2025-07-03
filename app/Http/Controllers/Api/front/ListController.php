@@ -9,6 +9,7 @@ use App\Models\Disease;
 use App\Models\Surgery;
 use App\Models\Allergy;
 use App\Models\Area;
+use App\Models\Visit;
 use App\Models\Blood;
 use App\Models\Banner;
 use App\Models\City;
@@ -24,6 +25,7 @@ use App\Transformers\front\BloodTransform;
 use App\Transformers\front\BannerTransform;
 use App\Transformers\front\CityTransform;
 use App\Transformers\front\CountryTransform;
+use App\Transformers\front\VisitTransform;
 use Illuminate\Http\Request;
 use League\Fractal\Serializer\ArraySerializer;
 
@@ -347,4 +349,33 @@ public function banners(Request $request)
     }  
 
 
+//visits
+     public function visits(Request $request)
+    {
+        $search = $request->input('search');
+        $take = $request->input('take'); 
+        $skip = $request->input('skip'); 
+        $locale = $request->query('lang', app()->getLocale());
+
+        $user = auth()->user();
+
+      $query = $user->visits()->wherePivot('active', true);
+
+      if ($search) 
+      {
+       $query->whereTranslationLike('visit_type', '%' . $search . '%', $locale);
+      }
+
+    $total = $query->count(); 
+
+    $visit = $query->skip($skip ?? 0)->take($take ?? $total)->get();
+
+    $visit =  fractal()->collection($visit)
+                  ->transformWith(new VisitTransform())
+                  ->serializeWith(new ArraySerializer())
+                   ->toArray();
+
+    return $this->responseApi('',$visit,200,['count' => $total]);
+
+    }  
 }
