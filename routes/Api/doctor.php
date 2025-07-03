@@ -51,10 +51,10 @@ Route::middleware(['auth:sanctum', 'api_localization','IsDoctor'])->group(functi
 
      Route::prefix('visits')->controller(VisitController::class)->group(function () {
       
-        Route::post('/{id}', 'store');
+        Route::post('/', 'store');
         Route::post('/{id}', 'active');
         Route::get('/{id}', 'show');
-        Route::get('/{id}', 'index');
+        Route::get('/index/{id}', 'index');
         Route::put('/{id}', 'update');
         Route::delete('/{id}', 'delete');
       

@@ -49,7 +49,7 @@ class VisitController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreVisit $request,string $id)
+    public function store(StoreVisit $request)
     {
         $data = $request->validated();
 
