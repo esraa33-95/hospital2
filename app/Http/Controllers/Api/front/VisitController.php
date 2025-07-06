@@ -54,14 +54,16 @@ class VisitController extends Controller
         $data = $request->validated();
 
         $user = auth()->user();
-     $user->visits()->syncWithoutDetaching([
+
+      $user->visits()->attach([
           $data['visit_id'] => [
             'price' => $data['price'],
             'active' => false
           ]
     ]);
 
-       $visit = Visit::findOrFail($data['visit_id']);
+       $visit = Visit::findOrFail($request->visit_id);
+
       $visit = fractal($visit,new VisitTransform())
                     ->serializeWith(new ArraySerializer())
                     ->toArray();
