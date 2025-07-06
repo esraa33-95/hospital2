@@ -25,31 +25,8 @@ class UpdateVisit extends FormRequest
       $id = $this->visit;
 
         return [
-           'visit_type_en' => [ 'nullable','string',
-            function ($attribute, $value, $error) use ($id) {
-                $exists = VisitTranslation::where('visit_type', $value)
-                    ->where('locale', 'en')
-                    ->where('visit_id', '!=', $id)
-                    ->exists();
-
-                if ($exists) {
-                    $error(__('validation.custom.visit_type_en.unique'));
-                }
-            }
-        ],
-           
-        'visit_type_ar' => [ 'nullable','string',
-            function ($attribute, $value, $error) use ($id) {
-                $exists = VisitTranslation::where('visit_type', $value)
-                    ->where('locale', 'ar')
-                    ->where('visit_id', '!=', $id)
-                    ->exists();
-
-                if ($exists) {
-                    $error(__('validation.custom.visit_type_en.unique'));
-                }
-            }
-        ],
+           'visit_type_en' => [ 'nullable','string','max:255'], 
+           'visit_type_ar' => [ 'nullable','string','max:255'],
             
             'min_price'=>'nullable|decimal:2',
             'max_price'=>'nullable|decimal:2|gt:min_price',

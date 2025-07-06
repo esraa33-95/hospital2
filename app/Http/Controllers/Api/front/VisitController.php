@@ -39,7 +39,7 @@ class VisitController extends Controller
     $visit =  fractal()->collection($visit)
                   ->transformWith(new VisitTransform())
                   ->serializeWith(new ArraySerializer())
-                   ->toArray();
+                  ->toArray();
 
     return $this->responseApi('',$visit,200,['count' => $total]);
 
@@ -54,8 +54,7 @@ class VisitController extends Controller
         $data = $request->validated();
 
         $user = auth()->user();
-
-       $user->visits()->syncWithoutDetaching([
+     $user->visits()->syncWithoutDetaching([
           $data['visit_id'] => [
             'price' => $data['price'],
             'active' => false
@@ -63,8 +62,7 @@ class VisitController extends Controller
     ]);
 
        $visit = Visit::findOrFail($data['visit_id']);
-
-        $visit = fractal($visit,new VisitTransform())
+      $visit = fractal($visit,new VisitTransform())
                     ->serializeWith(new ArraySerializer())
                     ->toArray();
 

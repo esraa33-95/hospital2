@@ -22,7 +22,7 @@ class StoreVisit extends FormRequest
      */
     public function rules(): array
     {
-     
+      
         return [
            
             'visit_id' => ['required', 'exists:visits,id'],
@@ -31,7 +31,7 @@ class StoreVisit extends FormRequest
             function ($attribute, $value, $error) 
             {
                  $visit = $this->input('visit_id');
-
+                 
                 if ($visit) 
                 {
                     $visit = Visit::find($visit);
