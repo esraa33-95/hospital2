@@ -66,18 +66,22 @@ class ListController extends Controller
     {
         $search = $request->input('search');
         $take = $request->input('take'); 
-        $skip = $request->input('skip');  
+        $skip = $request->input('skip'); 
+        $departmentId =  $request->input('department_id');
        
     
-        $query = User::where('user_type', 2)
-                      ->whereHas('certificate')
-                      ->with('certificate');
+        $query = User::where('user_type', 2)->with('department');
                       
-        if ($search) 
-        {
-           $query->where('name','like', '%' . $search . '%');
-        }
+        // if ($search) 
+        // {
+        //    $query->where('name','like', '%' . $search . '%');
+        // }
 
+        if ($request->filled('department_id')) 
+         {
+           $query->where('department_id', $departmentId);
+         }
+    
         $total = $query->count();
 
        $doctors = $query->skip($skip ?? 0)->take($take ?? $total)->get();
