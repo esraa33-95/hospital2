@@ -59,14 +59,10 @@ public function show(string $id)
         });
     }
 
-     if (!$take || $take == 0)
-     {
-        return $this->responseApi('', ReportResource::collection([]), 200, ['count' => 0]);
-    }
 
     $total = $query->count(); 
 
-    $reports = $query->skip($skip ?? 0)->take($take)->get();
+    $reports = $query->skip($skip ?? 0)->take($take ?? $total)->get();
     
 
     return $this->responseApi('',ReportResource::collection($reports),200,['count' => $total]);

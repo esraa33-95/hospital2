@@ -41,7 +41,7 @@ class PatientController extends Controller
    
     $total = $query->count(); 
 
-    $patients = $query->skip($skip ?? 0)->take($take ?? 0)->get();
+    $patients = $query->skip($skip ?? 0)->take($take ?? $total)->get();
 
     $patients =  fractal()->collection($patients)
                   ->transformWith(new UserTransform())
@@ -144,8 +144,8 @@ class PatientController extends Controller
     public function destroy(string $id)
     {
         $patient = User::where('user_type',3)
-        ->where('id', $id)
-        ->firstorFail();
+                          ->where('id', $id)
+                         ->firstorFail();
     
         $patient->delete();
     

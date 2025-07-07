@@ -54,6 +54,14 @@ Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function
         Route::delete('/{id}', 'destroy');
     });
 
+     Route::prefix('reports')->controller(ReportController::class)->group(function ()  {
+        Route::post('/', 'store');
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+    });
+
     //surgery
  Route::prefix('surgeries')->controller(SurgeryController::class)->group(function (){                 
         Route::post('/', 'store'); 
@@ -134,13 +142,7 @@ Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function
         Route::delete('/{id}', 'delete');                
     });
 
-     //  Route::prefix('reports')->controller(ReportController::class)->group(function ()  {
-    //     Route::post('/', 'store');
-    //     Route::get('/', 'index');
-    //     Route::get('/{id}', 'show');
-    //     Route::put('/{id}', 'update');
-    //     Route::delete('/{id}', 'destroy');
-    // });
+     
 
 });
 

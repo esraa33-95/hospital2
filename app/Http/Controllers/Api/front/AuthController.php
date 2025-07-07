@@ -132,8 +132,8 @@ public function verifyEmailOtp(VerifyEmailOtp $request)
    $request->validated();
 
     $user = User::withTrashed()
-   ->where('email', $request->email)
-   ->first();
+                  ->where('email', $request->email)
+                  ->first();
 
     if (!$user) 
     {
@@ -146,9 +146,9 @@ public function verifyEmailOtp(VerifyEmailOtp $request)
     }
 
     $otp = $user->otps()
-    ->where('otp', $request->otp)
-    ->where('expires_at','>=',now())
-    ->first();
+                ->where('otp', $request->otp)
+                ->where('expires_at','>=',now())
+                ->first();
 
     if(!$otp)
     {
