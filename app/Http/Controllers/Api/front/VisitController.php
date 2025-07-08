@@ -8,6 +8,9 @@ use App\Models\Visit;
 use App\Traits\Response;
 use App\Http\Requests\Api\front\StoreVisit;
 use App\Http\Requests\Api\front\UpdateVisit;
+use App\Models\Order;
+use App\Models\User;
+use App\Transformers\front\OrderTransform;
 use App\Transformers\front\VisitTransform;
 use League\Fractal\Serializer\ArraySerializer;
 
@@ -155,5 +158,25 @@ class VisitController extends Controller
          $user->visits()->detach($id);
 
          return  $this->responseApi(__('messages.delete_visit'),204);
+    }
+
+
+//order of doctor
+    public function orders(string $id)
+    {
+     $user = auth()->user();
+
+     $order = $user->order()
+              ->with('visit')
+              ->where('user_id',$user->id)
+              ->get();
+
+     $orders =  fractal()->collection($order)
+                  ->transformWith(new OrderTransform())
+                   ->serializeWith(new ArraySerializer())
+                   ->toArray();
+
+    return $this->responseApi('', $orders, 200);
+        
     }
 }

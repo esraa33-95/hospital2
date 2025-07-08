@@ -37,7 +37,7 @@ class OrderTransform extends TransformerAbstract
         $user = User::find($order->user_id);
 
     return [
-        'user_name' => $user->name, 
+        'doctor_name' => $user->name, 
         'visit_id' => $order->visit_id,
         'visit_type_ar' => $visit->translate('ar')->visit_type,
         'visit_type_en' => $visit->translate('en')->visit_type,
