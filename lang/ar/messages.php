@@ -140,4 +140,7 @@ return [
 'cant_delete'=>'لا يمكن حذف الزيارة',
 'delete_visit'=>'تم حذف الزيارة بنجاح',
 
+//orders
+'store_order'=>'تم اضافة الطلب بنجاح',
+
 ];

@@ -22,8 +22,8 @@ class AdminController extends Controller
         $data = $request->validated();
 
        $user = User::where('email',$data['email'])
-       ->where('user_type', 1)
-       ->first();
+                    ->where('user_type', 1)
+                    ->first();
 
        if(!$user || !Hash::check($data['password'],$user->password ) )
        {
@@ -55,10 +55,10 @@ public function update(UpdateAdmin $request)
 {
   $user = auth()->user();
 
-  if($user->user_type !== 1)
-{
-    return $this->responseApi(__('messages.admin')); 
-}
+//   if($user->user_type !== 1)
+// {
+//     return $this->responseApi(__('messages.admin')); 
+// }
 
 $data = $request->validated();
 

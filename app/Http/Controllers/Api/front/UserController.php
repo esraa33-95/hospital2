@@ -46,10 +46,10 @@ class UserController extends Controller
         $types = [2,3];
 
         $user = User::withTrashed()
-         ->whereIn('user_type', $types)
-         ->where('id',$id)
-         ->where('uuid', $uuid)
-         ->firstOrFail();
+                     ->whereIn('user_type', $types)
+                     ->where('id',$id)
+                     ->where('uuid', $uuid)
+                     ->firstOrFail();
 
        if ($request->hasFile('image'))
         {

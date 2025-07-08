@@ -5,7 +5,6 @@ namespace App\Traits;
 trait Response
 {
 
-
     public function successCode(): array
     {
         return [200, 201, 202];

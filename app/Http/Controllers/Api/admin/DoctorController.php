@@ -81,8 +81,8 @@ class DoctorController extends Controller
     public function show(string $id)
     {
        $doctor = User::where('user_type',2)
-       ->where('id',$id)
-       ->firstorFail();
+                        ->where('id',$id)
+                         ->firstorFail();
    
         $doctor = fractal()
                  ->item($doctor)

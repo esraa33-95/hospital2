@@ -24,4 +24,11 @@ class Visit extends Model implements TranslatableContract
 {
     return $this->hasMany(VisitTranslation::class);
 }
+
+  public function orders()
+{
+    return $this->hasMany(Order::class);
+}
+
+
 }

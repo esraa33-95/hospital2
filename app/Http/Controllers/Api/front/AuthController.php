@@ -54,8 +54,8 @@ public function login(LoginRequest $request)
     $data = $request->validated();
 
    $user = User::withTrashed()
-  ->where('email',$data['email'])
-   ->first();
+                ->where('email',$data['email'])
+                ->first();
 
    if(!$user || !Hash::check($data['password'],$user->password ))
    {
@@ -169,8 +169,8 @@ public function resetpassword(ResetPassword $request)
     $request->validated();
 
     $user = User::withTrashed()
-    ->where('email', $request->email)
-    ->first();
+                 ->where('email', $request->email)
+                 ->first();
 
     if (!$user) 
     {
