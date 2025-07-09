@@ -57,7 +57,7 @@ Route::middleware(['auth:sanctum', 'api_localization','IsDoctor'])->group(functi
         Route::get('/{id}', 'index');
         Route::put('/{id}', 'update');
         Route::delete('/{id}', 'delete');
-        Route::get('/order/{id}', 'orders');
+       
       
     });
       

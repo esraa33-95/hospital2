@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Traits\Response;
 use App\Transformers\front\OrderTransform;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use League\Fractal\Serializer\ArraySerializer;
 
 class OrderController extends Controller
@@ -40,6 +41,13 @@ class OrderController extends Controller
         $data = $request->validated();
 
         $data['user_id'] = auth()->id();
+        $data['status'] = 'waiting';
+
+        DB::table('visit_doctors')
+                    ->where('user_id',$data['doctor_id'])
+                    ->where('visit_id', $data['visit_id'])
+                    ->where('active',true)
+                    ->firstOrFail();
 
        $order = Order::create($data);
 

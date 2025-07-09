@@ -34,10 +34,12 @@ class OrderTransform extends TransformerAbstract
     public function transform(Order $order):array
     {
          $visit = $order->visit;
-        $user = User::find($order->user_id);
+         $doctor = User::find($order->doctor_id);
+         $patient = User::find($order->user_id);
 
     return [
-        'doctor_name' => $user->name, 
+        'doctor_name' => $doctor->name,
+        'patient_name' => $patient->name, 
         'visit_id' => $order->visit_id,
         'visit_type_ar' => $visit->translate('ar')->visit_type,
         'visit_type_en' => $visit->translate('en')->visit_type,

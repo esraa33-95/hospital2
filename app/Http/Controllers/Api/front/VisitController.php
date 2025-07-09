@@ -161,22 +161,5 @@ class VisitController extends Controller
     }
 
 
-//order of doctor
-    public function orders(string $id)
-    {
-     $user = auth()->user();
 
-     $order = $user->order()
-              ->with('visit')
-              ->where('user_id',$user->id)
-              ->get();
-
-     $orders =  fractal()->collection($order)
-                  ->transformWith(new OrderTransform())
-                   ->serializeWith(new ArraySerializer())
-                   ->toArray();
-
-    return $this->responseApi('', $orders, 200);
-        
-    }
 }

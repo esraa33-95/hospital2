@@ -43,44 +43,44 @@ class userTransform extends TransformerAbstract
 
            
 
-            'certificates' => ($user->user_type == 2 && $user->certificate) ? $user->certificate->map(function ($certificate) {
-               return [
-                'name_ar' => $certificate->translate('ar')->name,
-                'name_en' => $certificate->translate('en')->name,
-                  ];
-           }) : null,
+        //     'certificates' => ($user->user_type == 2 && $user->certificate) ? $user->certificate->map(function ($certificate) {
+        //        return [
+        //         'name_ar' => $certificate->translate('ar')->name,
+        //         'name_en' => $certificate->translate('en')->name,
+        //           ];
+        //    }) : null,
 
-            'experiences' => ($user->user_type == 2 && $user->experiences) ? $user->experiences->map(function ($experience) {
-               return [
-                'name_ar' => $experience->translate('ar')->name,
-                'name_en' => $experience->translate('en')->name,
-                  ];
-           }) : null,
+        //     'experiences' => ($user->user_type == 2 && $user->experiences) ? $user->experiences->map(function ($experience) {
+        //        return [
+        //         'name_ar' => $experience->translate('ar')->name,
+        //         'name_en' => $experience->translate('en')->name,
+        //           ];
+        //    }) : null,
         
 
- 'diseases' => ($user->user_type == 3 && $user->diseases) ? $user->diseases->map(function ($disease) {
-               return [
-          'name_ar' => $disease->translate('ar')->name,
-          'name_en' => $disease->translate('en')->name,
-                  ];
-           }) : null,
+//  'diseases' => ($user->user_type == 3 && $user->diseases) ? $user->diseases->map(function ($disease) {
+//                return [
+//           'name_ar' => $disease->translate('ar')->name,
+//           'name_en' => $disease->translate('en')->name,
+//                   ];
+//            }) : null,
 
- 'allergy' => ($user->user_type == 3 && $user->allergies) ? $user->allergies->map(function ($allergy) {
-               return [
+//  'allergy' => ($user->user_type == 3 && $user->allergies) ? $user->allergies->map(function ($allergy) {
+//                return [
        
-        'name_ar' => $allergy->translate('ar')->name,
-        'name_en' => $allergy->translate('en')->name,
-            ];
-           }) : null,
+//         'name_ar' => $allergy->translate('ar')->name,
+//         'name_en' => $allergy->translate('en')->name,
+//             ];
+//            }) : null,
 
 
-  'surgeries' => ($user->user_type == 3 && $user->surgeries) ? $user->surgeries->map(function ($surgery) {
-               return [
+//   'surgeries' => ($user->user_type == 3 && $user->surgeries) ? $user->surgeries->map(function ($surgery) {
+//                return [
        
-        'name_ar' => $surgery->translate('ar')->name,
-        'name_en' => $surgery->translate('en')->name,
-                  ];
-           }) : null,         
+//         'name_ar' => $surgery->translate('ar')->name,
+//         'name_en' => $surgery->translate('en')->name,
+//                   ];
+//            }) : null,         
            
 
 

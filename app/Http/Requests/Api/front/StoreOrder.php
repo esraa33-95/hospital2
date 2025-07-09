@@ -22,7 +22,7 @@ class StoreOrder extends FormRequest
     public function rules(): array
     {
         return [
-           
+           'doctor_id' => 'required|exists:users,id',
             'visit_id'=>'required|exists:visits,id',
             'date'=>'required|date',
             'time'=>'required|date_format:H:i',
