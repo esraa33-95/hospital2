@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Http\Controllers\Api\front\DoctorController;
 use App\Http\Controllers\Api\front\UserController;
 use App\Http\Controllers\Api\front\CertificateController;
@@ -61,8 +60,17 @@ Route::middleware(['auth:sanctum', 'api_localization','IsDoctor'])->group(functi
       
     });
       
-       
+// show orders for doctors     
+ Route::prefix('orders')->controller(DoctorController::class)->group(function () {
+      
+      Route::get('/wait/{id}', 'waitingorders');
+      Route::post('/{id}', 'updateorders');
+      Route::get('/accept/{id}', 'acceptedorders');
+     // Route::post('/cancel/{id}', 'cancelorder');
+      Route::post('/cancelorders/{id}', 'cancelorders');
 
+          
+    });
     
 
 

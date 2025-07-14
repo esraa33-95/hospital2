@@ -139,5 +139,8 @@ unique' => 'The Arabic name already exists.',
 
 //order
 'store_order'=>'store order successfully',
+'update_order'=>'update order successfully',
+'delete_order'=>'delete order successfully',
+'cancel_order'=>'cancel all orders successfully ',
 
 ];

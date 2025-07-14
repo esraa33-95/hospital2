@@ -142,5 +142,8 @@ return [
 
 //orders
 'store_order'=>'تم اضافة الطلب بنجاح',
+'update_order'=>'تم تعديل الطلب بنجاح',
+'delete_order'=>'تم حذف الطلب بنجاح',
+'cancel_order'=>'تم الغاء الطلب بنجاح',
 
 ];

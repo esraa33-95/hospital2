@@ -50,7 +50,7 @@ class userTransform extends TransformerAbstract
         //           ];
         //    }) : null,
 
-        //     'experiences' => ($user->user_type == 2 && $user->experiences) ? $user->experiences->map(function ($experience) {
+        //      'experiences' => ($user->user_type == 2 && $user->experiences) ? $user->experiences->map(function ($experience) {
         //        return [
         //         'name_ar' => $experience->translate('ar')->name,
         //         'name_en' => $experience->translate('en')->name,
@@ -65,32 +65,32 @@ class userTransform extends TransformerAbstract
 //                   ];
 //            }) : null,
 
-//  'allergy' => ($user->user_type == 3 && $user->allergies) ? $user->allergies->map(function ($allergy) {
-//                return [
+//   'allergy' => ($user->user_type == 3 && $user->allergies) ? $user->allergies->map(function ($allergy) {
+//                 return [
        
-//         'name_ar' => $allergy->translate('ar')->name,
+//          'name_ar' => $allergy->translate('ar')->name,
 //         'name_en' => $allergy->translate('en')->name,
 //             ];
 //            }) : null,
 
 
-//   'surgeries' => ($user->user_type == 3 && $user->surgeries) ? $user->surgeries->map(function ($surgery) {
+//    'surgeries' => ($user->user_type == 3 && $user->surgeries) ? $user->surgeries->map(function ($surgery) {
 //                return [
        
 //         'name_ar' => $surgery->translate('ar')->name,
-//         'name_en' => $surgery->translate('en')->name,
+//          'name_en' => $surgery->translate('en')->name,
 //                   ];
 //            }) : null,         
            
 
 
-           'blood' => ($user->user_type == 3 && $user->blood) ? $user->blood->map(function ($blood) {
-               return [
+        //    'blood' => ($user->user_type == 3 && $user->blood) ? $user->blood->map(function ($blood) {
+        //        return [
        
-        'name_ar' => $blood->translate('ar')->name,
-        'name_en' => $blood->translate('en')->name,
-                  ];
-           }) : null, 
+        // 'name_ar' => $blood->translate('ar')->name,
+        // 'name_en' => $blood->translate('en')->name,
+        //           ];
+        //    }) : null, 
 
 
         ];

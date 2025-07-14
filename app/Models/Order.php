@@ -3,9 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Enum\OrderEnum;
 
 class Order extends Model
 {
+  
+public const STATUS = 'status';
+
+    public const WAITING = 1;
+    public const ACCEPTED = 2;
+    public const REJECTED = 3;
+
     protected $fillable =[
         'user_id',
         'doctor_id',
@@ -13,6 +21,7 @@ class Order extends Model
         'date',
         'time',
         'status',  
+        'price',
     ];
 
     public function user()
@@ -29,5 +38,8 @@ class Order extends Model
     {
         return $this->belongsTo(Visit::class);
     }
+
+    
+   
     
 }

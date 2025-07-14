@@ -131,10 +131,14 @@ class User extends Authenticatable implements MustVerifyEmail,HasMedia
                  ->withPivot('active','price')->withTimestamps();
 }
 
-    public function order()
+ public function orders()
     {
         return $this->hasMany(Order::class);
     }
+
+
+
+
 
 protected static function boot()
 {

@@ -18,7 +18,8 @@ return new class extends Migration
             $table->foreignId('visit_id')->constrained('visits')->onDelete('cascade');
             $table->date('date');
             $table->time('time');
-            $table->enum('status',['waiting'])->default('waiting');
+            $table->integer('status');
+            $table->decimal('price');
             $table->timestamps();
         });
     }

@@ -77,7 +77,7 @@ class ListController extends Controller
         //    $query->where('name','like', '%' . $search . '%');
         // }
 
-        if ($request->filled('department_id')) 
+        if ($request->department_id) 
          {
            $query->where('department_id', $departmentId);
          }

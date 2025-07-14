@@ -80,11 +80,17 @@ Route::prefix('addresses')->controller(AdressController::class)->group(function 
     Route::prefix('orders')->controller(OrderController::class)->group(function () {                 
         Route::post('/', 'store');  
         Route::get('/{id}', 'orders'); 
-                
-          
+                      
     });
 
-
-
+//orders
+Route::prefix('orders')->controller(PatientController::class)->group(function () {
+      
+     Route::get('/wait/{id}', 'waitingorder');
+     Route::get('/accept/{id}', 'acceptedorder');
+     Route::post('/cancelorders/{id}', 'cancelorders');
+     //Route::post('/cancel/{id}', 'cancelorder');
+      
+    });
 
 });

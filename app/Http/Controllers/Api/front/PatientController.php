@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Admin\StoreAdminRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\Api\front\Updatebyname;
+use App\Models\Order;
 use App\Models\User;
 use App\Traits\Common;
 use App\Traits\Response;
+use App\Transformers\front\OrderTransform;
 use App\Transformers\front\UserTransform;
 use Illuminate\Support\Facades\Hash;
 use League\Fractal\Serializer\ArraySerializer;
@@ -139,8 +141,8 @@ class PatientController extends Controller
         $uuid = $request->input('uuid');
     
         $patient = User::where('user_type',3)
-        ->where('uuid',$uuid)
-        ->firstOrFail();
+                        ->where('uuid',$uuid)
+                       ->firstOrFail();
     
         $patient->delete();
     
@@ -148,5 +150,105 @@ class PatientController extends Controller
     }
     
 
+
+//show all accepeted orders 
+public function acceptedorder(string $id)
+{
+    $user = auth()->user();
+
+   $orders = Order::with('visit')
+                   ->where('status',2)
+                   ->where('user_id',$user->id)
+                   ->get();
+
+       if(!$orders)
+       {
+            return $this->responseApi(__('there is no accepted orders'));
+       }            
+
+    $orders =  fractal()->collection($orders)
+                  ->transformWith(new OrderTransform())
+                   ->serializeWith(new ArraySerializer())
+                   ->toArray();
+
+      return $this->responseApi('', $orders, 200);              
+}
+
+//show all waiting orders
+public function waitingorder(string $id)
+{
+    $user = auth()->user();
+
+  $order =  Order::with('visit')
+                ->where('status',1)
+                ->where('user_id',$user->id)
+                ->get();
+
+        if(!$order)
+       {
+            return $this->responseApi(__('there is no waiting orders'));
+       }     
+   
+ $orders =  fractal()->collection($order)
+                  ->transformWith(new OrderTransform())
+                   ->serializeWith(new ArraySerializer())
+                   ->toArray();
+
+return $this->responseApi('', $orders, 200);             
+
+}
+
+//cancel all accepted orders
+public function cancelorders(string $id)
+    {
+     $user = auth()->user();
+
+    $orders = order::with('visit')
+                  ->where('user_id',$user->id)
+                  ->where('status',2)
+                  ->get();
+
+          if(!$orders)
+          {
+            return $this->responseApi(__('no accepted orders'));
+          }
+
+       foreach($orders as $order)  
+        {
+            $order->update(['status'=>3]);
+        }  
+   
+     $orders =  fractal()->collection($orders)
+                  ->transformWith(new  OrderTransform())
+                   ->serializeWith(new ArraySerializer())
+                   ->toArray();
+
+    return $this->responseApi(__('messages.cancel_order'));
+        
+    }
+
+
+    
+//cancel one order
+// public function cancelorder(string $id)
+// {
+//      $user = auth()->user();
+
+//     $order = order::with('visit')
+//                    ->where('id',$id)
+//                    ->where('user_id',$user->id)
+//                    ->where('status',2)
+//                    ->firstOrFail();
+     
+//     $order->update(['status'=>3]);
+
+//    $order = fractal()
+//             ->item($order) 
+//             ->transformWith(new OrderTransform())
+//             ->serializeWith(new ArraySerializer())
+//             ->toArray();
+
+//       return $this->responseApi(__('messages.delete_order'));   
+// }
     
 }
