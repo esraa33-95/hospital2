@@ -46,6 +46,7 @@ class OrderTransform extends TransformerAbstract
         'date' => $order->date,
         'time' => $order->time,
         'status' => $order->status,
+        'price'=>$order->price,
     ];
     }
 }

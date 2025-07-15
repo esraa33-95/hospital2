@@ -25,9 +25,9 @@ class StoreOrder extends FormRequest
         return [
            'doctor_id' => 'required|exists:users,id',
             'visit_id'=>'required|exists:visits,id',
-            'date'=>'required|date|date_format:Y-m-d',              
+            'date'=>'required|date_format:Y-m-d',              
             'time'=>'required|date_format:H:i',
-             'price'=>['required','decimal:1'], 
+             'price'=>['required','decimal:2'], 
         ];
     }
 }
