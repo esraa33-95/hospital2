@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\front;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\front\ChangePassword;
 use App\Http\Requests\Api\front\updateUser;
-use App\Http\Requests\Api\front\uploadimageRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\Common;
@@ -74,7 +73,6 @@ class UserController extends Controller
  }
 
 //delete account
-
  public function deleteAccount(Request $request)
 {
    $user = auth()->user()->delete();

@@ -146,4 +146,7 @@ return [
 'delete_order'=>'تم حذف الطلب بنجاح',
 'cancel_order'=>'تم الغاء الطلب بنجاح',
 
+//wallet
+'store_deposit'=>'تم اضافة الرصيد بنجاح',
+
 ];

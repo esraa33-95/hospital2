@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\front\UserController;
 use App\Http\Controllers\Api\front\CertificateController;
 use App\Http\Controllers\Api\front\ExperienceController;
 use App\Http\Controllers\Api\front\VisitController;
+use App\Http\Controllers\Api\front\WalletController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\IsDoctor;
 
@@ -66,13 +67,16 @@ Route::middleware(['auth:sanctum', 'api_localization','IsDoctor'])->group(functi
       Route::get('/wait/{id}', 'waitingorders');
       Route::post('/{id}', 'updateorders');
       Route::get('/accept/{id}', 'acceptedorders');
-     // Route::post('/cancel/{id}', 'cancelorder');
       Route::post('/cancelorders/{id}', 'cancelorders');
-
-          
+      // Route::post('/cancel/{id}', 'cancelorder');
+    
     });
     
 
+    Route::prefix('wallet')->controller(WalletController::class)->group(function () {
+      Route::post('/{id}', 'deposit');
+      
+    });
 
 
 });

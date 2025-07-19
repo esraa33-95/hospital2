@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\front\SurgeryController;
 use App\Http\Controllers\Api\front\UserController;
 use App\Http\Controllers\Api\front\AdressController;
 use App\Http\Controllers\Api\front\OrderController;
+use App\Http\Controllers\Api\front\WalletController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -80,17 +81,19 @@ Route::prefix('addresses')->controller(AdressController::class)->group(function 
     Route::prefix('orders')->controller(OrderController::class)->group(function () {                 
         Route::post('/', 'store');  
         Route::get('/{id}', 'orders'); 
+         Route::get('/wait/{id}', 'waitingorder');
+        Route::get('/accept/{id}', 'acceptedorder');
+        Route::post('/cancelorder/{id}', 'cancelorder');
+        Route::post('/cancel/{id}', 'cancelorder');
+       //Route::post('/cancel/{id}', 'cancelorder');
                       
     });
 
-//orders
-Route::prefix('orders')->controller(PatientController::class)->group(function () {
-      
-     Route::get('/wait/{id}', 'waitingorder');
-     Route::get('/accept/{id}', 'acceptedorder');
-     Route::post('/cancelorders/{id}', 'cancelorders');
-     //Route::post('/cancel/{id}', 'cancelorder');
+
+
+Route::prefix('wallet')->controller(WalletController::class)->group(function () {
+      Route::post('/{id}', 'deposit');
       
     });
 
-});
+ });

@@ -143,4 +143,8 @@ unique' => 'The Arabic name already exists.',
 'delete_order'=>'delete order successfully',
 'cancel_order'=>'cancel all orders successfully ',
 
+//wallet
+'store_deposit'=>'store deposit successfully',
+
+
 ];
