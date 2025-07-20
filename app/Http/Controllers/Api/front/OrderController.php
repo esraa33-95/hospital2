@@ -7,6 +7,7 @@ use App\Http\Requests\Api\front\StoreOrder;
 use App\Models\Order;
 use App\Traits\Response;
 use App\Transformers\front\OrderTransform;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use League\Fractal\Serializer\ArraySerializer;
 
@@ -38,7 +39,7 @@ class OrderController extends Controller
         $data = $request->validated();
 
         $data['user_id'] = auth()->id();
-        $data['status'] = 1;
+        $data['status'] = Order::WAITING;
 
     $visit = DB::table('visit_doctors')
                     ->where('user_id', $data['doctor_id'])
@@ -51,11 +52,6 @@ class OrderController extends Controller
            return $this->responseApi(__('doctor not subcribe in this visit'));
         }  
         
-         if ($data['price'] != $visit->price) 
-            {
-        return $this->responseApi(__('price must match the doctor visit price'));
-           }
-
        $order = Order::create($data);
 
        $order = fractal($order, new OrderTransform())
@@ -65,238 +61,221 @@ class OrderController extends Controller
     return $this->responseApi(__('messages.store_order'), $order, 201);    
     }
 
-   
-   //show all accepeted orders for patient
-public function acceptedorder(string $id)
+//filter of current,history
+public function filter(Request $request,string $id)
 {
     $user = auth()->user();
 
-   $orders = Order::with('visit')
-                   ->where('status',2)
-                   ->where('user_id',$user->id)
-                   ->get();
+    $take = $request->input('take');
+    $skip = $request->input('skip');
+    $search = $request->input('search'); 
 
-       if(!$orders)
-       {
-            return $this->responseApi(__('there is no accepted orders'));
-       }            
+    $query = Order::with('visit');
 
-    $orders =  fractal()->collection($orders)
-                  ->transformWith(new OrderTransform())
-                   ->serializeWith(new ArraySerializer())
-                   ->toArray();
+    if ($user->user_type === 2) 
+        {
+        $query->where('doctor_id', $user->id);
+    } else {
+        $query->where('user_id', $user->id);
+    }
 
-      return $this->responseApi('', $orders, 200);              
-} 
+    if ($search === 'current') 
+        {
+        $query->whereIn('status', [Order::WAITING, Order::ACCEPTED]);
+        } 
+    elseif ($search === 'history') 
+        {
+        $query->whereIn('status', [Order::CANCELED, Order::REJECTED, Order::COMPLETED]);
+        }
 
+    $total = $query->count();
 
-//show all waiting orders
-public function waitingorder(string $id)
+    $orders = $query->skip($skip ?? 0)->take($take ?? $total)->get();
+
+    $orders = fractal()->collection($orders)
+        ->transformWith(new OrderTransform())
+        ->serializeWith(new ArraySerializer())
+        ->toArray();
+
+    return $this->responseApi('', $orders, 200, ['count' => $total]);
+}
+   
+//update waiting orders for doctors to accepted
+public function acceptorders(string $id)
 {
     $user = auth()->user();
 
   $order =  Order::with('visit')
-                ->where('status',1)
-                ->where('user_id',$user->id)
-                ->get();
-
-        if(!$order)
-       {
-            return $this->responseApi(__('there is no waiting orders'));
-       }     
-   
- $orders =  fractal()->collection($order)
-                  ->transformWith(new OrderTransform())
-                   ->serializeWith(new ArraySerializer())
-                   ->toArray();
-
-return $this->responseApi('', $orders, 200);             
-
-}
-
-//cancel all accepted orders
-public function cancelorder(string $id)
-    {
-     $user = auth()->user();
-
-    $orders = order::with('visit')
-                  ->where('user_id',$user->id)
-                  ->where('status',2)
-                  ->get();
-
-          if(!$orders)
-          {
-            return $this->responseApi(__('no accepted orders'));
-          }
-
-       foreach($orders as $order)  
-        {
-            $order->update(['status'=>3]);
-        }  
-   
-     $orders =  fractal()->collection($orders)
-                  ->transformWith(new  OrderTransform())
-                   ->serializeWith(new ArraySerializer())
-                   ->toArray();
-
-    return $this->responseApi(__('messages.cancel_order'));
-        
-    }
-
-    //cancel one order
-// public function cancelorder(string $id)
-// {
-//      $user = auth()->user();
-
-//     $order = order::with('visit')
-//                    ->where('id',$id)
-//                    ->where('user_id',$user->id)
-//                    ->where('status',2)
-//                    ->firstOrFail();
-     
-//     $order->update(['status'=>3]);
-
-//    $order = fractal()
-//             ->item($order) 
-//             ->transformWith(new OrderTransform())
-//             ->serializeWith(new ArraySerializer())
-//             ->toArray();
-
-//       return $this->responseApi(__('messages.delete_order'));   
-// }
-
-
-
-
-//update all waiting orders for doctors to accepted
-public function updateorders(string $id)
-{
-    $user = auth()->user();
-
-  $orders =  Order::with('visit')
-                ->where('status',1)
+                ->where('status',Order::WAITING)
                 ->where('doctor_id',$user->id)
-                ->get();
-    if(!$orders)  
+                ->first();
+    if(!$order)  
     {
           return $this->responseApi(__('no waiting order for this doctor'));
     }          
       
-  foreach($orders as $order ) 
-  {
-    $order->update(['status'=>2]);
-  }             
-   
- $orders =  fractal()->collection($orders)
-                  ->transformWith(new OrderTransform())
-                   ->serializeWith(new ArraySerializer())
-                   ->toArray();
+    $order->update(['status'=>Order::ACCEPTED]);
+            
+   $order = fractal()
+            ->item($order) 
+            ->transformWith(new OrderTransform())
+            ->serializeWith(new ArraySerializer())
+            ->toArray();
 
-    return $this->responseApi(__('messages.update_order'), $orders, 200);            
+    return $this->responseApi(__('messages.update_order'), $order, 200);            
 
 }
+
+//reject order by doctor
+public function rejectedorders(string $id)
+{
+    $user = auth()->user();
+
+    $order = order::with('visit')
+                   ->where('id',$id)
+                   ->where('doctor_id',$user->id)
+                   ->where('status',Order::ACCEPTED)
+                   ->firstOrFail();
+     
+    $order->update(['status'=>Order::REJECTED]);
+
+   $order = fractal()
+            ->item($order) 
+            ->transformWith(new OrderTransform())
+            ->serializeWith(new ArraySerializer())
+            ->toArray();
+
+     return $this->responseApi(__('messages.delete_order'));
+    
+}
+
+//cancel one order
+public function cancelorder(string $id)
+{
+     $user = auth()->user();
+
+    $order = order::with('visit')
+                   ->where('id',$id)
+                   ->where('user_id',$user->id)
+                   ->where('status',Order::ACCEPTED)
+                   ->firstOrFail();
+     
+    $order->update(['status'=>Order::CANCELED]);
+
+   $order = fractal()
+            ->item($order) 
+            ->transformWith(new OrderTransform())
+            ->serializeWith(new ArraySerializer())
+            ->toArray();
+
+      return $this->responseApi(__('messages.delete_order'));   
+}
+
 
 
 
 //show waiting orders
-public function waitingorders(string $id)
-{
-    $user = auth()->user();
-
-  $order =  Order::with('visit')
-                   ->where('status',1)
-                   ->where('doctor_id',$user->id)
-                   ->get();
-
-        if(!$order)
-       {
-            return $this->responseApi(__('there is no waiting orders'));
-       }     
-   
- $orders =  fractal()->collection($order)
-                  ->transformWith(new OrderTransform())
-                   ->serializeWith(new ArraySerializer())
-                   ->toArray();
-
-    return $this->responseApi('', $orders, 200);             
-
-}
-
-//show all accepted orders
-public function acceptedorders(string $id)
-{
-    $user = auth()->user();
-
-   $orders = Order::with('visit')
-                   ->where('doctor_id',$user->id)
-                   ->where('status',2)
-                   ->get();
-
-       if(!$orders)
-       {
-            return $this->responseApi(__('there is no accepted orders'));
-       }            
-
-    $orders =  fractal()->collection($orders)
-                        ->transformWith(new OrderTransform())
-                        ->serializeWith(new ArraySerializer())
-                        ->toArray();
-
-      return $this->responseApi('', $orders, 200);              
-}
-
-
-//cancel all accepted order
-public function cancelorders(string $id)
-    {
-     $user = auth()->user();
-
-    $orders = order::with('visit')
-                  ->where('doctor_id',$user->id)
-                  ->where('status',2)
-                  ->get();
-
-          if(!$orders)
-          {
-            return $this->responseApi(__('no accepted orders'));
-          }
-
-       foreach($orders as $order)  
-        {
-            $order->update(['status'=>3]);
-        }  
-   
-     $orders =  fractal()->collection($orders)
-                  ->transformWith(new  OrderTransform())
-                   ->serializeWith(new ArraySerializer())
-                   ->toArray();
-
-    return $this->responseApi(__('messages.cancel_order'));
-        
-}
-
-//cancel order
-// public function cancelorder(string $id)
+// public function waitingorders(string $id)
 // {
 //     $user = auth()->user();
 
-//     $order = order::with('visit')
-//                    ->where('id',$id)
+//   $order =  Order::with('visit')
+//                    ->where('status',Order::WAITING)
 //                    ->where('doctor_id',$user->id)
-//                    ->where('status',2)
-//                    ->firstOrFail();
-     
-//     $order->update(['status'=>3]);
+//                    ->get();
 
-//    $order = fractal()
-//             ->item($order) 
-//             ->transformWith(new OrderTransform())
-//             ->serializeWith(new ArraySerializer())
-//             ->toArray();
+//         if(!$order)
+//        {
+//             return $this->responseApi(__('there is no waiting orders'));
+//        }     
+   
+//  $orders =  fractal()->collection($order)
+//                   ->transformWith(new OrderTransform())
+//                    ->serializeWith(new ArraySerializer())
+//                    ->toArray();
 
-//      return $this->responseApi(__('messages.delete_order'));
-    
+//     return $this->responseApi('', $orders, 200);             
+
 // }
+
+//show all accepted orders
+// public function acceptedorders(string $id)
+// {
+//     $user = auth()->user();
+
+//     $orders = Order::with('visit')
+//                    ->where('doctor_id',$user->id)
+//                    ->where('status',Order::ACCEPTED)
+//                    ->get();
+
+//        if(!$orders)
+//        {
+//             return $this->responseApi(__('there is no accepted orders'));
+//        }            
+
+//     $orders =  fractal()->collection($orders)
+//                         ->transformWith(new OrderTransform())
+//                         ->serializeWith(new ArraySerializer())
+//                         ->toArray();
+
+//       return $this->responseApi('', $orders, 200);              
+// }
+
+  //show all accepeted orders for patient
+// public function acceptedorder(string $id)
+// {
+//     $user = auth()->user();
+
+//      $orders = Order::with('visit')
+//                    ->where('status',Order::ACCEPTED)
+//                    ->where('user_id',$user->id)
+//                    ->get();
+
+//        if(!$orders)
+//        {
+//             return $this->responseApi(__('there is no accepted orders'));
+//        }            
+
+//     $orders =  fractal()->collection($orders)
+//                   ->transformWith(new OrderTransform())
+//                    ->serializeWith(new ArraySerializer())
+//                    ->toArray();
+
+//       return $this->responseApi('', $orders, 200);              
+// } 
+
+
+// //show all waiting orders
+// public function waitingorder(string $id)
+// {
+//     $user = auth()->user();
+
+//   $order =  Order::with('visit')
+//                 ->where('status',Order::WAITING)
+//                 ->where('user_id',$user->id)
+//                 ->get();
+
+//         if(!$order)
+//        {
+//             return $this->responseApi(__('there is no waiting orders'));
+//        }     
+   
+//  $orders =  fractal()->collection($order)
+//                      ->transformWith(new OrderTransform())
+//                      ->serializeWith(new ArraySerializer())
+//                      ->toArray();
+
+//     return $this->responseApi('', $orders, 200);             
+// }
+
+
+
+
+
+
+
+
+
 
     
 }

@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\front\DoctorController;
 use App\Http\Controllers\Api\front\UserController;
 use App\Http\Controllers\Api\front\CertificateController;
 use App\Http\Controllers\Api\front\ExperienceController;
+use App\Http\Controllers\Api\front\OrderController;
 use App\Http\Controllers\Api\front\VisitController;
 use App\Http\Controllers\Api\front\WalletController;
 use Illuminate\Support\Facades\Route;
@@ -62,13 +63,13 @@ Route::middleware(['auth:sanctum', 'api_localization','IsDoctor'])->group(functi
     });
       
 // show orders for doctors     
- Route::prefix('orders')->controller(DoctorController::class)->group(function () {
+ Route::prefix('orders')->controller(OrderController::class)->group(function () {
       
       Route::get('/wait/{id}', 'waitingorders');
-      Route::post('/{id}', 'updateorders');
+      Route::post('/{id}', 'acceptorders');
       Route::get('/accept/{id}', 'acceptedorders');
-      Route::post('/cancelorders/{id}', 'cancelorders');
-      // Route::post('/cancel/{id}', 'cancelorder');
+       Route::post('/reject/{id}', 'rejectedorders');
+        Route::get('filter/{id}', 'filter');
     
     });
     

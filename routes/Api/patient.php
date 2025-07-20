@@ -81,16 +81,15 @@ Route::prefix('addresses')->controller(AdressController::class)->group(function 
     Route::prefix('orders')->controller(OrderController::class)->group(function () {                 
         Route::post('/', 'store');  
         Route::get('/{id}', 'orders'); 
-         Route::get('/wait/{id}', 'waitingorder');
+        Route::get('/wait/{id}', 'waitingorder');
         Route::get('/accept/{id}', 'acceptedorder');
-        Route::post('/cancelorder/{id}', 'cancelorder');
         Route::post('/cancel/{id}', 'cancelorder');
-       //Route::post('/cancel/{id}', 'cancelorder');
-                      
+        Route::get('filter/{id}', 'filter');
+                         
     });
 
 
-
+//wallet
 Route::prefix('wallet')->controller(WalletController::class)->group(function () {
       Route::post('/{id}', 'deposit');
       

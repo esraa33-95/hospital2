@@ -31,7 +31,7 @@ $wallet->total_price = $wallet->total_price + $data['amount'];
 $wallet->save();
 
 $transaction = Transaction::create([
-   'user_id'=>$user->id,
+   'wallet_id'=>$wallet->id,
    'amount'=>$data['amount'],
    'status'=> 1,
 ]);

@@ -8,11 +8,12 @@ use App\Enum\OrderEnum;
 class Order extends Model
 {
   
-public const STATUS = 'status';
 
     public const WAITING = 1;
     public const ACCEPTED = 2;
     public const REJECTED = 3;
+    public const CANCELED = 4;
+    public const COMPLETED = 5;
 
     protected $fillable =[
         'user_id',
