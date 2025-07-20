@@ -107,7 +107,7 @@ public function acceptorders(string $id)
 
   $order =  Order::with('visit')
                 ->where('status',Order::WAITING)
-                ->where('doctor_id',$user->id)
+                ->where('doctor_id', $user->id)
                 ->first();
     if(!$order)  
     {
@@ -127,14 +127,14 @@ public function acceptorders(string $id)
 }
 
 //reject order by doctor
-public function rejectedorders(string $id)
+public function rejectorder(string $id)
 {
     $user = auth()->user();
 
     $order = order::with('visit')
                    ->where('id',$id)
                    ->where('doctor_id',$user->id)
-                   ->where('status',Order::ACCEPTED)
+                   ->where('status',Order::WAITING)
                    ->firstOrFail();
      
     $order->update(['status'=>Order::REJECTED]);

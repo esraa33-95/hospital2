@@ -65,11 +65,11 @@ Route::middleware(['auth:sanctum', 'api_localization','IsDoctor'])->group(functi
 // show orders for doctors     
  Route::prefix('orders')->controller(OrderController::class)->group(function () {
       
-      Route::get('/wait/{id}', 'waitingorders');
-      Route::post('/{id}', 'acceptorders');
-      Route::get('/accept/{id}', 'acceptedorders');
-       Route::post('/reject/{id}', 'rejectedorders');
+        Route::post('/{id}', 'acceptorders');
+        Route::post('/reject/{id}', 'rejectorder');
         Route::get('filter/{id}', 'filter');
+          // Route::get('/wait/{id}', 'waitingorders');
+         //  Route::get('/accept/{id}', 'acceptedorders');
     
     });
     

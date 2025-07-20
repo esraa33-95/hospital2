@@ -81,11 +81,10 @@ Route::prefix('addresses')->controller(AdressController::class)->group(function 
     Route::prefix('orders')->controller(OrderController::class)->group(function () {                 
         Route::post('/', 'store');  
         Route::get('/{id}', 'orders'); 
-        Route::get('/wait/{id}', 'waitingorder');
-        Route::get('/accept/{id}', 'acceptedorder');
         Route::post('/cancel/{id}', 'cancelorder');
         Route::get('filter/{id}', 'filter');
-                         
+        // Route::get('/wait/{id}', 'waitingorder');
+        // Route::get('/accept/{id}', 'acceptedorder');                
     });
 
 
