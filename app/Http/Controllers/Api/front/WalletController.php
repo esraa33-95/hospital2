@@ -30,7 +30,7 @@ $wallet->total_price = $wallet->total_price + $data['amount'];
 
 $wallet->save();
 
-$transaction = Transaction::create([
+ Transaction::create([
    'wallet_id'=>$wallet->id,
    'amount'=>$data['amount'],
    'status'=> 1,
@@ -43,6 +43,9 @@ $transaction = Transaction::create([
  return $this->responseApi(__('messages.store_deposit'),$wallet,201); 
 
 }
+
+
+
 
 
 
