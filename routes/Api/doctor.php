@@ -69,8 +69,7 @@ Route::middleware(['auth:sanctum', 'api_localization','IsDoctor'])->group(functi
         Route::post('/reject/{id}', 'rejectorder');
         Route::get('filter/{id}', 'filter');
         Route::post('/status/{id}', 'changestatus');
-          // Route::get('/wait/{id}', 'waitingorders');
-         //  Route::get('/accept/{id}', 'acceptedorders');
+         
     
     });
     

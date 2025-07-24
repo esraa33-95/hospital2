@@ -26,7 +26,7 @@ $wallet = Wallet::create([
     'user_id'=>$user->id,
 ]);
 
-$wallet->total_price = $wallet->total_price + $data['amount'];
+$wallet->total_price += $data['amount'];
 
 $wallet->save();
 
@@ -43,6 +43,7 @@ $wallet->save();
  return $this->responseApi(__('messages.store_deposit'),$wallet,201); 
 
 }
+
 
 
 

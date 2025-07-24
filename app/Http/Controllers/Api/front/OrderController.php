@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\front\StoreOrder;
 use App\Http\Requests\Api\front\StoreStatus;
 use App\Models\Order;
+use App\Models\Transaction;
 use App\Models\Wallet;
 use App\Traits\Response;
 use App\Transformers\front\OrderTransform;
@@ -84,8 +85,7 @@ public function filter(Request $request, string $id)
     $search = $request->input('search'); 
 
     $query = Order::with('visit');
-
-    
+ 
     if ($search === 'current') 
         {
         $query->whereIn('status', [Order::WAITING, Order::ACCEPTED]);
@@ -181,42 +181,80 @@ public function cancelorder(string $id)
 //change status in 2,3
 public function changestatus(StoreStatus $request, string $id)
 {
-   $data = $request->validated();
+    
+    $data = $request->validated();
 
-   $order = Order::with('visit')->findOrFail($id);
+    $order = Order::with('visit')->findOrFail($id);
 
-   $patient = Wallet::where('user_id',$order->user_id)->first();
-       
-   $doctor = Wallet::where('user_id',$order->doctor_id)->first();
+    $patient = $order->user->wallet;
+    $doctor  = $order->doctor->wallet;
 
 
-if( $data['status'] == Order::ACCEPTED)
-{
-  $patient->pending_price += $order['price'];
-  $doctor->pending_price += $order['price'];
-}
-elseif(in_array( $data['status'],[Order::CANCELED, Order::REJECTED]))
-{
-  $patient->pending_price -= $order['price'];
-  $doctor->pending_price -= $order['price'];
-  $patient->total_price += $order['price'];
+    if ($data['status'] == Order::ACCEPTED) {
 
-}
-elseif( $data['status'] == Order::COMPLETED)
-{
-   $patient->pending_price -= $order['price'];
-  $doctor->pending_price -= $order['price'];
-  $doctor->total_price += $order['price'];
+        $patient->pending_price += $order->price;
+        $doctor->pending_price  += $order->price;
+ 
 
-}
+        Transaction::create([
+            'wallet_id' => $patient->id,
+            'status'    => Transaction::WITHDRAW,
+            'amount'    => $order->price,
+        ]);
+
+        Transaction::create([
+            'wallet_id' => $doctor->id,
+            'status'    => Transaction::DEPOSIT,
+            'amount'    => $order->price,
+        ]);
+
+    } elseif (in_array($data['status'], [Order::CANCELED, Order::REJECTED])) {
+
+        $patient->pending_price -= $order->price;
+        $doctor->pending_price  -= $order->price;
+        $patient->total_price   += $order->price;
+
+        Transaction::create([
+            'wallet_id' => $patient->id,
+            'status'    => Transaction::DEPOSIT,
+            'amount'    => $order->price,
+        ]);
+
+        Transaction::create([
+            'wallet_id' => $doctor->id,
+            'status'    => Transaction::WITHDRAW,
+            'amount'    => $order->price,
+        ]);
+
+    } elseif ($data['status'] == Order::COMPLETED) {
+
+        $patient->pending_price -= $order->price;
+        $doctor->pending_price  -= $order->price;
+        $doctor->total_price    += $order->price;
+
+    
+        Transaction::create([
+            'wallet_id' => $patient->id,
+            'status'    => Transaction::WITHDRAW,
+            'amount'    => $order->price,
+        ]);
+
+        Transaction::create([
+            'wallet_id' => $doctor->id,
+            'status'    => Transaction::DEPOSIT,
+            'amount'    => $order->price,
+        ]);
+    }
+
     $patient->save();
     $doctor->save();
 
     $order->status = $data['status'];
     $order->save();
 
- return $this->responseApi(__('Order status changed successfully'));
-  }
+    return $this->responseApi(__('status changed successfully'));
+}
+
 
 
 
@@ -224,98 +262,6 @@ elseif( $data['status'] == Order::COMPLETED)
 
 
 
-//show waiting orders
-// public function waitingorders(string $id)
-// {
-//     $user = auth()->user();
 
-//   $order =  Order::with('visit')
-//                    ->where('status',Order::WAITING)
-//                    ->where('doctor_id',$user->id)
-//                    ->get();
-
-//         if(!$order)
-//        {
-//             return $this->responseApi(__('there is no waiting orders'));
-//        }     
-   
-//  $orders =  fractal()->collection($order)
-//                   ->transformWith(new OrderTransform())
-//                    ->serializeWith(new ArraySerializer())
-//                    ->toArray();
-
-//     return $this->responseApi('', $orders, 200);             
-
-// }
-
-//show all accepted orders
-// public function acceptedorders(string $id)
-// {
-//     $user = auth()->user();
-
-//     $orders = Order::with('visit')
-//                    ->where('doctor_id',$user->id)
-//                    ->where('status',Order::ACCEPTED)
-//                    ->get();
-
-//        if(!$orders)
-//        {
-//             return $this->responseApi(__('there is no accepted orders'));
-//        }            
-
-//     $orders =  fractal()->collection($orders)
-//                         ->transformWith(new OrderTransform())
-//                         ->serializeWith(new ArraySerializer())
-//                         ->toArray();
-
-//       return $this->responseApi('', $orders, 200);              
-// }
-
-  //show all accepeted orders for patient
-// public function acceptedorder(string $id)
-// {
-//     $user = auth()->user();
-
-//      $orders = Order::with('visit')
-//                    ->where('status',Order::ACCEPTED)
-//                    ->where('user_id',$user->id)
-//                    ->get();
-
-//        if(!$orders)
-//        {
-//             return $this->responseApi(__('there is no accepted orders'));
-//        }            
-
-//     $orders =  fractal()->collection($orders)
-//                   ->transformWith(new OrderTransform())
-//                    ->serializeWith(new ArraySerializer())
-//                    ->toArray();
-
-//       return $this->responseApi('', $orders, 200);              
-// } 
-
-
-// //show all waiting orders
-// public function waitingorder(string $id)
-// {
-//     $user = auth()->user();
-
-//   $order =  Order::with('visit')
-//                 ->where('status',Order::WAITING)
-//                 ->where('user_id',$user->id)
-//                 ->get();
-
-//         if(!$order)
-//        {
-//             return $this->responseApi(__('there is no waiting orders'));
-//        }     
-   
-//  $orders =  fractal()->collection($order)
-//                      ->transformWith(new OrderTransform())
-//                      ->serializeWith(new ArraySerializer())
-//                      ->toArray();
-
-//     return $this->responseApi('', $orders, 200);             
-// }
 
 

@@ -83,9 +83,7 @@ Route::prefix('addresses')->controller(AdressController::class)->group(function 
         Route::get('/{id}', 'orders'); 
         Route::post('/cancel/{id}', 'cancelorder');
         Route::get('filter/{id}', 'filter');
-         Route::post('/status/{id}', 'changestatus');
-        // Route::get('/wait/{id}', 'waitingorder');
-        // Route::get('/accept/{id}', 'acceptedorder');                
+                      
     });
 
 

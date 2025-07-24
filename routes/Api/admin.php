@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\admin\CountryController;
 use App\Http\Controllers\Api\admin\DepartmentController;
 use App\Http\Controllers\Api\admin\DiseaseController;
 use App\Http\Controllers\Api\admin\DoctorController;
+use App\Http\Controllers\Api\admin\OrderController;
 use App\Http\Controllers\Api\admin\PatientController;
 use App\Http\Controllers\Api\admin\ReportController;
 use App\Http\Controllers\Api\admin\SurgeryController;
@@ -141,6 +142,12 @@ Route::middleware(['auth:sanctum','api_localization','IsAdmin'])->group(function
         Route::put('/{id}', 'update');       
         Route::delete('/{id}', 'delete');                
     });
+
+    Route::prefix('orders')->controller(OrderController::class)->group(function () {                 
+        Route::get('/', 'filterorders'); 
+        Route::get('/transaction', 'transaction'); 
+                     
+    }); 
 
      
 
